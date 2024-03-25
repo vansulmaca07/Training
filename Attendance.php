@@ -29,7 +29,7 @@ session_start();
             <option value="MSTY">MSTY</option> 
         </select>  <br> -->
         <input type="text" class="documentfilter" name="documentNo" id="documentnumber"
-         value="">
+         value="" placeholder="Please enter the document number">
 
     
         <button id="documentfilter" class="submit" name="submit">SUBMIT</button>
