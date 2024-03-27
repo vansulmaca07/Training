@@ -1,0 +1,58 @@
+<?php
+
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+
+    $idinput = ($_POST["IDregistrationInput"]);           
+  
+    try {
+        require_once "dbh2.inc.php";
+
+       /* $query = "UPDATE attendance, signdb
+        SET attendance.GID = signdb.GID
+
+        where attendance.RFID = :rfid;"; */
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
+
+        $query ="UPDATE users
+                        
+        SET
+            RFID = :rfid
+            
+        WHERE
+            department = '1'
+        AND GID = 'jt9970440';
+        ";
+
+       /* $query = "UPDATE currentstatus
+        SET KP = :maintenanceid,
+        statusid = :statusid
+        where machineID = :machineid;";*/
+      
+        $stmt = $pdo->prepare($query);
+
+      
+        $stmt->bindParam("rfid", $idinput);
+                     
+        $stmt->execute();
+
+        $pdo = null;
+        $stmt = null;
+
+        
+        header("Location: ../idregistration.php");
+
+        die();
+
+    } catch (PDOException $e) {
+        die("Query failed: " . $e->getMessage());
+        
+    }
+
+  
+}
+else {
+    header("Location: ../idregistration.php");
+}
