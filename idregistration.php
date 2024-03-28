@@ -1,9 +1,10 @@
 <?php
     
+   
     include_once 'navigation.php'
 
 ?>
-
+  
 
 <div class="idregistration" id="idregistration">
             <h4>IDカード登録</h4>
@@ -35,9 +36,10 @@
                         }
                         
                         //read all row from database table
-
-                        //$sql = "SELECT * FROM '{$_SESSION["documentNo"]}'";
-                        $sql = "SELECT * FROM users where department = '1'";
+                        
+                        
+                        $department = $_SESSION["department"];
+                        $sql = "SELECT * FROM users where department = '$department';";
                         
                         $result = $connection->query($sql);
                         
@@ -54,8 +56,20 @@
                             <td>" . $row["department"] .  "</td>";
                           
                         if ($row["RFID"] == '') {
-                            echo "<td><a href='idregister.php'><button>REGISTER</button></a></td>";
+                            echo "<td>
+                            <form action = 'includes/idregister.php' method ='post' id='idregform'>
+
+                            <input type='hidden' name='GIDfetch' value= ' $row[GID]'>
+                            <input type='text' name='RFID' value=''>
+                            
+                            <button name='submit'>REGISTER</button>
+
+                            </form>
+                            
+                            
+                            </td>";
                         }
+                        //<a href='idregister.php?GIDfetch=$row['GID']'><button>REGISTER</button></a>
 
                         else {
                             echo "<td>REGISTRATION COMPLETED</td>";
@@ -63,8 +77,9 @@
                        
                         }
                         
-                        ?>          
-
+                        ?>   
+                            
+                    
 
                     
              
