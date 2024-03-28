@@ -5,46 +5,43 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 
-    $idinput = ($_POST["IDregistrationInput"]);           
-  
+    $idinput = ($_POST["RFID"]);
+    $GIDfetch = ($_POST["GIDfetch"]);
+ //   $department = $_SESSION["department"];
+    
+  /*  echo "$idinput";
+    echo "$department";
+    echo "$GIDget"; */
+
+ 
     try {
         require_once "dbh2.inc.php";
 
-       /* $query = "UPDATE attendance, signdb
-        SET attendance.GID = signdb.GID
-
-        where attendance.RFID = :rfid;"; */
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
+       
+       $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
         $query ="UPDATE users
                         
         SET
-            RFID = :rfid
-            
+            RFID = :rfid    
         WHERE
-            department = '1'
-        AND GID = 'jt9970440';
-        ";
-
-       /* $query = "UPDATE currentstatus
-        SET KP = :maintenanceid,
-        statusid = :statusid
-        where machineID = :machineid;";*/
-      
+            GID = :GID;";
+    
         $stmt = $pdo->prepare($query);
 
-      
-        $stmt->bindParam("rfid", $idinput);
-                     
+        $stmt->bindParam(":rfid", $idinput);
+        $stmt->bindParam(":GID", $GIDfetch);
+             
         $stmt->execute();
 
         $pdo = null;
         $stmt = null;
 
-        
-        header("Location: ../idregistration.php");
+       
+        header('location: ../idregistration.php');
 
         die();
+        
 
     } catch (PDOException $e) {
         die("Query failed: " . $e->getMessage());
@@ -52,7 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
   
+
+
 }
 else {
     header("Location: ../idregistration.php");
 }
+
+
