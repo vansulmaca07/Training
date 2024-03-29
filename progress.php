@@ -39,7 +39,12 @@
                         //read all row from database table
 
                         //$sql = "SELECT * FROM '{$_SESSION["documentNo"]}'";
-                        $sql = "SELECT * FROM trainingform";
+                        $sql = "SELECT document_id, training_name, status_name
+
+                        from training_form 
+                        
+                        inner join status_ref on training_form.status_id = status_ref.status_id;"; 
+
                         
                         
                         $result = $connection->query($sql);
@@ -52,10 +57,11 @@
                         while ($row = $result->fetch_assoc()){
 
                         echo "<tr>
-                            <td>" . $row["id"] .  "</td>
-                            <td>" . $row["trainingname"] .  "</td>
-                            <td>" . $row["statusid"] .  "</td>
-                            <td>  </td>
+                            <td>" . $row["document_id"] .  "</td>
+                            <td>" . $row["training_name"] .  "</td>
+                            <td>" . $row["status_name"] .  "</td>
+                            <td>  
+                            </td>
                             <td><a href='Attendance.php'><button>Attendance</button></a></td>
                             
                             </tr>";
