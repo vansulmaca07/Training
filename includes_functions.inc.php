@@ -60,6 +60,7 @@ function loginUser ($conn, $username, $pwd) {
         $_SESSION["firstname"] = $uidExists["firstname"];
         $_SESSION["surname"] = $uidExists["surname"];
         $_SESSION["rfid"] = $uidExists["RFID"];
+        $_SESSION["department"] = $uidExists["department_id"];
         
         
         header("location: ../home.php");
