@@ -10,6 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
     <title>Home</title>
+    <script type="text/javascript" src="home.js"></script>
 
 </head>
 <body>
@@ -41,10 +42,9 @@ session_start();
                  '<a href="newform.php" class = "btn2">新規作成</a>
                  <a href="progress.php" class = "btn2">進捗状況</a>
                  <a href="training.php" class = "btn2">訓練</a>
-                 <a href="registration.php" class = "btn2">IDカード登録</a>
+                 <a href="idregistration.php" class = "btn2">IDカード登録</a>
                  <a href="namelist.php" class = "btn2">Namelist Master</a>
                  <a href="" class = "btn2">ユーザー管理</a>';
-
                 }
 
                 else if ($_SESSION["userlevel"] === "user") {
@@ -54,7 +54,6 @@ session_start();
                 <a href="training.php" class = "btn2">訓練</a>
                 <button class="btn4" onclick="regSignature()" disabled >Namelist Master</button></a>
                 <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
-            
                 }
                 
                 else if ($_SESSION["userlevel"] === "leader") {
