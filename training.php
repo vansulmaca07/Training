@@ -6,7 +6,7 @@
 
 
 <div class="training" id="training">
-           
+            <h4>IDカード登録</h4>
             <div id="table-wrapper3">
                 <div id="table-scroll3">
                     <table id="trainingTable" border="1" class="trainingT">
