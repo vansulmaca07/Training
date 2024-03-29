@@ -95,7 +95,7 @@ session_start();
                         //{
 
                         $documentNo = $_SESSION["documentNo"];
-                        $sql = "SELECT * FROM sg032 where training_id = '$documentNo'";
+                        $sql = "SELECT * FROM attendance where training_id = '$documentNo'";
                         
                         
                         $result = $connection->query($sql);
@@ -108,7 +108,7 @@ session_start();
                         while ($row = $result->fetch_assoc()){
 
                         echo "<tr>
-                            <td>" . $row["dateID"] .  "</td>
+                            <td>" . $row["date_id"] .  "</td>
                             <td>" . $row["affiliation"] .  "</td>
                             <td>" . $row["GID"] . "</td>
                             <td>" . $row["name"] . "</td>
@@ -117,22 +117,15 @@ session_start();
                             </tr>";
                         }
 
-                        //}
-                        
                         ?>          
                     </table>
-                   
-                    
                 </div>
                 <?php      
                     echo
                      '<a href="includes/attendanceback.inc.php" class = "btn3" style="text-decoration:none;">BACK</a>';
                      ?>
             </div>
-           
-
     </div>
-    
 </body>
 </html>
 
