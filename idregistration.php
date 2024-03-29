@@ -7,16 +7,17 @@
   
 
 <div class="idregistration" id="idregistration">
-            <h4>IDカード登録</h4>
+            <h4>訓練</h4>
             <div id="table-wrapper5">
                 <div id="table-scroll5">
                     <table id="IDregTable" border="1" class="IDregT">
                         <thead>
                     <tr id="firstrow">
-                    <th style="width:25%">GID</th>
-                    <th style="width:25%">名前</th>
-                    <th style="width:25%">工程</th> <!--process-->
-                    <th style="width:25%">ID登録状況</th> <!--ID registration status-->  
+                    <th style="width:17.5%">GID</th>
+                    <th style="width:17.5%">名前</th>
+                    <th style="width:17.5%">姓</th>
+                    <th style="width:17.5%">工程</th> <!--process-->
+                    <th style="width:30%">ID登録状況</th> <!--ID registration status-->  
                     </thead>
                     
                     <?php
@@ -39,8 +40,13 @@
                         
                         
                         $department = $_SESSION["department"];
-                        $sql = "SELECT * FROM users where department = '$department';";
+                        //$sql = "SELECT * FROM users where department = '$department';";
+                        $sql = "SELECT GID, firstname, surname, RFID, department_name
+                        FROM users
+                        INNER JOIN department on users.department_id = department.department_id
                         
+                        WHERE users.department_id ='$department';";
+
                         $result = $connection->query($sql);
                         
                         if (!$result) {
@@ -53,14 +59,14 @@
                         echo "<tr>
                             <td>" . $row["GID"] .  "</td>
                             <td>" . $row["firstname"] .  "</td>
-                            <td>" . $row["department"] .  "</td>";
+                            <td>" . $row["surname"] .  "</td>
+                            <td>" . $row["department_name"] .  "</td>";
                           
                         if ($row["RFID"] == '') {
                             echo "<td>
                             <form action = 'includes/idregister.php' method ='post' id='idregform'>
-
-                            <input type='hidden' name='GIDfetch' value= ' $row[GID]'>
-                            <input type='text' name='RFID' value=''>
+                            <input type='text' hidden name= 'GIDfetch' value = '$row[GID]'>
+                            <input type='text' name='rfid' value=''>
                             
                             <button name='submit'>REGISTER</button>
 
@@ -70,7 +76,7 @@
                             </td>";
                         }
                         //<a href='idregister.php?GIDfetch=$row['GID']'><button>REGISTER</button></a>
-
+                        //<input type='hidden' name='GIDfetch' value= '$row[GID]'>
                         else {
                             echo "<td>REGISTRATION COMPLETED</td>";
                         }
