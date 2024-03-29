@@ -30,44 +30,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $audience = ($_POST["audienceID"]);
     $contents = ($_POST["contentsID"]);
     $usageid = ($_POST["usageID"]); 
-    $statusid = '進行中'; 
+    $statusid = '1'; 
 
     try {
         require_once "dbh2.inc.php";
 
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
-        $query ="INSERT INTO trainingform (
-            creationdepartment,
-            trainingname,
+        $query ="INSERT INTO training_form (
+            creation_department,
+            training_name,
             area,
-            starttimereg,
-            endtimereg,
-            locationreg,
-            instructorreg,
-            starttimeA,
-            endtimeA,
-            locationA,
-            instructorA,
-            starttimeB,
-            endtimeB,
-            locationB,
-            instructorB,
-            starttimeC,
-            endtimeC,
-            locationC,
-            instructorC,
-            starttimeD,
-            endtimeD,
-            locationD,
-            instructorD,  
+            start_time_regular,
+            end_time_regular,
+            location_regular,
+            instructor_regular,
+            start_time_a,
+            end_time_a,
+            location_a,
+            instructor_a,
+            start_time_b,
+            end_time_b,
+            location_b,
+            instructor_b,
+            start_time_c,
+            end_time_c,
+            location_c,
+            instructor_c,
+            start_time_d,
+            end_time_d,
+            location_d,
+            instructor_d,  
             category,
             purpose,
             audience,
             contents,
-            usageid,
-            statusid 
+            usage_id,
+            status_id 
             )
+
         VALUES (
             
             :creationdepartment,
@@ -77,35 +78,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             :endtimereg,
             :locationreg,
             :instructorreg,
-           :starttimeA,
+            :starttimeA,
             :endtimeA,
             :locationA,
             :instructorA,
-           :starttimeB,
+            :starttimeB,
             :endtimeB,
             :locationB,
             :instructorB,
-             :starttimeC,
+            :starttimeC,
             :endtimeC,
             :locationC,
             :instructorC,
             :starttimeD,
             :endtimeD,
             :locationD,
-           :instructorD, 
-           :category,
+            :instructorD, 
+            :category,
             :purpose,
             :audience,
             :contents,
             :usageid, 
             :statusid
-        );
+        );";
          
-        ALTER TABLE sg032
-        add COLUMN SG033 varchar(50) not null;
+      //  ALTER TABLE sg032
+      //  add COLUMN SG033 varchar(50) not null;
 
-        Alter TABLE sg032
-        add COLUMN dateID033 datetime default null;";
+      //  Alter TABLE sg032
+      //  add COLUMN dateID033 datetime default null;";
         
 
         $stmt = $pdo->prepare($query);
