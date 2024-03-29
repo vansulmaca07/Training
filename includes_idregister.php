@@ -1,19 +1,14 @@
 <?php
 
-session_start();
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 
-    $idinput = ($_POST["RFID"]);
-    $GIDfetch = ($_POST["GIDfetch"]);
- //   $department = $_SESSION["department"];
+    $rfid = ($_POST["rfid"]);
+    $GIDfetch  = ($_POST["GIDfetch"]);
+   
     
-  /*  echo "$idinput";
-    echo "$department";
-    echo "$GIDget"; */
-
- 
     try {
         require_once "dbh2.inc.php";
 
@@ -25,13 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         SET
             RFID = :rfid    
         WHERE
-            GID = :GID;";
+            GID = :GIDfetch;";
     
         $stmt = $pdo->prepare($query);
-
-        $stmt->bindParam(":rfid", $idinput);
-        $stmt->bindParam(":GID", $GIDfetch);
-             
+        
+        $stmt->bindParam(":rfid", $rfid);
+        $stmt->bindParam(":GIDfetch", $GIDfetch);
+          
         $stmt->execute();
 
         $pdo = null;
@@ -47,9 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Query failed: " . $e->getMessage());
         
     }
-
-  
-
 
 }
 else {
