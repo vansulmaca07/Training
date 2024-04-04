@@ -22,12 +22,7 @@ session_start();
         <div class="sign">
 
         <form action="includes/documentNo.inc.php" method="post">
-        <!--<select name="plantsite" id="plantsite" class="plantsitefilter">
-            <option value="JTY">JTY</option>
-            <option value="CGTY">CGTY</option>
-            <option value="KKTY">KKTY</option>
-            <option value="MSTY">MSTY</option> 
-        </select>  <br> -->
+    
         <input type="text" class="documentfilter" name="documentNo" id="documentnumber"
          value="" placeholder="Please enter the document number">
 
@@ -111,7 +106,7 @@ session_start();
                             <td>" . $row["date_id"] .  "</td>
                             <td>" . $row["affiliation"] .  "</td>
                             <td>" . $row["GID"] . "</td>
-                            <td>" . $row["name"] . "</td>
+                            <td>" . $row["name_"] . "</td>
                             <td>" . $row["certification"] . "</td>
                             
                             </tr>";
