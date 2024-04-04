@@ -59,10 +59,14 @@
                         echo "<tr>
                             <td>" . $row["document_id"] .  "</td>
                             <td>" . $row["training_name"] .  "</td>
-                            <td>" . $row["status_name"] .  "</td>
                             <td>  
                             </td>
-                            <td><a href='Attendance.php'><button>Attendance</button></a></td>
+                            <td>" . $row["status_name"] .  "</td>
+                            <td><form action='includes/documentNo.inc.php' method ='POST'>
+                            <input type='text' hidden value='$row[document_id]' name='documentNo'>             
+                            <button type='submit'>ATTENDANCE</button>
+                            </form>
+                            </td>
                             
                             </tr>";
                         }
