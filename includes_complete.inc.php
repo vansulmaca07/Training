@@ -3,63 +3,52 @@
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-   
-    $rfid = ($_SESSION["rfid"]);
+     
+    $GIDfetch = ($_POST["GIDfetch"]);
+    $training_id = ($_POST["training_id"]);
   
-
-
     try {
         require_once "dbh2.inc.php";
 
-       /* $query = "UPDATE attendance, signdb
-        SET attendance.GID = signdb.GID
-
-        where attendance.RFID = :rfid;"; */
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
-        $query ="UPDATE sg032
+        $query ="UPDATE attendance
                         
-        INNER JOIN signdb ON sg032.RFID = signdb.RFID
+        INNER JOIN users ON attendance.GIDh = users.GID
         SET
-            sg032.GID = signdb.GID
+            attendance.GID = users.GID
             
         WHERE
-            sg032.RFID = :RFID;
+            attendance.GIDh = :GID
+        AND
+            attendance.training_id = :training_id;
 
-        UPDATE sg032
+        UPDATE attendance
             SET 
-            dateID = Now()
+            date_id = Now()
 
         WHERE 
-            RFID = :RFID;";
+            GIDh = :GID
+        AND
+            training_id = :training_id;";
 
-       /* $query = "UPDATE currentstatus
-        SET KP = :maintenanceid,
-        statusid = :statusid
-        where machineID = :machineid;";*/
-      
         $stmt = $pdo->prepare($query);
-
       
-        $stmt->bindParam("RFID", $rfid);
+        $stmt->bindParam(":GID", $GIDfetch);
+        $stmt->bindParam(":training_id", $training_id);
                      
         $stmt->execute();
 
         $pdo = null;
         $stmt = null;
-
-        
+   
         header("Location: ../training.php");
-
         die();
 
     } catch (PDOException $e) {
         die("Query failed: " . $e->getMessage());
         
     }
-
-  
 }
 else {
     header("Location: ../training.php");
