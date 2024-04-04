@@ -15,7 +15,23 @@ function emptyInputLogin($username, $pwd) {
 
 function uidExists($conn, $username) {
 
-    $sql = "SELECT * FROM users WHERE GID = ?;";
+  //  $sql = "SELECT * FROM users WHERE GID = ?;";
+
+    $sql = "SELECT users.userlevel, users.GID, users.name_, users.RFID, users.pwd, users.department_id, dept.department_name
+
+    FROM users
+    
+    INNER JOIN
+    department AS dept
+    
+    ON
+    
+    users.department_id = dept.department_id
+    
+    where 
+    
+    users.GID =?;"; 
+
     $stmt = mysqli_stmt_init($conn);
 
     if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -57,9 +73,9 @@ function loginUser ($conn, $username, $pwd) {
         session_start();
         $_SESSION["userlevel"] = $uidExists["userlevel"];
         $_SESSION["GID"] = $uidExists["GID"];
-        $_SESSION["firstname"] = $uidExists["firstname"];
-        $_SESSION["surname"] = $uidExists["surname"];
+        $_SESSION["name_"] = $uidExists["name_"];
         $_SESSION["rfid"] = $uidExists["RFID"];
+        $_SESSION["department_name"] = $uidExists["department_name"];
         $_SESSION["department"] = $uidExists["department_id"];
         
         
