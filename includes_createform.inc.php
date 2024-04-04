@@ -2,6 +2,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
+    $training_id = ($_POST["trainingDepartment"]) . ($_POST["trainingIdentifier"]);
     $creationdepartment = ($_POST["departmentID"]);
     $trainingname = ($_POST["educationID"]);
     $trainingloc = ($_POST["trainingLoc"]);
@@ -32,12 +33,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usageid = ($_POST["usageID"]); 
     $statusid = '1'; 
 
+    //attendance table
+
+    $checked_array = ($_POST["GIDcheck"]);
+    $GIDname = ($_POST["GIDname"]);
+    $firstname = ($_POST["name_"]);
+    $surname = ($_POST["surname"]);
+    $department_attendee = ($_POST["department_name"]);
+
+    //
     try {
         require_once "dbh2.inc.php";
 
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
+        
         $query ="INSERT INTO training_form (
+            document_id,
             creation_department,
             training_name,
             area,
@@ -71,6 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         VALUES (
             
+            :document_id,
             :creationdepartment,
             :trainingname,
             :area,
@@ -102,15 +115,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             :statusid
         );";
          
-      //  ALTER TABLE sg032
-      //  add COLUMN SG033 varchar(50) not null;
-
-      //  Alter TABLE sg032
-      //  add COLUMN dateID033 datetime default null;";
-        
-
         $stmt = $pdo->prepare($query);
 
+        $stmt->bindParam(":document_id", $training_id);
         $stmt->bindParam(":creationdepartment", $creationdepartment);
         $stmt->bindParam(":trainingname", $trainingname);
         $stmt->bindParam(":area", $trainingloc);
@@ -141,21 +148,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":usageid", $usageid);  
         $stmt->bindParam(":statusid", $statusid); 
                      
-        $stmt->execute();
+        $stmt->execute(); 
+
+        $query2 = "INSERT INTO attendance (GIDh,name_,training_id,affiliation) 
+        VALUES (:GID,:firstname,:training_id,:department_name);";
+
+        $stmt2 = $pdo->prepare($query2);
+
+        foreach ($GIDname as $key => $value) {
+
+        if(in_array($GIDname[$key], $checked_array)){
+        $stmt2->bindParam(":GID", $GIDname[$key]);
+        $stmt2->bindParam(":firstname", $firstname[$key]);
+        $stmt2->bindParam(":training_id", $training_id); 
+        $stmt2->bindParam(":department_name", $department_attendee[$key]);                       
+        $stmt2->execute();
+        }      
+        }
+
+        $query3= "UPDATE attendance 
+        INNER JOIN users ON
+           attendance.GIDh = users.GID
+        SET 
+           attendance.RFID = users.RFID
+        ";
+
+        $stmt3 = $pdo->prepare($query3);
+        $stmt3->execute();
 
         $pdo = null;
         $stmt = null;
-
+        $stmt2= null;
+        $stmr3= null;
         header("Location: ../progress.php");
 
         die();
 
     } catch (PDOException $e) {
         die("Query failed: " . $e->getMessage());
-        
-    }
-
+    
+}
 }
 else {
     header("Location: ../progress.php");
 }
+
