@@ -19,15 +19,24 @@ session_start();
             <div class="loginDIV">
                     <p class="loginP">
                         <?php
-                        
-                        echo $_SESSION["surname"] .  $_SESSION["firstname"];
+                        echo
+                        $_SESSION["name_"];
                     ?>
                     </p>
                     <p class="loginP">    <?php
                         echo $_SESSION["GID"];
                     ?></p>
                     <p class="loginP">    <?php
-                        echo $_SESSION["userlevel"];
+
+                        if ($_SESSION["userlevel"] === "1"){
+                        echo "administrator";
+                        }
+                        else {
+                            
+                        }
+                    ?></p>
+                     <p class="loginP">    <?php
+                        echo $_SESSION["department_name"];
                     ?></p>
                     
                     <a href="includes/logout.inc.php"> <button class="btn">ログアウト</button> </a>        
@@ -36,18 +45,17 @@ session_start();
 
                 <?php
                 
-                if($_SESSION["userlevel"] === "administrator") {
+                if($_SESSION["userlevel"] === "1") {
 
                 echo
                  '<a href="newform.php" class = "btn2">新規作成</a>
                  <a href="progress.php" class = "btn2">進捗状況</a>
                  <a href="training.php" class = "btn2">訓練</a>
                  <a href="idregistration.php" class = "btn2">IDカード登録</a>
-                 <a href="namelist.php" class = "btn2">Namelist Master</a>
                  <a href="" class = "btn2">ユーザー管理</a>';
                 }
 
-                else if ($_SESSION["userlevel"] === "user") {
+                else if ($_SESSION["userlevel"] === "3") {
                 echo 
                 '<button class="btn4" onclick="displayRegForm()" disabled>新規作成</button></a>
                 <button class="btn4" onclick="displayProgress()" disabled>進捗状況</button></a>
@@ -56,13 +64,13 @@ session_start();
                 <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
                 }
                 
-                else if ($_SESSION["userlevel"] === "leader") {
+                else if ($_SESSION["userlevel"] === "2") {
                 echo 
                 '<a href="newform.php" class = "btn2">新規作成</a>
-                <a href="progress.php" class = "btn2">進捗状況</a>
-                <a href="training.php" class = "btn2">訓練</a>
-                <a href="namelist.php" class = "btn2">Namelist Master</a>
-                <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
+                 <a href="progress.php" class = "btn2">進捗状況</a>
+                 <a href="training.php" class = "btn2">訓練</a>
+                 <a href="idregistration.php" class = "btn2">IDカード登録</a>
+                 <a href="" class = "btn4">ユーザー管理</a>';
                 }
                 ?>
             </div>
