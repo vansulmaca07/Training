@@ -17,12 +17,12 @@
                 value=""
                 required>
                 </h2>
-            </div>
+            </div> 
             <div id="mainrecord">
                     <table id="mainrecordTable" border="1" class="mainrecordT">
                     <tbody>
-                    <tr>
-                    <td>
+                    <tr style="width:100%">
+                    <td style="width:50%">
                     <span>名称：</span>
                     <input type="text"
                      name="educationID"
@@ -31,8 +31,24 @@
                      style="width:90%"
                      required>
                     </td>
-                    <td>
+                    <td style="width:20%">
+                    <span>工程：</span>
+                    <select name="trainingDepartment" id="trainingDepartment">
+                        <option value="SG">SG</option>
+                        <option value="SBA">SBA</option>
+                        <option value="P">P</option>
+                        <option value="KT">KT</option>
+                        <option value="SE">SE</option>
+                        <option value="CRSE">CRSE</option>
+                        <option value="ASE">ASE</option>
+                        <option value="SBC">SBC</option>
+                        <option value="SBA">SBA</op"tion>
+                        <option value="SBN">SBN</option>
+                    </select>
+                    <input type="text" name="trainingIdentifier" value="" style="width:25%">    
+                    </td>
                     
+                    <td style="width:15%">
                     <input type="radio" id="trainingLocInternal" name="trainingLoc" value="internal" checked>
                     <label for="trainingLocInternal">社内</label>
                     <!--<select name="trainingloc" id="trainingloc">
@@ -40,7 +56,7 @@
                         <option value="external">EXTERNAL</option>
                     </select>-->
                     </td>
-                    <td>
+                    <td style="width:15%">
                     <input type="radio" id="trainingLocExternal" name="trainingLoc" value="external">
                     <label for="trainingLocExternal">社外</label>
                     </td>
@@ -190,9 +206,86 @@
                     </tr>
                     </table>
             </div>
+            <div id="participantsDIV" class="participantsDIV">
+                <caption>受講者（製造）</caption>
+                <script>
+                    function toggle(source) {
+                        checkboxes = document.getElementsByName('GIDcheck[]');
+                        for(var i=0, n=checkboxes.length;i<n;i++) {
+                        checkboxes[i].checked = source.checked;
+                        }
+                    }
+                </script>
+                
+                        <table id="participantsTable" border="1" class="participantsT">
+                        <thead>
+                        <tr id="firstrow">
+                        <th style="width:10%"><input type="checkbox" id="select_all" onClick="toggle(this)">すべて選択</th>
+                        <th style="width:22.5%">GID</th>
+                        <th style="width:22.5%">名前</th>
+                        <th style="width:22.5%">Team</th>
+                        <th style="width:22.5%">工程</th> 
+                     
+                        </thead>
+   
+                        <?php
+                        $servername = "localhost";
+                        $username = "root";
+                        $password = "";
+                        $database = "trainingdb";
+                        
+                        //Create connection
+
+                        $connection = new mysqli($servername, $username, $password, $database);
+
+                        //Check connection
+
+                        if ($connection->connect_error) {
+                            die("Connection failed: " . $connection->connect_error);
+                        }
+                        
+                        //read all row from database table
+                        
+                        
+                        //$department = $_SESSION["department"];
+                        //$sql = "SELECT * FROM users where department = '$department';";
+                        
+                        $department = $_SESSION["department"];
+                        $sql = "SELECT GID, name_, RFID, department_name, shift_description
+                        FROM users
+                        INNER JOIN department on users.department_id = department.department_id
+                        INNER JOIN shift on users.shift_id = shift.shift_id
+                        WHERE users.department_id ='$department';";
+                        /*WHERE users.department_id ='$department';";*/
+
+                        $result = $connection->query($sql);
+                        
+                        if (!$result) {
+                            die("Invalid Query: " . $connection->error);
+                        }
+
+                        //read data of each row
+                        while ($row = $result->fetch_assoc()){
+
+                        echo "
+                            <tr>
+                            <td><input type='checkbox' name='GIDcheck[]' value= '$row[GID]' ></td>
+                            <td><input type='text' hidden name='GIDname[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
+                            <td><input type='text' hidden name='name_[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
+                            <td><input type='text' hidden name='shift_description[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
+                            <td><input type='text' hidden name='department_name[]' value= '$row[department_name]'>" . $row["department_name"] .  "</td>
+                            ";
+                            
+                        //<a href='idregister.php?GIDfetch=$row['GID']'><button>REGISTER</button></a>
+                        //<input type='hidden' name='GIDfetch' value= '$row[GID]'>
+                        } 
+                        ?>
+                      
+            </div> 
             <div id="contentsDIV" class="contentsDIV">
-                <caption>内容</caption>
+              
                 <table id="contentsTable" border="1" class="contentsT">
+                <caption>内容</caption>
                 <tr>
                 <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required></textarea></td>
                 </tr>
