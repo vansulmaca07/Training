@@ -8,3 +8,4 @@ $_SESSION["documentNo"] = "0";
 
 header("location: ../attendance.php");
 exit();
+
