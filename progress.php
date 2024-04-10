@@ -1,9 +1,6 @@
-<?php
-    
+<?php  
     include_once 'navigation.php'
-
 ?>
-
 
 <div class="progress" id="progress">
             <h4>進捗状況</h4>
@@ -12,12 +9,14 @@
                     <table id="progressTable" border="1" class="progressT">
                         <thead>
                     <tr id="firstrow">
-                    <th style="width:15%">No</th>
-                    <th style="width:40%">ファイル名</th>
-                    <th style="width:15%">全体状態</th>
-                    <th style="width:15%">備考欄</th>
-                    <th style="width:15%">【サイン進捗】</th>
-                    
+                    <th style="width:10%">No</th>
+                    <th style="width:10%">作成者</th> <!--creator-->
+                    <th style="width:20%">ファイル名</th>
+                    <th style="width:10%">区分</th>
+                    <th style="width:20%">教材</th>
+                    <th style="width:10%">全体状態</th>
+                    <th style="width:10%">備考欄</th>
+                    <th style="width:10%">【サイン進捗】</th>
                     </thead>
                     
                     <?php
@@ -39,14 +38,16 @@
                         //read all row from database table
 
                         //$sql = "SELECT * FROM '{$_SESSION["documentNo"]}'";
-                        $sql = "SELECT document_id, training_name, status_name
-
+                        $department = $_SESSION["department"];
+                        $group_ = $_SESSION["group_"];
+                        $sql = "SELECT document_id, training_name, status_name, creator, name_, category, usage_id
                         from training_form 
-                        
-                        inner join status_ref on training_form.status_id = status_ref.status_id;"; 
 
-                        
-                        
+                        inner join status_ref on training_form.status_id = status_ref.status_id
+                        inner join users on training_form.creator = users.GID
+
+                        where training_form.creation_department ='$department';"; 
+
                         $result = $connection->query($sql);
 
                         if (!$result) {
@@ -58,13 +59,15 @@
 
                         echo "<tr>
                             <td>" . $row["document_id"] .  "</td>
+                            <td>" . $row["creator"] .  "</td>
                             <td>" . $row["training_name"] .  "</td>
-                            <td>  
-                            </td>
+                            <td>" . $row["category"] .  "</td>
+                            <td>" . $row["usage_id"] .  "</td>
                             <td>" . $row["status_name"] .  "</td>
+                            <td></td>
                             <td><form action='includes/documentNo.inc.php' method ='POST'>
                             <input type='text' hidden value='$row[document_id]' name='documentNo'>             
-                            <button type='submit'>ATTENDANCE</button>
+                            <button type='submit'>サイン</button>
                             </form>
                             </td>
                             
@@ -73,16 +76,7 @@
                         
                         ?>          
              
-                    <!--<tr><td>SG026</td><td>SG026_20231221_上級監督者教育(安全衛生その他)</td><td style="bgcolor:green">完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG027</td><td>SG027_20240105_通勤災害の共有、通災MAPの教育</td><td>完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG028</td><td>SG028_20240110_熱戻し炉常時監視、省エネモード　取り扱い説明(安全衛生)</td><td>完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG029</td><td>SG029_20240110_通勤災害についての教育(安全衛生)</td><td>完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG030</td><td>SG030_20240111_AB工程　異物検出・テープ貼り位置検出カメラ教育(その他)</td><td>完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG031</td><td>SG031_20240206_教育訓練記録についての教育(その他)</td><td>完了</td><td></td><td>完了</td></tr>
-                    <tr><td>SG032</td><td>SG032_20240209_教育訓練記録についての教育(安全衛生)</td><td>進行中</td><td></td>
-                    <td><a href="Attendance.php"><button>Attendance</button></a> </td></tr> -->
-                    </table>
-                 
+                    </table>        
                 </div>
             </div>
         </div>
