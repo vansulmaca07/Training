@@ -16,9 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $query ="UPDATE attendance
                         
-        INNER JOIN signdb ON attendance.RFID = signdb.RFID
+        INNER JOIN users ON users.RFID = attendance.RFID
         SET
-            attendance.GID = signdb.GID
+            attendance.GID = users.GID
             
         WHERE
             attendance.RFID = :rfid
@@ -47,8 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die();
 
     } catch (PDOException $e) {
-        die("Query failed: " . $e->getMessage());
+        die("Query failed: ID card not in database" . $e->getMessage());
         
+
     }
   
 }
