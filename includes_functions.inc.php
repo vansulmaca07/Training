@@ -17,7 +17,7 @@ function uidExists($conn, $username) {
 
   //  $sql = "SELECT * FROM users WHERE GID = ?;";
 
-    $sql = "SELECT users.userlevel, users.GID, users.name_, users.RFID, users.pwd, users.department_id, dept.department_name
+    $sql = "SELECT users.userlevel, users.GID, users.name_, users.RFID, users.pwd, users.department_id, dept.department_name, users.group_
 
     FROM users
     
@@ -77,9 +77,10 @@ function loginUser ($conn, $username, $pwd) {
         $_SESSION["rfid"] = $uidExists["RFID"];
         $_SESSION["department_name"] = $uidExists["department_name"];
         $_SESSION["department"] = $uidExists["department_id"];
+        $_SESSION["group_"] = $uidExists["group_"];
         
         
-        header("location: ../home.php");
+        header("location: ../progress.php");
         exit();
     }
 }
