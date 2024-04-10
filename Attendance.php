@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 ?>
 
 <!DOCTYPE html>
@@ -9,9 +8,20 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="attendance.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="attendance.css"> 
 
+ <!--   <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+    /> -->
+  
+    <!-- MDB 
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css"
+    rel="stylesheet"
+    />  -->
+   
+    <title>Document</title>
 
 </head>
 <body>
@@ -19,45 +29,45 @@ session_start();
     <div class="try">
         <div class="attendanceinput">
 
-        <div class="sign">
+            <form action="includes/documentNo.inc.php" method="post">
+            <input type="text" class="documentfilter" name="documentNo" id="documentnumber"
+            value="" placeholder="Please enter the document number">    
+            <button id="documentfilter" class="submit" name="submit">SUBMIT</button> 
+         <!--   <button class="btn btn-primary" name ="submit" data-mdb-ripple-init> 
+            <i class="fas fa-search"></i>
+            </button> -->
+            </form>
 
-        <form action="includes/documentNo.inc.php" method="post">
-    
-        <input type="text" class="documentfilter" name="documentNo" id="documentnumber"
-         value="" placeholder="Please enter the document number">
+            <form action="includes/attendanceTap.php" method="POST">
+            <input type="text" autofocus class="attendanceTap" name="rfid" id="rfid" placeholder="Please Tap your ID">
+            <button id="submit" class="submit" name="submit">SUBMIT</button>
+            </button>
+            </form>
 
-    
-        <button id="documentfilter" class="submit" name="submit">SUBMIT</button>
-        </form>
+            <form action="includes/BarAndQRscan.inc.php" method="post">
+            <input type="text" class="documentfilter" name="GIDinput" id="GIDinput" placeholder="Please scan your QR/Bar code">
+            <button name="submit" class="submit" type="submit">SUBMIT</button>
+            <button type="button" class="btn btn-primary" data-mdb-ripple-init> 
+            <i class="fas fa-search"></i>
+            </button>
+            </form>
+            </div>
 
-        <form action="includes/attendanceTap.php" method="POST">
-        <input type="text" autofocus class="attendanceTap" name="rfid" id="rfid" placeholder="Please Tap your ID">
-        <button id="submit" class="submit" name="submit">SUBMIT</button>
-        </form>
+            <div class="companyfilter"> <!--***RESERVED***-->
 
-        <form action="includes/BarAndQRscan.inc.php" method="post">
-        <input type="text" class="documentfilter" name="GIDinput" id="GIDinput" placeholder="Please scan your QR/Bar code">
-        <button name="submit" class="submit" type="submit">SUBMIT</button>
-        </form>
-        </div>
-
-        <div class="companyfilter"> <!--***RESERVED***-->
-
-        <!--<select name="plantsite" id="plantsite" class="plantsitefilter">
-            <option value="JTY">JTY</option>
-            <option value="CGTY">CGTY</option>
-            <option value="KKTY">KKTY</option>
-            <option value="MSTY">MSTY</option> 
-        </select>-->    
-        </div>
-
-
-
-        </div>    
+                <!--<select name="plantsite" id="plantsite" class="plantsitefilter">
+                <option value="JTY">JTY</option>
+                <option value="CGTY">CGTY</option>
+                <option value="KKTY">KKTY</option>
+                    <option value="MSTY">MSTY</option> 
+                </select>-->    
+        
+             </div>    
 
             <div id="attendanceDIV">
                 <div id="table-scroll2">
                     <table id="attendanceTable" border="1" class="attendanceT">
+                    <caption><?php echo $_SESSION["documentNo"]; ?></caption>
                     <thead>
                     <tr id="firstrow">
                     <th style="width:20%">日付</th>
@@ -85,14 +95,9 @@ session_start();
                         
                         //read all row from database table
 
-                        //$sql = "SELECT * FROM '{$_SESSION["documentNo"]}'";
-                        // if (isset($_GET['documentNo']) && $_GET['documentNo'] != '')
-                        //{
-
                         $documentNo = $_SESSION["documentNo"];
                         $sql = "SELECT * FROM attendance where training_id = '$documentNo'";
-                        
-                        
+                                    
                         $result = $connection->query($sql);
 
                         if (!$result) {
@@ -108,7 +113,6 @@ session_start();
                             <td>" . $row["GID"] . "</td>
                             <td>" . $row["name_"] . "</td>
                             <td>" . $row["certification"] . "</td>
-                            
                             </tr>";
                         }
 
@@ -121,6 +125,11 @@ session_start();
                      ?>
             </div>
     </div>
+    <script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"
+  ></script>
+       
 </body>
 </html>
 
