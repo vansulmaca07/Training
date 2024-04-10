@@ -10,8 +10,6 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
     <title>Home</title>
-    <script type="text/javascript" src="home.js"></script>
-
 </head>
 <body>
     <div class="full">
@@ -48,9 +46,11 @@ session_start();
                 if($_SESSION["userlevel"] === "1") {
 
                 echo
-                 '<a href="newform.php" class = "btn2">新規作成</a>
+                 '
                  <a href="progress.php" class = "btn2">進捗状況</a>
+                 <a href="newform.php" class = "btn2">新規作成</a>
                  <a href="training.php" class = "btn2">訓練</a>
+                 <a href="approval.php" class = "btn2">承認</a>
                  <a href="idregistration.php" class = "btn2">IDカード登録</a>
                  <a href="" class = "btn2">ユーザー管理</a>';
                 }
@@ -60,17 +60,19 @@ session_start();
                 '<button class="btn4" onclick="displayRegForm()" disabled>新規作成</button></a>
                 <button class="btn4" onclick="displayProgress()" disabled>進捗状況</button></a>
                 <a href="training.php" class = "btn2">訓練</a>
+                <a href="approval.php" class = "btn4" disabled>承認</a>
                 <button class="btn4" onclick="regSignature()" disabled >Namelist Master</button></a>
                 <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
                 }
                 
                 else if ($_SESSION["userlevel"] === "2") {
                 echo 
-                '<a href="newform.php" class = "btn2">新規作成</a>
-                 <a href="progress.php" class = "btn2">進捗状況</a>
+                '<a href="progress.php" class = "btn2">進捗状況</a>
+                 <a href="newform.php" class = "btn2">新規作成</a>
                  <a href="training.php" class = "btn2">訓練</a>
+                 <a href="approval.php" class = "btn2">承認</a>
                  <a href="idregistration.php" class = "btn2">IDカード登録</a>
-                 <a href="" class = "btn4">ユーザー管理</a>';
+                 <a href="" class = "btn4" disabled>ユーザー管理</a>';
                 }
                 ?>
             </div>
