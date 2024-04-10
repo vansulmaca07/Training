@@ -1,9 +1,11 @@
 <?php
 
+session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $training_id = ($_POST["trainingDepartment"]) . ($_POST["trainingIdentifier"]);
-    $creationdepartment = ($_POST["departmentID"]);
+    $creationdepartment = $_SESSION["department"];
     $trainingname = ($_POST["educationID"]);
     $trainingloc = ($_POST["trainingLoc"]);
     $starttimereg = ($_POST["datetimeRegularStart"]);
@@ -31,7 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $audience = ($_POST["audienceID"]);
     $contents = ($_POST["contentsID"]);
     $usageid = ($_POST["usageID"]); 
-    $statusid = '1'; 
+    $statusid = '1';
+    $creator = $_SESSION["GID"]; 
 
     //attendance table
 
@@ -47,8 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
-        
         $query ="INSERT INTO training_form (
+            creator,
             document_id,
             creation_department,
             training_name,
@@ -82,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             )
 
         VALUES (
-            
+            :creator,
             :document_id,
             :creationdepartment,
             :trainingname,
@@ -117,6 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          
         $stmt = $pdo->prepare($query);
 
+        $stmt->bindParam(":creator", $creator);
         $stmt->bindParam(":document_id", $training_id);
         $stmt->bindParam(":creationdepartment", $creationdepartment);
         $stmt->bindParam(":trainingname", $trainingname);
