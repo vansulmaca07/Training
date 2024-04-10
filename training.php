@@ -1,7 +1,5 @@
 <?php
-    
     include_once 'navigation.php'
-
 ?>
 
 
@@ -14,8 +12,8 @@
                     <thead>
                     <tr id="firstrow">
                     <th style="width:15%">No</th>
-                    <th style="width:40%">ファイル名</th>
-                    <th style="width:20%">Description</th>
+                    <th style="width:30%">ファイル名</th>
+                    <th style="width:30%">Description</th>
                     <th style="width:25%">Completion</th>
 
                     </thead>
@@ -40,7 +38,7 @@
                         
                         $GIDsession = $_SESSION["GID"];
                         //$sql = "SELECT * FROM users where department = '$department';";
-                        $sql = "SELECT training_id, training_name, GID 
+                        $sql = "SELECT training_id, training_name, GID, contents 
                         FROM attendance
                         INNER JOIN training_form ON attendance.training_id = training_form.document_id
                         WHERE GIDh = '$GIDsession';";
@@ -57,7 +55,7 @@
                         echo "<tr>
                             <td>" . $row["training_id"] .  "</td>
                             <td>" . $row["training_name"] .  "</td>
-                            <td></td>
+                            <td>" . $row["contents"] .  "</td>
                             
                         ";
                         
