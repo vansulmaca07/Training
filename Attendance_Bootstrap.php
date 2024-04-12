@@ -26,31 +26,73 @@ session_start();
     .btn2 {
         background-color:rgba(4, 73, 129, 0.808);
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        
+    }
+    .btn2:hover {
+        opacity: 0.85;
     }
     .docuNo {
-        background-color: lightgoldenrodyellow;
-        font-size: 10px;
-        border-radius: 0.3rem;
-        padding: 5px 10px;
-        color: black; 
-        border: none;
-        overflow: hidden;
-    }   
+    background-color: lightgoldenrodyellow;
+    font-size: 10px;
+    border-radius: 0.3rem;
+    padding: 5px 10px;
+    color: black; 
+    border: none;
+    overflow: hidden;
+    width: 150px;
+    }
+    .form-control:focus {
+    border-color: #FF0000;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+    }
     </style>
     <title>Document</title>
     </head>
+
+    
 
 <body>
     <div class="container my-5">
     <h2 class="text-center">受講者</h2>
                     <h3 class="text-center"><?php echo $_SESSION["documentNo"]; ?></h3>
-
+                    <!--<div class="input-group mb-3">
                     <form action="includes/documentNo.inc.php" method="post">
-                    <input type="text" class="docuNo" name="documentNo" id="documentnumber"
+                    <input type="text" class="form-control-plaintext docuNo" name="documentNo" id="documentnumber"
                     value="" placeholder="Please enter the document number">    
-                    <button id="documentfilter" class="btn btn2" name="submit">SUBMIT</button> 
+                    <button id="documentfilter" class="btn btn2" name="submit">SUBMIT</button>   
+                    </div> -->
+
+                    <!--Document No-->
+                    <form action="includes/documentNo.inc.php" method="post">
+                    <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" placeholder="Document No." aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="<?php echo $_SESSION["documentNo"]; ?>" name ="documentNo">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit">SUBMIT</button>
+                    </div>
                     </form>
 
+                    <!--ID TAP-->
+
+                    <form action="includes/attendanceTap.php" method="post">
+                    <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" autofocus placeholder="Please TAP your ID" aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="" name ="rfid">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit">SUBMIT</button>
+                    </div>
+                    </form>
+
+                    <!--QR_Barcode-->
+
+                    <form action="includes/includes/BarAndQRscan.inc.php" method="post">
+                    <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" placeholder="Please scan your QR/Bar code" aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="" name ="GIDinput">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit">SUBMIT</button>
+                    </div>
+                    </form>
+
+                   
+                    <!--
                     <form action="includes/attendanceTap.php" method="POST">
                     <input type="text" autofocus class="docuNo" name="rfid" id="rfid" placeholder="Please Tap your ID">
                     <button id="submit" class="btn btn2" name="submit">SUBMIT</button>
@@ -60,7 +102,8 @@ session_start();
                     <input type="text" class="docuNo" name="GIDinput" id="GIDinput" placeholder="Please scan your QR/Bar code">
                     <button class="btn btn2" type="submit">SUBMIT</button>
                     </form>
-            
+                    -->
+
                     <table id="attendanceTable" border="1" class="table table-bordered table-hover rounded-3 overflow-hidden main-T">
                     <thead class="table text-center theadstyle">
                     <tr id="firstrow">
@@ -121,7 +164,6 @@ session_start();
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"></script> -->
     <!-- Bootstrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> 
-
 </body>
 </html>
 
