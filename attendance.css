@@ -1,156 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins',sans-serif;
-}
-html,body{
-    
-    height: 100%;
-    overflow-y: auto;
-}
 
-.attendanceDIV {
-    
-    display: flex;
-    flex-direction: column;
-    pad: 25px 25px;
-    border-radius: 20px;
-    box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
-    0 32px 64px -48px rgba(0,0,0,0.5);
-    width: 100%;
-    height: 150px;
-    font-size: 12px;
-    align-items: center;
-    justify-content: center;
-    
-}
 
-.submit{
-    
-    background: rgba(4, 73, 129, 0.808);
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .3s;
-    margin-top: 10px;
-    padding: 0px 10px;
-    font-size: 10px;
-    height: 25px;
-}
-
-.btn3 {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    background: rgba(4, 73, 129, 0.808);
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .3s;
-    margin-top: 10px;
-    padding: 0px 10px;
-    font-size: 10px;
-    height: 25px;
-    float: right;
-    margin-right: 5%;
-}
-
-.attendanceT {
-    text-align: center;
-    border-collapse: collapse;
-    border: none;
-    width: 100%;
-    margin: 25px 0;
-    font-size: 10px;
-    min-width: 400px;
-    border-radius: 5px 5px 0 0;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    margin: auto;   
-    margin-bottom: 20px;
-    position:relative;
-    width: 90%;
-}
-
-.attendanceT thead tr {
+.theadstyle {
     background-color:rgba(4, 73, 129, 0.808);
-    color: #ffffff;
-    text-align: center;
-    font-weight: bold;
-    height: 40px;
 }
-
-.attendanceT tbody tr {
-    border-bottom: 1px solid #dddddd;
-    height: 40px;
+.main-T {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.btn2 {
+    background-color:rgba(4, 73, 129, 0.808);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    height: 30px;
+    padding: 0px;
+    width: 70px;    
+}
+.btn2:hover {
+    opacity: 0.85;
+}
+.docuNo {
+background-color: lightgoldenrodyellow;
+font-size: 10px;
+border-radius: 0.3rem;
+padding: 5px 10px;
+color: black; 
+border: none;
+overflow: hidden;
+width: 150px;
+height: 30px;
 
 }
-
-.attendanceT tbody tr:nth-of-type(even) {
-    
-    height: 40px;
-
-}
-
-.attendanceT tbody tr.active-row {
-    font-weight: bold;
-    color: #009879;
-    height: 40px;
-}
+.form-control:focus {
+border-color: #FF0000;
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+} 
 
 #table-wrapper {
-    position:relative;
-    width: 90%;
-  }
-  #table-scroll2 {
-    height:400px;
-    overflow:auto;  
-    margin-top:20px;
-  }
-
-
-  h1 {
-    text-align: center;
-    font-size: large;
-    margin-top: 3rem;
+position:relative;
+width: 100%;
 }
-
-input {
-    background-color: lightgoldenrodyellow;
-    font-size: 10px;
-    border-radius: 0.3rem;
-    padding: 5px 10px;
-    color: black; 
-    border: none;
-    
+#table-scroll {
+height:250px;
+overflow:auto;  
+margin-top:20px;
 }
+#table-wrapper table {
+width:100%;
 
-.attendanceinput{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
 }
-
-.sign {
-    float: left;
-    
-    width: 45%;
-    margin-left: 5%;
-    
-}
-
-.plantsitefilter{
-    background-color: lightgoldenrodyellow;
-    font-size: 10px;
-    border-radius: 0.3rem;
-    padding: 5px 10px;
-    color: black; 
-    border: none;
-}
-
