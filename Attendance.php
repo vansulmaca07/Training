@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+include ('includes/dbh2.inc.php');
 ?>
 
 <!DOCTYPE html>
@@ -8,77 +10,72 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="attendance.css"> 
-
- <!--   <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-    /> -->
-  
     <!-- MDB 
-    <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css"
-    rel="stylesheet"
-    />  -->
-   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet"/>  -->
+
+    <!-- Bootstrap 5  --> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="attendance.css">
+
+    <!-- Bootstrap 5 Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
+
     <title>Document</title>
+    </head>
 
-</head>
+    
+
 <body>
-    <h1>受講者（製造）</h1>
-    <div class="try">
-        <div class="attendanceinput">
+    <div class="container my-5">
+        <h3 class="text-center">受講者</h3>
 
+            <!--Document No-->
             <form action="includes/documentNo.inc.php" method="post">
-            <input type="text" class="documentfilter" name="documentNo" id="documentnumber"
-            value="" placeholder="Please enter the document number">    
-            <button id="documentfilter" class="submit" name="submit">SUBMIT</button> 
-         <!--   <button class="btn btn-primary" name ="submit" data-mdb-ripple-init> 
-            <i class="fas fa-search"></i>
-            </button> -->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" placeholder="Document No." aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="<?php echo $_SESSION["documentNo"]; ?>" name ="documentNo">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><span class="bi-search"></span></button>
+                </div>
+            </form>            
+            
+            <!--ID TAP-->
+            <form action="includes/attendanceTap.php" method="post">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" autofocus placeholder="Please TAP your ID" aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="" name ="rfid">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-person-vcard"></i>
+                    </button>
+                </div>
             </form>
 
-            <form action="includes/attendanceTap.php" method="POST">
-            <input type="text" autofocus class="attendanceTap" name="rfid" id="rfid" placeholder="Please Tap your ID">
-            <button id="submit" class="submit" name="submit">SUBMIT</button>
-            </button>
-            </form>
-
-            <form action="includes/BarAndQRscan.inc.php" method="post">
-            <input type="text" class="documentfilter" name="GIDinput" id="GIDinput" placeholder="Please scan your QR/Bar code">
-            <button name="submit" class="submit" type="submit">SUBMIT</button>
-            <button type="button" class="btn btn-primary" data-mdb-ripple-init> 
-            <i class="fas fa-search"></i>
-            </button>
-            </form>
-            </div>
-
-            <div class="companyfilter"> <!--***RESERVED***-->
-
-                <!--<select name="plantsite" id="plantsite" class="plantsitefilter">
-                <option value="JTY">JTY</option>
-                <option value="CGTY">CGTY</option>
-                <option value="KKTY">KKTY</option>
-                    <option value="MSTY">MSTY</option> 
-                </select>-->    
+            <!--QR_Barcode-->
         
-             </div>    
+            <form action="includes/bar_qr_scan.inc.php" method="post">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control-plaintext docuNo" placeholder="Please scan your QR/Bar code" aria-label="Recipient's username" aria-describedby="button-addon2"
+                    value="" name ="GIDinput">
+                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-qr-code-scan"></i> / <i class="bi bi-upc-scan"></i></button>
+                </div>
+            </form>
 
-            <div id="attendanceDIV">
-                <div id="table-scroll2">
-                    <table id="attendanceTable" border="1" class="attendanceT">
-                    <caption><?php echo $_SESSION["documentNo"]; ?></caption>
-                    <thead>
-                    <tr id="firstrow">
-                    <th style="width:20%">日付</th>
-                    <th style="width:20%">所属</th>
-                    <th style="width:20%">GID</th>
-                    <th style="width:20%">氏名</th>
-                    <th style="width:20%">認定</th></tr>
-                    </thead>
+            <div id="table-wrapper">
+                <div id="table-scroll"> 
+                    <table id="attendanceTable" border="1" class="table table-bordered table-hover rounded-3 overflow-hidden main-T">
+                        <thead class="table text-center theadstyle">
+                            <tr id="firstrow">
+                                <th style="width:20%">日付</th>
+                                <th style="width:20%">所属</th>
+                                <th style="width:20%">GID</th>
+                                <th style="width:20%">氏名</th>
+                                <th style="width:20%">認定</th>
+                            </tr>
+                        </thead>
 
                     <?php
-                    $servername = "localhost";
+                        $servername = "localhost";
                         $username = "root";
                         $password = "";
                         $database = "trainingdb";
@@ -103,33 +100,40 @@ session_start();
                         if (!$result) {
                             die("Invalid Query: " . $connection->error);
                         }
-
                         //read data of each row
+
+
+
                         while ($row = $result->fetch_assoc()){
 
                         echo "<tr>
-                            <td>" . $row["date_id"] .  "</td>
-                            <td>" . $row["affiliation"] .  "</td>
-                            <td>" . $row["GID"] . "</td>
-                            <td>" . $row["name_"] . "</td>
-                            <td>" . $row["certification"] . "</td>
+                            <td class ='text-center'>" . $row["date_id"] .  "</td>
+                            <td class ='text-center'>" . $row["affiliation"] .  "</td>
+                            <td class ='text-center'>" . $row["GID"] . "</td>
+                            <td class ='text-center'>" . $row["name_"] . "</td>
+                            <td class ='text-center'>" . $row["certification"] . "</td>
                             </tr>";
                         }
 
                         ?>          
                     </table>
-                </div>
-                <?php      
-                    echo
-                     '<a href="includes/attendanceback.inc.php" class = "btn3" style="text-decoration:none;">BACK</a>';
-                     ?>
-            </div>
+                    </div>
+                    </div>
     </div>
-    <script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"
-  ></script>
-       
+    <div class="container my-5">
+        <?php      
+                    echo
+                     '<a class="btn btn2" href="includes/attendanceback.inc.php" role="button">BACK</a>';
+                     ?>
+        
+    </div>
+    <!-- MDB 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"></script> -->
+
+
+    <!--Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> 
+                        
 </body>
 </html>
 
