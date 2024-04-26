@@ -24,19 +24,22 @@ body {
     align-items: center;
 }
 .select-btn {
-    height: 65px;
-    padding: 0 20px;
+    height: 30px;
+    padding: 0 7.5px;
     border-radius: 7px;
-    font-size: 22px;
+    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    background-color: #fff;
+    background-color: lightgoldenrodyellow;
+    width: 140px;
+    
 }
 
+
 .select-btn i {
-    font-size: 31px;
+    font-size: 13px;
     transition: transform 0.3s linear;
 }
 
@@ -49,7 +52,8 @@ body {
     background: #fff;
     margin-top: 15px;
     border-radius: 7px;
-    padding: 20px;
+    padding: 10px;
+    width: 140px;
 }
 
 .content .search {
@@ -57,18 +61,18 @@ body {
 }
 
 .search i {
-    left: 15px;
+    left: 13px;
     color: #999;
-    font-size: 20px;
-    line-height: 53px;
+    font-size: 13px;
+    line-height: 30px;
     position: absolute;
 }
 
 .search input {
-    height: 53px;
+    height: 30px;
     width: 100%;
     outline: none;
-    font-size: 17px;
+    font-size: 13px;
     border-radius: 5px;
     padding: 0 15px 0 43px;
     border: 1px solid #b3b3b3;
@@ -84,9 +88,7 @@ body {
 .options li{
     height: 50px;
     padding: 0 13px;
-    font-size: 21px;
-
-
+    font-size: 13px;
     border-radius: 5px;
 }
 
