@@ -13,6 +13,6 @@ if ($_SESSION["userlevel"] === "generaluser") {
 
 else if ($_SESSION["userlevel"] === "administrator" or "user" or "leader") {
 
-    header("location: ../home.php");
+    header("location: ../progress.php");
     exit();
 }
