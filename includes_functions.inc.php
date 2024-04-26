@@ -79,9 +79,16 @@ function loginUser ($conn, $username, $pwd) {
         $_SESSION["department"] = $uidExists["department_id"];
         $_SESSION["group_"] = $uidExists["group_"];
         
-        
+        if ($_SESSION["userlevel"] === "1") {
         header("location: ../progress.php");
-        exit();
-    }
-}
+        }
+        else if ($_SESSION["userlevel"] === "2") {
+            header("location: ../progress.php");
+            }
+        else if ($_SESSION["userlevel"] === "3") {
+        header("location: ../training.php");
+        }
 
+        exit();
+        }
+    }
