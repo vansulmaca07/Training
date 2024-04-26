@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rfid = ($_POST["rfid"]);
     $documentNo = $_SESSION["documentNo"];
 
+    if($rfid !== "NULL") {
 
     try {
         require_once "dbh2.inc.php";
@@ -42,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = null;
         $stmt = null;
 
-        header("Location: ../Attendance.php");
+        header("Location: ../attendance.php");
 
         die();
 
@@ -51,8 +52,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 
     }
+
+}
+
+else {
+    print_r("Invalid ID");
+    header("Location: ../attendance.php");
+}
   
 }
 else {
-    header("Location: ../Attendance.php");
+    header("Location: ../attendance.php");
 }
