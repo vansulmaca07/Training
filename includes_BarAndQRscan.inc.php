@@ -19,9 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $query ="UPDATE attendance
                         
-        INNER JOIN signdb ON attendance.GIDh = signdb.GID
+        INNER JOIN users ON attendance.GIDh = users.GID
         SET
-            attendance.GID = signdb.GID
+            attendance.GID = users.GID
             
         WHERE
             attendance.GIDh = :GID
@@ -43,8 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare($query);
 
       
-        $stmt->bindParam("GID", $GID);
-        $stmt->bindParam("documentNo", $documentNo);
+        $stmt->bindParam(":GID", $GID);
+        $stmt->bindParam(":documentNo", $documentNo);
                      
         $stmt->execute();
 
@@ -64,5 +64,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
 }
 else {
-    header("Location: ../attendance.php");
+    header("Location: ../Attendance_Bootstrap.php");
 }
