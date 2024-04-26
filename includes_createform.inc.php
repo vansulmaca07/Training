@@ -28,14 +28,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $endtimeD = ($_POST["datetimeDEnd"]);
     $instructorD = ($_POST["instructorDID"]);
     $locationD = ($_POST["LocationD"]); 
-    $category = ($_POST["category"]);
     $purpose = ($_POST["purposeID"]);
     $audience = ($_POST["audienceID"]);
     $contents = ($_POST["contentsID"]);
     $usageid = ($_POST["usageID"]); 
     $statusid = '1';
-    $creator = $_SESSION["GID"]; 
+    $creator = $_SESSION["GID"];
+    $confirmation_by = ($_POST["confirmation_by"]);
+    $confirmation_date = ($_POST["confirmation_date"]); 
 
+    if(($_POST["category"]) === 'Other') {
+    $category = ($_POST["category_other_manual"]);
+    }
+    else {
+    $category = ($_POST["category"]);
+    }
     //attendance table
 
     $checked_array = ($_POST["GIDcheck"]);
@@ -81,7 +88,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             audience,
             contents,
             usage_id,
-            status_id 
+            status_id,
+            confirmation_by,
+            confirmation_date 
             )
 
         VALUES (
@@ -115,7 +124,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             :audience,
             :contents,
             :usageid, 
-            :statusid
+            :statusid,
+            :confirmation_by,
+            :confirmation_date
         );";
          
         $stmt = $pdo->prepare($query);
@@ -150,24 +161,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":audience", $audience);
         $stmt->bindParam(":contents", $contents);
         $stmt->bindParam(":usageid", $usageid);  
-        $stmt->bindParam(":statusid", $statusid); 
-                     
-        $stmt->execute(); 
+        $stmt->bindParam(":statusid", $statusid);
+        $stmt->bindParam(":confirmation_by", $confirmation_by); 
+        $stmt->bindParam(":confirmation_date", $confirmation_date);
 
+        $stmt->execute(); 
+         
         $query2 = "INSERT INTO attendance (GIDh,name_,training_id,affiliation) 
         VALUES (:GID,:firstname,:training_id,:department_name);";
 
         $stmt2 = $pdo->prepare($query2);
-
+        
         foreach ($GIDname as $key => $value) {
 
-        if(in_array($GIDname[$key], $checked_array)){
-        $stmt2->bindParam(":GID", $GIDname[$key]);
-        $stmt2->bindParam(":firstname", $firstname[$key]);
-        $stmt2->bindParam(":training_id", $training_id); 
-        $stmt2->bindParam(":department_name", $department_attendee[$key]);                       
-        $stmt2->execute();
-        }      
+            if(in_array($GIDname[$key], $checked_array)){
+            $stmt2->bindParam(":GID", $GIDname[$key]);
+            $stmt2->bindParam(":firstname", $firstname[$key]);
+            $stmt2->bindParam(":training_id", $training_id); 
+            $stmt2->bindParam(":department_name", $department_attendee[$key]);                       
+            $stmt2->execute();
+            }      
         }
 
         $query3= "UPDATE attendance 
