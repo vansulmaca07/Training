@@ -51,12 +51,8 @@
             </form>
             
             <?php
-
             echo 
-            '<a href="includes/attendanceuser.inc.php" class = "btn2" style="text-decoration:none;">サインアップ</a>';
-           // echo
-           // '<a href="includes/attendanceuser.inc.php" class = "btn2" style="text-decoration:none;">一般ユーザー</a>';
-    
+            '<a href="includes/attendanceuser.inc.php" class = "btn2" style="text-decoration:none;">一般ユーザー</a>';  
             ?>
         </div>
     </div>
