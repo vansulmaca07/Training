@@ -129,19 +129,22 @@
                                 </td>
                                 <td style="width:20%">
                                     <span>工程：</span>
-                                    <select style="height: 30px;" name="trainingDepartment" id="trainingDepartment">
-                                        <option value="SG">SG</option>
-                                        <option value="SBA">SBA</option>
-                                        <option value="P">P</option>
-                                        <option value="KT">KT</option>
-                                        <option value="SE">SE</option>
-                                        <option value="CRSE">CRSE</option>
-                                        <option value="ASE">ASE</option>
-                                        <option value="SBC">SBC</option>
-                                        <option value="SBA">SBA</op"tion>
-                                        <option value="SBN">SBN</option>
+                                    <select style="height: 30px;" name="trainingDepartment" id="trainingDepartment" required>
+                                    <option value="" disabled selected hidden>Select</option>
+                                        <?php
+                                        $query = "SELECT * FROM process_prefix
+                                        ;";
+                                        $stmt = $pdo->prepare($query);
+                                        $stmt->execute();
+                                        $result = $stmt->fetchAll();
+                                        $php_array = [];
+                                        foreach($result as $row)
+                                        {
+                                            echo "<option value= '$row[process_prefix]'>$row[process_prefix]</option>";
+                                        };
+                                        ?>
                                     </select>
-                                    <input type="text" name="trainingIdentifier" value="" style="width:25%">    
+                                    <!--<input type="text" name="trainingIdentifier" value="" style="width:25%">-->    
                                 </td>
                                 <td style="width:15%">
                                     <input type="radio" id="trainingLocInternal" name="trainingLoc" value="1" checked>
