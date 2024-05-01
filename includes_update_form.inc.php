@@ -4,7 +4,9 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $training_id = $_POST["training_id"];
+    $training_id = $_SESSION["training_id"];
+    $process_prefix = $_POST["process_prefix"];
+    $process_suffix = $_POST["process_suffix"];
     $creationdepartment = $_SESSION["department"];
     $trainingname = ($_POST["educationID"]);
     $trainingloc = ($_POST["trainingLoc"]);
@@ -54,15 +56,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             purpose = :purpose,
             audience = :audience, 
             usage_id = :usage_id,
-            contents = :contents
+            contents = :contents,
+            process_suffix = :process_suffix
+
 
         WHERE
-            document_id = :training_id
+            training_id = :training_id;
+        
+        UPDATE attendance
+        
+        SET
+            training_id = concat(:process_prefix, :process_suffix)
+
+        WHERE
+            training_id = :training_id;
+            
         ";
 
         $stmt = $pdo->prepare($query);
 
         $stmt->bindParam(":training_id", $training_id);
+        $stmt->bindParam(":process_prefix", $process_prefix);
+        $stmt->bindParam(":process_suffix", $process_suffix);
         $stmt->bindParam(":training_name", $trainingname);
         $stmt->bindParam(":area", $trainingloc);
         $stmt->bindParam(":start_time_regular", $starttimereg);
@@ -73,9 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":purpose", $purpose);
         $stmt->bindParam(":audience", $audience);
         $stmt->bindParam(":contents", $contents);
-        $stmt->bindParam(":usage_id", $usageid);  
+        $stmt->bindParam(":usage_id", $usageid);
+          
          
         $stmt->execute();
+
 
         $pdo = null;
         $stmt = null;
