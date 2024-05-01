@@ -4,7 +4,8 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $training_id = ($_POST["trainingDepartment"]) . ($_POST["trainingIdentifier"]);
+  //  $training_id = ($_POST["trainingDepartment"]);
+    $process_prefix = ($_POST["trainingDepartment"]);
     $creationdepartment = $_SESSION["department"];
     $trainingname = ($_POST["educationID"]);
     $trainingloc = ($_POST["trainingLoc"]);
@@ -59,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $query ="INSERT INTO training_form (
             creator,
-            document_id,
+            process_prefix,
             creation_department,
             training_name,
             area,
@@ -95,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         VALUES (
             :creator,
-            :document_id,
+            :process_prefix,
             :creationdepartment,
             :trainingname,
             :area,
@@ -132,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare($query);
 
         $stmt->bindParam(":creator", $creator);
-        $stmt->bindParam(":document_id", $training_id);
+        $stmt->bindParam(":process_prefix", $process_prefix);
         $stmt->bindParam(":creationdepartment", $creationdepartment);
         $stmt->bindParam(":trainingname", $trainingname);
         $stmt->bindParam(":area", $trainingloc);
@@ -166,23 +167,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":confirmation_date", $confirmation_date);
 
         $stmt->execute(); 
+
+        $query1a ="SELECT * FROM training_form ORDER BY date_created DESC LIMIT 1";
+
+        $stmt1a = $pdo->prepare($query1a);
+        $stmt1a->execute();
+        $result = $stmt1a->fetchAll();
+        foreach($result as $row)
+        {
+            $training_id=$row["training_id"];
+        }
          
-        $query2 = "INSERT INTO attendance (GIDh,name_,training_id,affiliation) 
-        VALUES (:GID,:firstname,:training_id,:department_name);";
+        $query2 = "INSERT INTO attendance (GIDh,name_,training_id,affiliation,sign_progress) 
+        VALUES (:GID,:firstname,:training_id,:department_name,:sign_progress);";
 
         $stmt2 = $pdo->prepare($query2);
+
+        $sign_progress = "1";
         
         foreach ($GIDname as $key => $value) {
 
             if(in_array($GIDname[$key], $checked_array)){
             $stmt2->bindParam(":GID", $GIDname[$key]);
             $stmt2->bindParam(":firstname", $firstname[$key]);
-            $stmt2->bindParam(":training_id", $training_id); 
+            $stmt2->bindParam(":training_id", $training_id);
+            $stmt2->bindParam(":sign_progress",$sign_progress); 
             $stmt2->bindParam(":department_name", $department_attendee[$key]);                       
             $stmt2->execute();
             }      
         }
-
+        
         $query3= "UPDATE attendance 
         INNER JOIN users ON
            attendance.GIDh = users.GID
@@ -195,6 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $pdo = null;
         $stmt = null;
+        $stmt1a = null;
         $stmt2= null;
         $stmr3= null;
         header("Location: ../progress.php");
