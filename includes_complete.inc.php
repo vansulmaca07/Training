@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
         INNER JOIN users ON attendance.GIDh = users.GID
         SET
-            attendance.GID = users.GID
+            attendance.sign_progress = '2'
             
         WHERE
             attendance.GIDh = :GID
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         WHERE 
             GIDh = :GID
         AND
-            training_id = :training_id;";
+            training_id = :training_id";
 
         $stmt = $pdo->prepare($query);
       
