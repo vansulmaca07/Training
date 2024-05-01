@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
         INNER JOIN users ON users.RFID = attendance.RFID
         SET
-            attendance.GID = users.GID
+            attendance.sign_progress = '2'
             
         WHERE
             attendance.RFID = :rfid
