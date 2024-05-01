@@ -4,13 +4,12 @@ session_start();
 
 include("dbh.inc.php");
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     $training_id = $_POST["training_id"];
 
     $sql = "SELECT * FROM training_form
-    where document_id = '$training_id';";
+    where training_id = '$training_id';";
                             
     $result = $conn->query($sql);
                             
@@ -20,8 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     while($row = $result->fetch_assoc()) {
 
+    $_SESSION["training_id"] = $row["training_id"];
     $_SESSION["training_name"] = $row["training_name"];
-    $_SESSION["training_id"] = $row["document_id"];
+    $_SESSION["process_prefix"] = $row["process_prefix"]; 
+    $_SESSION["process_suffix"] = $row["process_suffix"];
     $_SESSION["start_time_regular"] = $row["start_time_regular"];
     $_SESSION["end_time_regular"] = $row["end_time_regular"];
     $_SESSION["location_regular"] = $row["location_regular"];
@@ -34,8 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $_SESSION["area"] = $row["area"];
     
     header("location: ../editform.php");
-
-        
 
     exit();
     }
