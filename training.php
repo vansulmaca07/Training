@@ -1,95 +1,97 @@
-<?php
-    include_once 'navigation.php'
+<?php  
+    include_once 'navigation.php';
+    include("includes/dbh2.inc.php");
 ?>
 
-        <div class="training" id="training">
-            <div id="table-wrapper3">
-            <h4 style="text-align:center;">訓練</h4>
-                <div id="table-scroll3">
-                    <table id="trainingTable" border="1" class="trainingT">
-                        <thead>
-                            <tr id="firstrow">
-                                <th style="width:15%">No</th>
-                                <th style="width:30%">ファイル名</th>
-                                <th style="width:30%">Description</th>
-                                <th style="width:25%">Completion</th>
-                            </tr>
-                        </thead>
-
-                    <?php
-                    $servername = "localhost";
-                        $username = "root";
-                        $password = "";
-                        $database = "trainingdb";
-                        
-                        //Create connection
-
-                        $connection = new mysqli($servername, $username, $password, $database);
-
-                        //Check connection
-
-                        if ($connection->connect_error) {
-                            die("Connection failed: " . $connection->connect_error);
-                        }
-                        
-                        //read all row from database table
-                        
-                        $GIDsession = $_SESSION["GID"];
-                        //$sql = "SELECT * FROM users where department = '$department';";
-                        $sql = "SELECT training_id, training_name, GID, contents 
-                        FROM attendance
-                        INNER JOIN training_form ON attendance.training_id = training_form.document_id
-                        WHERE GIDh = '$GIDsession';";
-
-                        $result = $connection->query($sql);
-                        
-                        if (!$result) {
-                            die("Invalid Query: " . $connection->error);
-                        }
-
-                        //read data of each row
-                        while ($row = $result->fetch_assoc()){
-
-                        echo "<tr>
-                            <td>" . $row["training_id"] .  "</td>
-                            <td>" . $row["training_name"] .  "</td>
-                            <td>" . $row["contents"] .  "</td>
-                            
-                        ";
-                        
-                        if ($row["GID"]!==$GIDsession) {
-
-                            echo "
-                                <td>
-                                <form action = 'includes/complete.inc.php' method ='post' id='complete_training'>
-                                <input type='text' hidden name= 'training_id' value = '$row[training_id]'>
-                                <input type='text' hidden name= 'GIDfetch' value = '$GIDsession'>
-                                
-                                <button name='submit'>Complete</button>
-    
-                                </form>
-                                
-                                
-                                </td>";
-                            }
-                            else {
-                            echo "
-                                <td>
-                                完了
-                                </td>
-                            ";
-                            }
-                        }
-                        
-                        ?>   
-
-                    
-                    </table>
+        <div class="progress" id="progress">
+            <h4>進捗状況</h4>
+                <div id="table-wrapper">
+                    <div id="table-scroll"> 
+                        <table id="progressTable" border="1" class="table table-hover rounded-3 overflow-hidden progressT">
+                            <thead>
+                                <tr id="firstrow">
+                                    <th style="width:10%; vertical-align:middle;">No</th>
+                                    <th style="width:15%; vertical-align:middle;">作成者</th> <!--creator-->
+                                    <th style="width:20%; vertical-align:middle;">ファイル名</th>
+                                    <th style="width:15%; vertical-align:middle;">
+                                        <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">区分</a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <?php
+                                                    $query = "SELECT DISTINCT(category) FROM training_form
+                                                        ;";
+                                                    $stmt = $pdo->prepare($query);
+                                                    $stmt->execute();
+                                                    $result = $stmt->fetchAll();
+                                                    foreach($result as $row)
+                                                        {
+                                                ?>
+                                                    <div class="list-group-item checkbox">
+                                                        <label><input type="checkbox" class="common_selector category" value="
+                                                            <?php echo $row["category"];
+                                                            ?>
+                                                            "> <?php echo $row["category"];
+                                                                ?>
+                                                        </label>
+                                                    </div>
+                                                        <?php
+                                                        }
+                                                        ?> 
+                                            </ul>   
+                                    </th>
+                                    <th style="width:10%; vertical-align:middle;">使用資料</th>
+                                    <th style="width:10%; vertical-align:middle;">全体状態</th>
+                                    <th style="width:10%; vertical-align:middle;">進捗</th>
+                                    <th style="width:10%; vertical-align:middle;">【サイン進捗 </th>
+                                </tr>
+                            </thead>
+                            <tbody id="post_list2">
+                            </tbody>
+                        </table>        
+                    </div>
                 </div>
-            </div>
         </div>
     </div> <!--mainwrapper-->
 </div> <!--full-->
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  filter_data();
+
+  function filter_data() {
+     // $('.filter_data').html();
+      $('#post_list2').html();
+      var action = 'fetch_data';
+      var category = get_filter('category');
+    
+      $.ajax({
+          url: "includes/fetch_data_progress.inc.php",
+          method: "POST",
+          data: {action:action, category:category},
+          success:function(data){
+           // $('.filter_data').html(data);
+            $('#post_list2').html(data);
+          }
+      });
+  }
+
+  function get_filter(class_name)
+  {
+    var filter = [];
+    $('.'+class_name+':checked').each(function(){
+        filter.push($(this).val());
+    });
+
+    return filter;
+  }
+
+  $('.common_selector').click(function(){
+      filter_data();
+  });
+});
+
+</script>
 </body>
 </html>
 
