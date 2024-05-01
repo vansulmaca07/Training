@@ -23,6 +23,11 @@ include ('includes/dbh2.inc.php');
     <!-- Bootstrap 5 Font Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
 
+     <!--jQuery-->
+     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+
+
     <title>Document</title>
     </head>
 
@@ -42,10 +47,10 @@ include ('includes/dbh2.inc.php');
             </form>            
             
             <!--ID TAP-->
-            <form action="includes/attendanceTap.php" method="post">
+            <form action="includes/attendanceTap.php" method="post" autocomplete="off" >
                 <div class="input-group mb-3">
                     <input type="text" class="form-control-plaintext docuNo" autofocus placeholder="Please TAP your ID" aria-label="Recipient's username" aria-describedby="button-addon2"
-                    value="" name ="rfid">
+                    value="" name ="rfid" id="attendance_input">
                     <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-person-vcard"></i>
                     </button>
                 </div>
@@ -56,21 +61,20 @@ include ('includes/dbh2.inc.php');
             <form action="includes/bar_qr_scan.inc.php" method="post">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control-plaintext docuNo" placeholder="Please scan your QR/Bar code" aria-label="Recipient's username" aria-describedby="button-addon2"
-                    value="" name ="GIDinput">
+                    value="" name ="GIDinput" autocomplete="off">
                     <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-qr-code-scan"></i> / <i class="bi bi-upc-scan"></i></button>
                 </div>
             </form>
-
             <div id="table-wrapper">
                 <div id="table-scroll"> 
                     <table id="attendanceTable" border="1" class="table table-bordered table-hover rounded-3 overflow-hidden main-T">
                         <thead class="table text-center theadstyle">
                             <tr id="firstrow">
-                                <th style="width:20%">日付</th>
                                 <th style="width:20%">所属</th>
                                 <th style="width:20%">GID</th>
                                 <th style="width:20%">氏名</th>
-                                <th style="width:20%">認定</th>
+                                <th style="width:20%">サイン進捗</th>
+                                <th style="width:20%">完了日</th>
                             </tr>
                         </thead>
 
@@ -93,7 +97,9 @@ include ('includes/dbh2.inc.php');
                         //read all row from database table
 
                         $documentNo = $_SESSION["documentNo"];
-                        $sql = "SELECT * FROM attendance where training_id = '$documentNo'";
+                        $sql = "SELECT date_id, affiliation, GIDh, name_, status_name FROM attendance
+                            INNER JOIN status_ref on attendance.sign_progress = status_ref.status_id
+                            WHERE training_id = '$documentNo'";
                                     
                         $result = $connection->query($sql);
 
@@ -107,11 +113,12 @@ include ('includes/dbh2.inc.php');
                         while ($row = $result->fetch_assoc()){
 
                         echo "<tr>
-                            <td class ='text-center'>" . $row["date_id"] .  "</td>
+                            
                             <td class ='text-center'>" . $row["affiliation"] .  "</td>
-                            <td class ='text-center'>" . $row["GID"] . "</td>
+                            <td class ='text-center'>" . $row["GIDh"] . "</td>
                             <td class ='text-center'>" . $row["name_"] . "</td>
-                            <td class ='text-center'>" . $row["certification"] . "</td>
+                            <td class ='text-center'>" . $row["status_name"] . "</td>
+                            <td class ='text-center'>" . $row["date_id"] .  "</td>
                             </tr>";
                         }
 
@@ -133,7 +140,37 @@ include ('includes/dbh2.inc.php');
 
     <!--Bootstrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> 
-                        
+             
+   
+    <script type="text/javascript">  
+    
+    
+let inputStart, inputStop;
+
+$("#attendance_input")[0].onpaste = e => e.preventDefault();
+// handle a key value being entered by either keyboard or scanner
+var lastInput
+
+let checkValidity = () => {
+    if ($("#attendance_input").val().length < 10) {
+      $("#attendance_input").val('')
+  } else {
+   // $("body").append($('<div style="background:green;padding: 5px 12px;margin-bottom:10px;" id="msg">ok</div>'))
+  }
+  timeout = false
+}
+
+let timeout = false
+$("#attendance_input").keypress(function (e) {
+  if (performance.now() - lastInput > 1000) {
+    $("#attendance_input").val('')
+  }
+    lastInput = performance.now();
+    if (!timeout) {
+    timeout = setTimeout(checkValidity, 200)
+  }
+}); 
+</script>
 </body>
 </html>
 
