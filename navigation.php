@@ -23,6 +23,9 @@ include("includes/dbh2.inc.php");
     <!--Icon Scout-->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 
+    <!-- Bootstrap 5 Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
+
     <title>Home</title>
 </head>
 <body>
@@ -62,12 +65,12 @@ include("includes/dbh2.inc.php");
 
                 echo
                  '
-                 <a href="progress.php" class = "btn-34">進捗状況</a>
-                 <a href="newform.php" class = "btn-34">新規作成</a>
-                 <a href="training.php" class = "btn-34">訓練</a>
-                 <a href="approval.php" class = "btn-34">確認者確認・提出</a>
-                 <a href="idregistration.php" class = "btn-34">IDカード登録</a>
-                 <a href="" class = "btn-34">ユーザー管理</a>'
+                 <a href="progress.php" class = "btn-34"><span>進捗状況</span></a>
+                 <a href="newform.php" class = "btn-34"><span>新規作成</span></a>
+                 <a href="training.php" class = "btn-34"><span>訓練</span></a>
+                 <a href="approval.php" class = "btn-34"><span>確認者確認・提出</span></a>
+                 <a href="idregistration.php" class = "btn-34"><span>IDカード登録</span></a>
+                 <a href="" class = "btn-34"><span>ユーザー管理</span></a>'
                  ;
                 }
 
@@ -90,6 +93,7 @@ include("includes/dbh2.inc.php");
                  <a href="idregistration.php" class = "btn-34">IDカード登録</a>
                  <a href="" class = "btn4" disabled>ユーザー管理</a>';
                 }
+                
                 ?>
             </div>
         </div>
