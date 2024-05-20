@@ -2,7 +2,23 @@
 session_start();
 
 include ('includes/dbh2.inc.php');
+
+
+ $training_id = $_SESSION["documentNo"] ;
+
+
+ $query_contents = "SELECT * from training_form
+ where training_id = '$training_id'";
+ 
+ $stmt_contents = $pdo->prepare($query_contents);
+ $stmt_contents->execute();
+
+ $result_contents = $stmt_contents->fetchAll();
+ $usage_materials = '';
+ $training_name = '';
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,8 +32,8 @@ include ('includes/dbh2.inc.php');
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet"/>  -->
 
     <!-- Bootstrap 5  --> 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="attendance.css">
 
     <!-- Bootstrap 5 Font Icon CSS -->
@@ -35,105 +51,220 @@ include ('includes/dbh2.inc.php');
 
 <body>
     <div class="container my-5">
-        <h3 class="text-center">受講者</h3>
+    <h4  class="text-center">受講者</h4>
 
-            <!--Document No-->
-            <form action="includes/documentNo.inc.php" method="post">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control-plaintext docuNo" placeholder="Document No." aria-label="Recipient's username" aria-describedby="button-addon2"
-                    value="<?php echo $_SESSION["documentNo"]; ?>" name ="documentNo">
-                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><span class="bi-search"></span></button>
+            <div class="row row-cols-auto" style="margin-top: 30px;">
+                <div class="col">
+                    <!--Document No-->
+                    <form action="includes/documentNo.inc.php" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control-plaintext docuNo" placeholder="Document No." aria-label="Recipient's username" aria-describedby="button-addon2"
+                            value="<?php echo $_SESSION["documentNo"]; ?>" name ="documentNo">
+                            <button class="btn btn_search" type="submit" id="button-addon2" name="submit"><span class="bi-search"></span></button>
+                        </div>
+                    </form>
+                </div>            
+                <div class="col">  
+                    <!--ID TAP-->
+                    <form action="includes/attendanceTap.php" method="post" autocomplete="off" >
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control-plaintext docuNo" autofocus placeholder="Please TAP your ID" aria-label="Recipient's username" aria-describedby="button-addon2"
+                            value="" name ="rfid" id="attendance_input">
+                            <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-person-vcard"></i>
+                            </button>
+                        </div>
+                    </form>    
+                </div>  
+                    <!--QR_Barcode-->
+                <div class="col">
+                    <form action="includes/bar_qr_scan.inc.php" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control-plaintext docuNo" placeholder="Please scan your QR/Bar code" aria-label="Recipient's username" aria-describedby="button-addon2"
+                            value="" name ="GIDinput" autocomplete="off" id="bar_qr_input">
+                            <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-qr-code-scan"></i></button>
+                        </div>
+                    </form>
                 </div>
-            </form>            
-            
-            <!--ID TAP-->
-            <form action="includes/attendanceTap.php" method="post" autocomplete="off" >
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control-plaintext docuNo" autofocus placeholder="Please TAP your ID" aria-label="Recipient's username" aria-describedby="button-addon2"
-                    value="" name ="rfid" id="attendance_input">
-                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-person-vcard"></i>
-                    </button>
+                   <!--Reference Files-->
+                <div class="col">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    教育訓練の内容と教材
+                    </button>        
                 </div>
-            </form>
+            </div>
 
-            <!--QR_Barcode-->
-        
-            <form action="includes/bar_qr_scan.inc.php" method="post">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control-plaintext docuNo" placeholder="Please scan your QR/Bar code" aria-label="Recipient's username" aria-describedby="button-addon2"
-                    value="" name ="GIDinput" autocomplete="off">
-                    <button class="btn btn2" type="submit" id="button-addon2" name="submit"><i class="bi bi-qr-code-scan"></i> / <i class="bi bi-upc-scan"></i></button>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">
+                                 <?php 
+                                 
+                                 foreach ($result_contents as $contents_training_name) {
+
+                                        $training_name = $contents_training_name["training_name"]; 
+                                 }
+
+                                 
+                                 echo $training_name; ?>
+                                </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                            <div class="modal-body">
+                          
+
+                                    <?php
+                                   
+                                ?>
+
+                                <table class="table-reference-files" style="width:100%; height:50px;">
+                                    <thead>
+                                        <th style="width:100%;">
+                                        内容
+                                        </th>
+                                    </thead>
+                                        <td style="width:100%; height:50px;">
+
+                                    <?php
+                                         foreach ($result_contents as $contents) {
+                                    
+                                            echo $contents["contents"];
+                                            $usage_materials = $contents["usage_id"];
+                                            
+                                            
+                                            }
+                                    
+                                          
+                                    ?>
+                                        </td>
+                                                                    
+                                </table>
+
+                                <hr>
+                                    
+                                <table class="table-reference-files" style="width:100%; height:50px;">
+                                    <thead>
+                                        <th style="width:100%;">
+                                        研修教材
+                                        </th>
+                                    </thead>
+                                        <td style="width:100%; height:50px;">
+
+                                    <?php
+
+                                    echo $usage_materials . '<br>';
+                                          
+                                    ?>
+                                        </td>
+                                                                    
+                                </table>
+
+                                <hr>
+
+                                <table class="table-reference-materials">
+                                    <thead>
+                                        <tr>
+                                        <th>
+                                        使用資料	
+                                        </th>
+                                        <th>
+                                        
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                        
+
+                                        <?php
+                                        $query_materials = "SELECT * FROM file_storage WHERE training_id = '$training_id'";
+                                        
+                                        $stmt_materials = $pdo->prepare($query_materials);
+                                        $stmt_materials->execute();
+
+                                        $result_materials = $stmt_materials->fetchAll();
+
+                                       
+                                        foreach ($result_materials as $materials) {
+
+                                            $file_path = "includes/uploads/" . $materials['file_name'] . "." . $materials['file_ext'];
+                                            echo "<tr>
+                                            <td>
+                                                $materials[file_name]
+                                            </td>
+                                            <td >
+                                                <a href = $file_path class='btn btn-primary' download style ='vertical-align:middle;'><i style='vertical-align: middle;' class='bi bi-download'></i></a>
+                                                
+                                            </td>
+                                            </tr>
+                                            ";
+
+                                        }
+
+                                        ?>
+                                        
+                                        
+                                </table>
+                            </div>
+                           
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <!--  <button type="button" class="btn btn-primary">Understood</button> -->
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+
+
             <div id="table-wrapper">
                 <div id="table-scroll"> 
                     <table id="attendanceTable" border="1" class="table table-bordered table-hover rounded-3 overflow-hidden main-T">
-                        <thead class="table text-center theadstyle">
-                            <tr id="firstrow">
+                        <thead class="table text-center theadstyle" style="width: 100%; margin-bottom: 0;">
                                 <th style="width:20%">所属</th>
                                 <th style="width:20%">GID</th>
                                 <th style="width:20%">氏名</th>
-                                <th style="width:20%">サイン進捗</th>
-                                <th style="width:20%">完了日</th>
-                            </tr>
+                                <th style="width:20%">サイン進捗
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle"></a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <?php
+                                                $query = "SELECT DISTINCT(sign_progress), status_name FROM attendance
+                                                        inner join status_ref on status_id = sign_progress
+                                                            ;";
+                                                        $stmt = $pdo->prepare($query);
+                                                        $stmt->execute();
+                                                        $result = $stmt->fetchAll();
+                                                        foreach($result as $row)
+                                                            {
+                                            ?>
+                                                <div class="list-group-item checkbox">
+                                                    <label><input type="checkbox" class="common_selector sign_progress" value="
+                                                        <?php echo $row["status_name"];
+                                                        ?>
+                                                        "> <?php echo $row["status_name"];
+                                                            ?>
+                                                    </label>
+                                                </div>
+                                            <?php
+                                                            }
+                                            ?> 
+                                        </ul>   
+                                    </th>
+                                <th style="width:20%">完了日</th>                           
                         </thead>
-
-                    <?php
-                        $servername = "localhost";
-                        $username = "root";
-                        $password = "";
-                        $database = "trainingdb";
-                        
-                        //Create connection
-
-                        $connection = new mysqli($servername, $username, $password, $database);
-
-                        //Check connection
-
-                        if ($connection->connect_error) {
-                            die("Connection failed: " . $connection->connect_error);
-                        }
-                        
-                        //read all row from database table
-
-                        $documentNo = $_SESSION["documentNo"];
-                        $sql = "SELECT date_id, affiliation, GIDh, name_, status_name FROM attendance
-                            INNER JOIN status_ref on attendance.sign_progress = status_ref.status_id
-                            WHERE training_id = '$documentNo'";
-                                    
-                        $result = $connection->query($sql);
-
-                        if (!$result) {
-                            die("Invalid Query: " . $connection->error);
-                        }
-                        //read data of each row
-
-
-
-                        while ($row = $result->fetch_assoc()){
-
-                        echo "<tr>
-                            
-                            <td class ='text-center'>" . $row["affiliation"] .  "</td>
-                            <td class ='text-center'>" . $row["GIDh"] . "</td>
-                            <td class ='text-center'>" . $row["name_"] . "</td>
-                            <td class ='text-center'>" . $row["status_name"] . "</td>
-                            <td class ='text-center'>" . $row["date_id"] .  "</td>
-                            </tr>";
-                        }
-
-                        ?>          
+                            <tbody id="post_list2">
+                            </tbody>          
                     </table>
-                    </div>
-                    </div>
-    </div>
-    <div class="container my-5">
-        <?php      
+
+                    <?php      
                     echo
-                     '<a class="btn btn2" href="includes/attendanceback.inc.php" role="button">BACK</a>';
+                     '<a class="btn btn2" href="includes/attendanceback.inc.php" role="button" style = "vertical-align:middle;"><i class="bi bi-arrow-return-left"></i></a>';
                      ?>
-        
+                </div>
+            </div>  
     </div>
+  <!--  <div class="container my-5">
+       
+    </div> -->
     <!-- MDB 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"></script> -->
 
@@ -169,7 +300,75 @@ $("#attendance_input").keypress(function (e) {
     if (!timeout) {
     timeout = setTimeout(checkValidity, 200)
   }
-}); 
+});
+
+/****Interlock for Bar and QR Scanner 
+
+
+$("#bar_qr_input")[0].onpaste = e => e.preventDefault();
+// handle a key value being entered by either keyboard or scanner
+var lastInput2
+
+let checkValidity2 = () => {
+    if ($("#bar_qr_input").val().length < 10) {
+      $("#bar_qr_input").val('')
+  } else {
+   // $("body").append($('<div style="background:green;padding: 5px 12px;margin-bottom:10px;" id="msg">ok</div>'))
+  }
+  timeout2 = false
+}
+
+let timeout2 = false
+$("#bar_qr_input").keypress(function (e) {
+  if (performance.now() - lastInput2 > 1000) {
+    $("#bar_qr_input").val('')
+  }
+    lastInput2 = performance.now();
+    if (!timeout2) {
+    timeout2 = setTimeout(checkValidity2, 200)
+  }
+});  */
+
+
+
+//FILTERS
+
+$(document).ready(function() {
+
+filter_data();
+
+function filter_data() {
+    $('#post_list2').html();
+    var action = 'fetch_data';
+    var sign_progress = get_filter('sign_progress');
+  
+    $.ajax({
+        url: "includes/fetch_data_attendance.inc.php",
+        method: "POST",
+        data: {action:action, sign_progress:sign_progress},
+        success:function(data){
+          $('#post_list2').html(data);
+        }
+    });
+}
+
+function get_filter(class_name)
+{
+  var filter = [];
+  $('.'+class_name+':checked').each(function(){
+      filter.push($(this).val());
+  });
+
+  return filter;
+}
+
+$('.common_selector').click(function(){
+    filter_data();
+});
+});
+
+
+
 </script>
 </body>
 </html>
