@@ -7,38 +7,8 @@ $group_ = $_SESSION["group_"];
 $department = $_SESSION["department"]; 
 
 if(isset($_POST["action"])) {
-   // $query = "SELECT GID, name_, RFID, department_name, shift_description, group_, building
-   // FROM users
-   // INNER JOIN department on users.department_id = department.department_id
-   // INNER JOIN shift on users.shift_id = shift.shift_id
-   // WHERE users.group_ ='$group_'";
 
-    $query_count_complete = "SELECT sign_progress, count(*) from attendance WHERE training_id = 'SG001' and sign_progress = '2' GROUP BY sign_progress ORDER BY COUNT(*) DESC;
-    ";
-    $stmt_02 = $pdo->prepare($query_count_complete);
-    $stmt_02->execute();
-    $result_02 = $stmt_02->fetchAll();
-
-    $complete_count='';
-
-    foreach($result_02 as $row_02)
-    {
-        $row02["count(*)"]=$complete_count;
-    }
-
-    $query_count_total = "SELECT sign_progress, count(*) from attendance WHERE training_id = 'SG001' ;";
-    $stmt_03 = $pdo->prepare($query_count_total);
-    $stmt_03->execute();
-    $result_03 = $stmt_03->fetchAll();
-
-    $total_count='';
-
-    foreach($result_03 as $row_03)
-    {
-        $row_03["count(*)"]=$total_count;
-    }
-
-    $query = "SELECT training_id, training_name, status_name, creator, name_, category, usage_id
+    $query = "SELECT training_id, training_name, status_name, creator, name_, category, usage_id, date_created
     from training_form 
 
     inner join status_ref on training_form.status_id = status_ref.status_id
@@ -52,6 +22,8 @@ if(isset($_POST["action"])) {
        $query .= "AND training_form.category IN('".$category_filter."')";
     }
 
+    $query .= "ORDER BY training_form.date_created ASC";
+
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll();
@@ -61,25 +33,49 @@ if(isset($_POST["action"])) {
     {
         foreach($result as $row)
         {
+          
+            
+            $query_files =  "SELECT * FROM file_storage
+            where training_id = '$row[training_id]'";
+        
+            $stmt2 = $pdo->prepare($query_files);
+            $stmt2->execute();
+            $result2 = $stmt2->fetchAll();
+
+            $file_name = '';
+            $file_path = '';
+
+          
+
             $output .= 
                 "<tr>
                             <td style='vertical-align: middle;'><form action = 'includes/edit_form.inc.php' method ='post' id='edit_form'>
                             <input type='text' hidden name= 'training_id' value = '$row[training_id]'><button type='submit' class='btn-link'>" . $row["training_id"] .  "</button>
-                            </form></td>
+                            </form>
+                            </td>
                             <td style='vertical-align: middle;'>" . $row["name_"] .  "</td>
                             <td style='vertical-align: middle;'>" . $row["training_name"] .  "</td>
                             <td style='vertical-align: middle;'>" . $row["category"] .  "</td>
                             <td style='vertical-align: middle;'>" . $row["usage_id"] .  "</td>
+                            <td> ";
+
+            foreach($result2 as $row_file) {
+                $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
+            
+                $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
+
+                $output .= "<a href = $file_path download>$file_name</a><br>";
+                }
+
+           
+            
+            $output .= "
+                            </td>
                             <td style='vertical-align: middle;'>" . $row["status_name"] .  "</td>
                             <td style='vertical-align: middle;'>
-                                <div class='progress'>
-                                <div class='progress-bar progress-bar-striped progress-bar-animated bg-success' role='progressbar' style='width: 50%' aria-valuenow='25' aria-valuemin='0' aria-valuemax='100'></div>
-                                </div>
-                                </td>
-                            <td style='vertical-align: middle;'><form action='includes/documentNo.inc.php' method ='POST'>
-
+                            <form action='includes/documentNo.inc.php' method ='POST'>
                             <input type='text' hidden value='$row[training_id]' name='documentNo'>             
-                            <button type='submit' class='btn'>サイン</button>
+                            <button type='submit' class='btn-attendance'><span>サイン</span></button>
                             </form>
                             </td>
                 </tr>";
@@ -93,3 +89,5 @@ if(isset($_POST["action"])) {
     echo $output;
    
 }
+
+?>
