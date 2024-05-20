@@ -75,67 +75,83 @@ if(isset($_POST['submit'])) {
      //   }
         
    // }
-
-*/
-
+   */
     
+    $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt');
+    $file_name_checking = $_FILES['file']['name'];
+    $file_size_checking = $_FILES['file']['size'];
 
+    $file_name_check_actual_ext = array();
 
-    $allowed = array('jpg','jpeg','png','pdf');
+    foreach ($file_name_checking as $extension_files) {
 
-
-    if(in_array($file_actual_Ext, $allowed)) {
-
-        foreach ($_FILES['file']['tmp_name'] as $key => $value) {
-            $file_name = $_FILES['file']['name'][$key];
-            $file_tmp_name = $_FILES['file']['tmp_name'][$key];
-            $file_size = $_FILES['file']['size'][$key];
-            $file_error = $_FILES['file']['error'][$key];
-            $file_type = $_FILES['file']['type'][$key];
-
-            $file_ext = explode('.', $file_name);
-            $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
-            $file_actual_Ext = strtolower(end($file_ext));
-
-            $file_name_new = uniqid('',true).".".$file_actual_Ext; 
-
-            $file_destination = '../uploads/'.$file_name_new;
-
-            $result = move_uploaded_file($file_tmp_name, $file_destination);
-
-            $query = "INSERT INTO file_storage (
-                file_name,
-                file_size,
-                file_type,
-                file_name_unique,
-                file_ext
-                )
-                VALUES (
-                    :file_name, 
-                    :file_size, 
-                    :file_type,
-                    :file_name_unique,
-                    :file_ext
-                ) 
-            ";
-
-            $stmt=$pdo->prepare($query);
-            $stmt->bindParam(":file_name", $file_name_original);
-            $stmt->bindParam(":file_size", $file_size);
-            $stmt->bindParam(":file_type", $file_type);
-            $stmt->bindParam(":file_name_unique", $file_name_new);
-            $stmt->bindParam(":file_ext", $file_actual_Ext);
-
-            $stmt->execute();
-
-
-
-        }
-
-        if ($result) {
-            echo "Files uploaded successfully!";
-        }
-
+        $extension_actual = explode('.', $extension_files);
+        $file_actual_Ext = strtolower(end($extension_actual));
+        $file_name_check_actual_ext[] = $file_actual_Ext;
+        
     }
 
+    $file_name_check_ext = '';
+    $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
+ 
+    if($file_name_check_ext === true) {
+        if(max($file_size_checking) < 1000000) {
+            
+            foreach ($_FILES['file']['tmp_name'] as $key => $value) {
+                $file_name = $_FILES['file']['name'][$key];
+                $file_tmp_name = $_FILES['file']['tmp_name'][$key];
+                $file_size = $_FILES['file']['size'][$key];
+                $file_error = $_FILES['file']['error'][$key];
+                $file_type = $_FILES['file']['type'][$key];
+
+                $file_ext = explode('.', $file_name);
+                $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
+                $file_actual_Ext = strtolower(end($file_ext));
+                
+                $file_name_new = $file_name_orignal.".".$file_actual_Ext; 
+
+                $file_destination = 'uploads/'.$file_name_new;
+
+                $result = move_uploaded_file($file_tmp_name, $file_destination);
+
+                $query = "INSERT INTO file_storage (
+                    file_name,
+                    file_size,
+                    file_type,
+                    file_ext
+                    )
+                    VALUES (
+                        :file_name, 
+                        :file_size, 
+                        :file_type,
+                        :file_ext
+                    ) 
+                ";
+
+                $stmt=$pdo->prepare($query);
+                $stmt->bindParam(":file_name", $file_name_original);
+                $stmt->bindParam(":file_size", $file_size);
+                $stmt->bindParam(":file_type", $file_type);
+                $stmt->bindParam(":file_ext", $file_actual_Ext);
+
+                $stmt->execute();
+
+            }
+
+            if ($result) {
+                echo "Files uploaded successfully!";
+        
+            }
+        }
+
+        else {
+            echo "File Size is too large!";
+        }
+    
+    }
+
+    else {
+        echo "Please check the exension of files";
+    }
+ 
 }
