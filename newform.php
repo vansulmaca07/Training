@@ -100,8 +100,11 @@
 }
 </style>
         <div class="main" id="main">
+            
+       
             <div class="scroll" id="div-scroll">
-            <form action="includes/createform.inc.php" method="post">
+
+            <form action="includes/createform.inc.php" method="post" enctype="multipart/form-data">
 
                 <div  id="creationdepartment">
                     <h2><b>作成部署: <?php echo $_SESSION["department_name"]; ?>
@@ -115,7 +118,7 @@
                     </h2>
                 </div> 
                 <div id="mainrecord">
-                    <table id="mainrecordTable" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
+                    <table id="mainrecordTable" border="1" class="table table-sm table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tbody>
                             <tr style="width:100%">
                                 <td style="width:50%">
@@ -157,7 +160,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table id="mainrecordTable2" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
+                    <table id="mainrecordTable2" class="table table-hover table-sm rounded-3 overflow-hidden mainrecordT2">
                         <tr style="width:100%;">
                             <td style="width:12%;">
                                 <span>日勤者実施日時：</span>
@@ -216,7 +219,7 @@
 
                         <tr style="width:100%;">
                             <td style="width:12%;">
-                                <span>日勤者実施日時：</span>
+                                <span>Ａ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
                                 <input type="datetime-local" name="datetimeAStart" id="datetimeAStart" value="" >
@@ -272,7 +275,7 @@
 
                         <tr style="width:100%;">
                             <td style="width:12%;">
-                                <span>日勤者実施日時：</span>
+                                <span>Ｂ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
                                 <input type="datetime-local" name="datetimeBStart" id="datetimeRegularStart" value="">
@@ -328,7 +331,7 @@
 
                         <tr style="width:100%;">
                             <td style="width:12%;">
-                                <span>日勤者実施日時：</span>
+                                <span>Ｃ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
                                 <input type="datetime-local" name="datetimeCStart" id="datetimeRegularStart" value="">
@@ -384,7 +387,7 @@
 
                         <tr style="width:100%;">
                             <td style="width:12%;">
-                                <span>日勤者実施日時：</span>
+                                <span>Ｄ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
                                 <input type="datetime-local" name="datetimeDStart" id="datetimeRegularStart" value="" >
@@ -438,72 +441,6 @@
                             </td>
                         </tr>
                         
-
-                        <!--
-                        <tr>
-                            <td style="vertical-align:middle;">
-                                <span>Ａ班実施日時：</span>
-                            <td>
-                                <input type="datetime-local" name="datetimeAStart" id="datetimeAStart">
-                            </td>
-                            <td>
-                                <input type="datetime-local" name="datetimeAEnd" id="datetimeAEnd">
-                            </td>
-                            <td>場所：
-                                <input type="text" id="LocationA" name="LocationA" value="">
-                            </td>
-                                <td>講師：
-                                <input type="text" id="instructorAID" name="instructorAID" value="">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;">
-                                <span>Ｂ班実施日時：</span>
-                            <td>
-                                <input type="datetime-local" name="datetimeBStart" id="datetimeBStart">
-                            </td>
-                            <td>
-                                <input type="datetime-local" name="datetimeBEnd" id="datetimeBEnd">
-                            </td>
-                            <td>場所：
-                                <input type="text" id="LocationB" name="LocationB" value="">
-                            </td>
-                            <td>講師：
-                                <input type="text" id="instructorBID" name="instructorBID" value="">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;">
-                                <span>Ｃ班実施日時：</span>
-                            <td>
-                                <input type="datetime-local" name="datetimeCStart" id="datetimeCStart">
-                            </td>
-                            <td>
-                                <input type="datetime-local" name="datetimeCEnd" id="datetimeCEnd">
-                            </td>
-                            <td>場所：
-                                <input type="text" id="LocationC" name="LocationC" value="">
-                            </td>
-                            <td>講師：
-                                <input type="text" id="instructorCID" name="instructorCID" value="">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;">
-                                <span>Ｄ班実施日時：</span>
-                            <td>
-                                <input type="datetime-local" name="datetimeDStart" id="datetimeDStart">
-                            </td>
-                            <td>
-                                <input type="datetime-local" name="datetimeDEnd" id="datetimeDEnd">
-                            </td>
-                            <td>場所：
-                                <input type="text" id="LocationD" name="LocationD" value="">
-                            </td>
-                            <td>講師：
-                                <input type="text" id="instructorDID" name="instructorDID" value="">
-                            </td>
-                        </tr>-->
                     </table>
                 </div>
                 <div id="categoryDIV" class="categoryDIV">
@@ -559,20 +496,20 @@
                             <td colspan ="1" style="width:10%">対象者：</td>
                             <td style ="50%"><input type="text" name="audienceID" id="audienceID" value="" style="width:92%" required></td>
                             <td colspan ="1" style="width:2.5%">名:</td>
-                            <td style="width:2.5%"><span class="jqValue"></span></td>
+                            <td style="width:2.5%"><span class="jqValue" id="jqValue"></span><input type="text" id="count_value" name="count_value" hidden class="count_value" value=""></td>
                             <td style="width:35%"></td>
                         </tr>
                     </table>
                 </div>
                 <div id="participantsDIV" class="participantsDIV">
                     <caption><b>受講者（製造）</b></caption>        
-                    <table id="participantsTable" border="1" class="table table-hover rounded-3 overflow-hidden participantsT">
-                        <thead class="table text-center theadstyle">
-                            <tr id="firstrow">
-                                <th style="width:10%; vertical-align:middle;"><input type="checkbox" id="select_all" onClick="toggle(this)" onchange="count()" style="vertical-align:middle;">すべて選択</th>
-                                <th style="width:18%; vertical-align:middle;">GID</th>
-                                <th style="width:18%; vertical-align:middle;">名前</th>
-                                <th style="width:18%; vertical-align:middle;">
+                    <table id="participantsTable" border="1" class="table table-hover rounded-3 table-sm overflow-hidden participantsT">
+                        <thead class="table text-center theadstyle participants_thead" style="width: 98.5%;">
+                            <tr id="firstrow" style="height: 40px;">
+                                <th style="width:10%; vertical-align:middle;height:40px;"><input type="checkbox" id="select_all" onClick="toggle(this)" onchange="count()" style="vertical-align:middle;">すべて選択</th>
+                                <th style="width:18%; vertical-align:middle;height:40px;">GID</th>
+                                <th style="width:18%; vertical-align:middle;height:40px;">名前</th>
+                                <th style="width:18%; vertical-align:middle;height:40px;">
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Team</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
@@ -599,7 +536,7 @@
                                                     ?>        
                                         </ul>  
                                 </th>
-                                <th style="width:18%; vertical-align:middle;">
+                                <th style="width:18%; vertical-align:middle; height:40px;">
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">工程</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
@@ -626,7 +563,7 @@
                                                     ?> 
                                         </ul>  
                                 </th>
-                                <th style="width:18%; vertical-align:middle;">
+                                <th style="width:18%; vertical-align:middle; height:40px;">
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Building</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
@@ -649,13 +586,14 @@
                                                 </div>
                                                     <?php
                                                     }
-                                                    ?>
+                                                    ?> 
                                         </ul>   
                                 </th> 
                             </tr>
                         </thead>
-                        <tbody id="post_list">
+                        <tbody id="post_list" class="participants_tbody">
                         </tbody>
+                    
                     </table>          
                 </div> 
                 <div id="contentsDIV" class="contentsDIV">
@@ -670,7 +608,13 @@
                 <caption><b>使用資料（作業標準がある場合には、作業標準№を記入、ない場合には資料名等を記入）</b></caption>
                     <table id="usageTable" border="1" class="usageT">
                         <tr>
-                            <td><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required></textarea></td>
+                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required></textarea></td>
+                        </tr>
+                        <tr>
+                            
+                            <td style="justify-tems:center; width:45%;">訓練資料を追加(任意):<input type="file" name="file[]" multiple ></td>
+                        
+                            <td style="width: 60%;"></td>
                         </tr>
                     </table>
                 </div>
@@ -688,7 +632,20 @@
                         </tr>
                     </table>
                 </div>
-                    <button type="submit" class = "btn3" style="text-decoration:none;">Complete</button>
+                <div id="checker_comment_regular" class="checker_comment_regular_div">
+                    <caption style="text-align:center;"><b>教育効果の確認結果</b></caption>
+                    <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
+                        <tr>
+                            <td colspan="1" style="width:10%">日勤者：</td>
+                            <td colspan="3" style="width:90%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="" style="width:100%"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="width:100%"><input type="text" name="checker_comment_regular" id="checker_comment_regular"
+                             value="上記の人にインタビューを実施し、理解できたことを確認できました。" style="width:100%"></td>
+                        </tr>
+                    </table>
+                </div>
+                    <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;"><span>送信</span></button>
             </form>   
             </div>
         </div> <!--main-->
@@ -750,9 +707,9 @@ wrapper.classList.toggle("active");
 
 $(document).ready(function() {
 
-  filter_data();
+    filter_data();
   function filter_data() {
-      $('#post_list').html();
+      //$('#post_list').html();
       var action = 'fetch_data';
       var shift = get_filter('shift');
       var process = get_filter('process');
@@ -793,7 +750,11 @@ function toggle(source) {
 function count() {
 var checkedboxes = $('input[name="GIDcheck[]"]:checked').length;
 $('.jqValue').html(checkedboxes);
+
+document.getElementById("count_value").value = checkedboxes;
+
 }
+
 
 </script>
 
