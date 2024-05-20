@@ -50,8 +50,8 @@ td {
     flex-direction: column;
     pad: 25px 25px;
     border-radius: 20px;
-    box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
-    0 32px 64px -48px rgba(0,0,0,0.5);
+  /*  box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
+    0 32px 64px -48px rgba(0,0,0,0.5); */
     width: 100%;
     height: 450px;
     font-size: 15px;
@@ -89,6 +89,7 @@ td {
     overflow:auto;  
     margin-top:20px;
     width: 90%;
+    position: relative;
   }
 
 
@@ -210,6 +211,7 @@ td {
     vertical-align: middle;
 } */
 
+/*
 .btn{
     background-color: rgba(4, 73, 129, 0.808);
     color: white;
@@ -219,7 +221,7 @@ td {
     margin: 0px;
     
    
-}
+}*/
 
 .btn-register {
     
@@ -298,9 +300,45 @@ td {
     transition: 0.2s;
   }
 
+.btn-34 span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+
+.btn-34 span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.btn-34:hover span {
+    padding-right: 25px;
+  }
+  
+.btn-34:hover span:after {
+    opacity: 1;
+    right: 0;
+  } 
+
+a {
+    text-decoration: none;
+}
+
+/*
 .btn-34:hover{
     opacity: 0.82;
     color: black;
+} */
+
+
+.btn-34:hover{
+    
+    color: white;
 } 
 
 .btn-35 {
@@ -362,6 +400,7 @@ td {
     color: black;
 }
 
+/*
 .btn{
     background-color: rgba(4, 73, 129, 0.808);
     color: white;
@@ -370,6 +409,8 @@ td {
     vertical-align: middle;
     margin: 0px; 
 }
+
+*/
 .btn-register {   
     display: table-cell;
     vertical-align: middle;
@@ -396,6 +437,7 @@ td {
     width: 80%; 
 }
 
+/*
 .btn:hover{
     opacity: 0.82;
 }
@@ -403,7 +445,7 @@ td {
 .btn2:hover{
     opacity: 0.82;
 }
-
+*/
 /*************Create Registration Form******************/
 
 h2 {
@@ -701,6 +743,16 @@ text-align: center;
     text-align: center;
 }
 
+/* checker comment */
+
+
+.checker_comment_regular_div {
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+}
+
 
 /* Result */
 
@@ -986,24 +1038,7 @@ text-align: center;
   
   }
 
-  .btn3 {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    background: rgba(4, 73, 129, 0.808);
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .3s;
-    margin-top: 10px;
-    padding: 0px 10px;
-    font-size: 10px;
-    height: 25px;
-    float: right;
-    margin-right: 5%;
-}
+
 
 
 /****************NameList*****************/
@@ -1064,27 +1099,6 @@ text-align: center;
     width:100%;
   
   }
-
-  .btn3 {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    background: rgba(4, 73, 129, 0.808);
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .3s;
-    margin-top: 10px;
-    padding: 0px 10px;
-    font-size: 10px;
-    height: 25px;
-    float: right;
-    margin-right: 5%;
-}
-
-
 
 
 /*******Home********/
@@ -1161,3 +1175,287 @@ text-align: center;
 }
 
 /****SEARCH INSTRUCTOR ***********/
+
+.participants_tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
+}
+
+.participants_tbody {
+    display: block;
+    height: 450px;
+   /* overflow: auto; */
+    overflow-y: scroll;
+}
+
+.participants_thead tr {
+    display: table;
+    width: 100%;
+    
+}
+
+/****btn pdf*****/
+.btn-pdf {
+    background: rgba(4, 73, 129, 0.808);
+    border-radius: 5px;
+    box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-block: 15px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 150px;
+    word-break: break-word;
+    border: 0;
+    transition: 0.2s;
+  }
+
+.btn-pdf span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+
+.btn-pdf span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.btn-pdf:hover span {
+    padding-right: 25px;
+  }
+  
+.btn-pdf:hover span:after {
+    opacity: 1;
+    right: 0;
+    
+  } 
+
+.btn-pdf:hover{
+    
+    color: white;
+} 
+
+/*****btn-update*********/
+
+.btn-update {
+    background: rgba(4, 73, 129, 0.808);
+    border-radius: 5px;
+    box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-block: 15px; 
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 150px;
+    word-break: break-word;
+    border: 0;
+    transition: 0.2s;
+    float: right;
+    margin-bottom: 20px;
+  }
+
+.btn-update span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+
+.btn-update span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.btn-update:hover span {
+    padding-right: 25px;
+  }
+  
+.btn-update:hover span:after {
+    opacity: 1;
+    right: 0;
+    
+  } 
+
+.btn-update:hover{
+    
+    color: white;
+} 
+
+/*****btn-attendance*********/
+
+.btn-attendance {
+ /*   background: rgba(4, 73, 129, 0.808); */
+    background-color: rgb(50, 168, 236);
+    border-radius: 5px;
+    box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 5px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100px;
+    word-break: break-word;
+    border: 0;
+    transition: 0.2s;
+    float: right;
+  }
+
+.btn-attendance span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+
+.btn-attendance span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.btn-attendance:hover span {
+    padding-right: 25px;
+  }
+  
+.btn-attendance:hover span:after {
+    opacity: 1;
+    right: 0;
+    
+  } 
+
+.btn-attendance:hover{
+    
+    color: white;
+} 
+
+/*********button upload**********/
+
+.btn-upload {
+    background: rgba(4, 73, 129, 0.808);
+    border-radius: 5px;
+    box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 5px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100px;
+    word-break: break-word;
+    border: 0;
+    transition: 0.2s;
+    float: right;
+  }
+
+.btn-upload span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+
+.btn-upload span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.btn-upload:hover span {
+    padding-right: 25px;
+  }
+  
+.btn-upload:hover span:after {
+    opacity: 1;
+    right: 0;
+    
+  } 
+
+.btn-upload:hover{
+    
+    color: white;
+} 
+
+.custom-file-button input[type=file] {
+    margin-left: -2px !important;
+    
+  }
+  
+  .custom-file-button input[type=file]::-webkit-file-upload-button {
+  /*  display: none; */
+    background-color: #009879;
+  }
+  
+  .custom-file-button input[type=file]::file-selector-button {
+  display: none;
+  
+  }
+
+
+  
+  .custom-file-button:hover label {
+    background-color: #dde0e3; 
+    
+    cursor: pointer;
+  }
