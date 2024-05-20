@@ -14,12 +14,18 @@ body {
     width: 21cm;
     min-height: 29.7cm;
     padding: 1cm;
-    margin: 1cm auto;
+    margin-right: 1cm auto; 
+    margin-top: 0;
+    margin-bottom: 0;
     border: 1px #D3D3D3 solid;
     border-radius: 5px;
     background: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
+
+.test {
+  margin-top: 50px;
+}
   
   .subpage {
     /*padding: 1cm;*/
@@ -27,16 +33,17 @@ body {
     height: 256mm;
    /* outline: 1cm lightblue solid; */
   }
-  
+  /*
   @page {
     size: A4;
     margin: 0;
-  }
+  }*/
   
   @media print {
     .page {
       width: 210mm;
       height: 297mm;
+      height: 292mm;
     }
   }
 
@@ -88,3 +95,247 @@ table, th, td, caption {
   width: 100%;
   height:120px;
 }
+
+.attendance {
+  width: 100%;
+}
+.attendance-t-a td,th {
+  height: 25px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.attendance-t-b td,th {
+  height: 25px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.column-1-b {
+  float: left;
+  width: 50%;
+}
+
+.column-2-b {
+  float: right;
+  width: 50%;
+}
+
+
+/*************STAMP*************/
+
+
+.parent {
+  position: relative;
+  border: 1px solid black;
+  border-radius: 100px;
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  left: 5px;
+}
+
+.child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  align-items: center;
+  justify-content: center;
+  background-color: skyblue;
+  left: 20px;
+  
+}
+
+
+span-a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 2.1em;
+  font-size: 10px;
+}
+
+.parent::before,
+.parent::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: black;
+  
+}
+
+.parent::before {
+  top: 26px;
+}
+
+div::after {
+  top: 52px;
+}
+
+
+/**** PDF download button****/
+.btn-pdf {
+  background: rgba(4, 73, 129, 0.808);
+  box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: 15px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 180px;
+  word-break: break-word;
+  border: 0;
+  transition: 0.2s;
+  
+ 
+}
+
+.btn-pdf span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.btn-pdf span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.btn-pdf:hover span {
+  padding-right: 25px;
+}
+
+.btn-pdf:hover span:after {
+  opacity: 1;
+  right: 0;
+  
+} 
+
+.btn-pdf:hover{
+  
+  color: white;
+} 
+
+.digital-stamp {
+  width: 100%;
+  padding: 5%;
+}
+
+.input-creator {
+  width: 100%;
+}
+
+
+.input-creator-deployment {
+  width: 100%;
+}
+
+.input-creator-date {
+  width: 100%;
+}
+
+.input-approver {
+  width: 100%;
+}
+
+.input-left {
+  background-color: lightgoldenrodyellow;
+  font-size: 10px;
+  border-radius: 0.3rem;
+  margin: 0.5rem 0;
+  padding: 5px 10px;
+  color: black; 
+  border: none;
+  height: 30px;
+}
+
+.digital-stamp {
+  margin-top: 40px;
+}
+
+.btn-approve {
+  background: rgba(4, 73, 129, 0.808);
+  box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: 15px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 180px;
+  word-break: break-word;
+  border: 0;
+  transition: 0.2s;
+
+  height: 40px;
+}
+
+
+.btn-approve span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.btn-approve span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.btn-approve:hover span {
+  padding-right: 25px;
+}
+
+.btn-approve:hover span:after {
+  opacity: 1;
+  right: 0;
+  
+} 
+
+.btn-approve:hover{
+  
+  color: white;
+} 
