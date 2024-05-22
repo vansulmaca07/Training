@@ -1,6 +1,46 @@
 <?php
     include_once 'navigation.php';
-    $group_ = $_SESSION["group_"];   
+    $group_ = $_SESSION["group_"];
+    include_once 'includes/dbh2.inc.php';
+    $GID_creator = $_SESSION["GID"];
+    
+
+$query_previous = 
+    "SELECT * FROM training_form
+        WHERE 
+            creator = '$GID_creator'
+        ORDER BY date_created DESC LIMIT 1";
+
+$stmt_previous = $pdo->prepare($query_previous);
+$stmt_previous->execute();
+
+$result_previous_data = $stmt_previous->fetchAll();
+
+$training_name_prev = '';
+$process_prefix_prev = '';
+$instructor_regular_prev = '';
+$location_regular_prev = '';
+$purpose_prev = '';
+$audience_prev = '';
+$contents_prev = '';
+$usage_id_prev = '';
+
+
+foreach ($result_previous_data as $prev_data) {
+    $training_name_prev = $prev_data["training_name"];
+    $process_prefix_prev = $prev_data["process_prefix"];
+    $instructor_regular_prev = $prev_data["instructor_regular"];
+    $location_regular_prev = $prev_data["location_regular"];
+    $purpose_prev = $prev_data["purpose"];
+    $audience_prev = $prev_data["audience"];
+    $contents_prev = $prev_data["contents"];
+    $usage_id_prev = $prev_data["usage_id"];
+}
+
+
+
+
+
 ?>
     <!-----------REGISTRATION FORM----------->
 
@@ -126,7 +166,8 @@
                                     <input type="text"
                                     name="educationID"
                                     id="educationID"
-                                    value=""
+                                    value="<?php echo $training_name_prev; ?>"
+                                    
                                     style="width:90%"
                                     required>
                                 </td>
@@ -135,6 +176,11 @@
                                     <select style="height: 30px;" name="trainingDepartment" id="trainingDepartment" required>
                                     <option value="" disabled selected hidden>Select</option>
                                         <?php
+
+                                        if ($process_prefix_prev !== '') {
+                                            echo "<option value= '$process_prefix_prev' selected>$process_prefix_prev</option>";
+                                        }
+
                                         $query = "SELECT * FROM process_prefix
                                         ;";
                                         $stmt = $pdo->prepare($query);
@@ -175,17 +221,27 @@
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="LocationRegular" name="LocationRegular" value="" required>
+                                <input type="text" id="LocationRegular" name="LocationRegular" value="<?php echo $location_regular_prev; ?>" required>
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
                             </td>
                             <td>
-                                <input type="text" id="trial_input" name="instructorRegularID" value="" required hidden>
+                                <input type="text" id="trial_input" name="instructorRegularID" value="<?php
+                                    if($instructor_regular_prev!=='') {
+                                        echo $instructor_regular_prev;
+                                    }
+                                ?>" required hidden>
                             <!--SEARCH INSTRUCTOR-->
                                 <div class="wrapper">
                                     <div class="select-btn">        
-                                        <span class="instructor_input">選択講師</span>
+                                        <!--<span class="instructor_input">選択講師</span>-->
+                                        <span class="instructor_input"><?php   if($instructor_regular_prev!=='') {
+                                        echo $instructor_regular_prev;
+                                    }
+                                    else if ($instructor_regular_prev==='') {
+                                        echo "選択講師";
+                                    } ?></span>
                                         <i class="uil uil-angle-down"></i>
                                     </div>
                                     <div class="content" style="position:absolute;">
@@ -195,6 +251,10 @@
                                         </div>
                                         <ul class="options">
                                         <?php
+
+                                          
+
+                                           
                                                 $query = "SELECT name_ from users
                                                     WHERE userlevel ='2'
                                                     ;";
@@ -209,6 +269,7 @@
                                                     //    ";
                                                         $php_array[]=$row["name_"];
                                                     }
+                                                
                                             ?>
                                         </ul>
                                     </div>
@@ -448,23 +509,24 @@
                     <table id="categoryTable" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tbody>
                             <tr>
+                          <!--  Quality
                                 <td style="width:25%">
-                                    <input type="radio" id="categoryQuality" name="category" value="品質" checked> <!--Quality-->
+                                    <input type="radio" id="categoryQuality" name="category" value="品質" checked>
                                     <label for="categoryQuality">品質</label>
-                                </td>
+                                </td> 
                                 <td style="width:25%">
                                     <input type="radio" 
                                     id="categoryEnvironment"
                                     name="category" 
                                     value="環境">
-                                    <label for="categoryEnvironment">環境</label> <!--Environment-->
+                                    <label for="categoryEnvironment">環境</label> Environment
                                 </td>
                                 <td style="width:25%">
                                     <input type="radio" 
                                     id="categorySafetyAndHygiene" 
                                     name="category" 
                                     value="安全衛生">
-                                    <label for="categorySafetyAndHygiene">安全衛生</label> <!--Safety and Hygiene-->
+                                    <label for="categorySafetyAndHygiene">安全衛生</label> Safety and Hygiene
                                 </td>
                                 <td style="width:25%">
                                     <div>
@@ -480,7 +542,46 @@
                                         placeholder="PLEASE SPECIFY"
                                         style="width:70%">
                                     </div>
-                                </td>   
+                                </td> -->
+
+                                <td style="width:25%">
+                                    <input type="checkbox" id="categoryQuality" name="category_quality" value="1" checked> <!--Quality-->
+                                    <label for="categoryQuality">品質</label>
+                                </td> 
+
+                                <td style="width:25%">
+                                    <input type="checkbox" 
+                                    id="categoryEnvironment"
+                                    name="category_environment" 
+                                    value="1">
+                                    <label for="categoryEnvironment">環境</label> <!--Environment-->
+                                </td>
+
+                                <td style="width:25%">
+                                    <input type="checkbox" 
+                                    id="categorySafetyAndHygiene" 
+                                    name="category_safety_and_hygiene" 
+                                    value="1">
+                                    <label for="categorySafetyAndHygiene">安全衛生</label> <!--Safety and Hygiene-->
+                                </td>
+
+                                <td style="width:25%">
+                                    <div>
+                                        <input type="checkbox" 
+                                        id="categoryOther" 
+                                        name="category_others" 
+                                        value="1">
+                                        <label for="categoryOther">その他</label>
+                                        <input type="text" 
+                                        id="categoryOtherManual" 
+                                        value="" 
+                                        name="category_others_manual" 
+                                        placeholder="PLEASE SPECIFY"
+                                        style="width:70%">
+                                    </div>
+                                </td> 
+
+
                             </tr>
                         </tbody>
                     </table>        
@@ -490,11 +591,11 @@
                     <table id="purposeTable" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">目的：</td>
-                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="" style="width:96%" required></td>
+                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="<?php echo $purpose_prev;?>" style="width:96%" required></td>
                         </tr>
                         <tr>
                             <td colspan ="1" style="width:10%">対象者：</td>
-                            <td style ="50%"><input type="text" name="audienceID" id="audienceID" value="" style="width:92%" required></td>
+                            <td style ="50%"><input type="text" name="audienceID" id="audienceID" value="<?php echo $audience_prev;?>" style="width:92%" required></td>
                             <td colspan ="1" style="width:2.5%">名:</td>
                             <td style="width:2.5%"><span class="jqValue" id="jqValue"></span><input type="text" id="count_value" name="count_value" hidden class="count_value" value=""></td>
                             <td style="width:35%"></td>
@@ -506,7 +607,7 @@
                     <table id="participantsTable" border="1" class="table table-hover rounded-3 table-sm overflow-hidden participantsT">
                         <thead class="table text-center theadstyle participants_thead" style="width: 98.5%;">
                             <tr id="firstrow" style="height: 40px;">
-                                <th style="width:10%; vertical-align:middle;height:40px;"><input type="checkbox" id="select_all" onClick="toggle(this)" onchange="count()" style="vertical-align:middle;">すべて選択</th>
+                                <th style="width:10%; vertical-align:middle;height:40px;"><input type="checkbox"  id="select_all" onClick="toggle(this)" onchange="count()" style="vertical-align:middle;">すべて選択</th>
                                 <th style="width:18%; vertical-align:middle;height:40px;">GID</th>
                                 <th style="width:18%; vertical-align:middle;height:40px;">名前</th>
                                 <th style="width:18%; vertical-align:middle;height:40px;">
@@ -600,7 +701,7 @@
                 <caption><b>内容</b></caption>
                     <table id="contentsTable" border="1" class="contentsT">
                         <tr>
-                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required></textarea></td>
+                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php echo $contents_prev;?></textarea></td>
                         </tr>
                     </table>
                 </div>
@@ -608,7 +709,7 @@
                 <caption><b>使用資料（作業標準がある場合には、作業標準№を記入、ない場合には資料名等を記入）</b></caption>
                     <table id="usageTable" border="1" class="usageT">
                         <tr>
-                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required></textarea></td>
+                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required><?php echo $usage_id_prev;?></textarea></td>
                         </tr>
                         <tr>
                             
@@ -622,7 +723,7 @@
                     <caption style="text-align:center;"><b>教育効果の確認方法、確認予定日</b></caption>
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
-                            <td colspan="4" style="width:100%"><input type="text" name="confirmation_by" id="confirmation_by_id" value="" style="width:100%" required></td>
+                            <td colspan="4" style="width:100%"><input type="text" name="confirmation_by" id="confirmation_by_id" value="インタビュー式による確認" style="width:100%" required></td>
                         </tr>
                         <tr>
                             <td colspan="1" style="width:25%; vertical-align:middle;">最終確認予定日：</td>
@@ -706,6 +807,8 @@ wrapper.classList.toggle("active");
 
 
 $(document).ready(function() {
+
+   
 
     filter_data();
   function filter_data() {
