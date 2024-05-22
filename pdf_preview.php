@@ -379,7 +379,7 @@ foreach ($result_07 as $result_approval) {
                             <tr>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category"]==='品質'){
+                                <?php if ($_SESSION["category_quality"]==='1'){
                                         echo "checked";
                                     }
                                     
@@ -390,7 +390,7 @@ foreach ($result_07 as $result_approval) {
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category"]==='環境'){
+                                <?php if ($_SESSION["category_environment"]==='1'){
                                         echo "checked";
                                     }
                                     
@@ -401,7 +401,7 @@ foreach ($result_07 as $result_approval) {
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category"]==='安全衛生'){
+                                <?php if ($_SESSION["category_safety_and_hygiene"]==='1'){
                                         echo "checked";
                                     }
                                     
@@ -412,7 +412,7 @@ foreach ($result_07 as $result_approval) {
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category"]!=='安全衛生' && $_SESSION["category"]!=='品質' && $_SESSION["category"]!=='安全衛生'){
+                                <?php if ($_SESSION["category_others"]==='1'){
                                         echo "checked";
                                     }
                                     
@@ -420,8 +420,8 @@ foreach ($result_07 as $result_approval) {
                                     
                                     >
                                     <span>その他:
-                                    <?php if ($_SESSION["category"]!=='安全衛生' && $_SESSION["category"]!=='品質' && $_SESSION["category"]!=='安全衛生'){
-                                        echo $_SESSION["category"];
+                                    <?php if ($_SESSION["category_others"]==='1'){
+                                        echo $_SESSION["category_others_manual"];
                                     }
                                     
                                     ?>
@@ -1000,9 +1000,38 @@ window.onload =function() {
 
     var training_id = '<?php echo $training_id; ?>';
     var training_name = '<?php echo $_SESSION["training_name"]; ?>';
-    var category = '<?php echo $_SESSION["category"]; ?>';
+    var category_quality = '<?php echo $_SESSION["category_quality"]; ?>';
+    var cat_q = '';
+    if(category_quality === '1' ) {
+        cat_q = '品質';
+    }
 
-    var file_name_try = training_id.concat("_",date_file_name,"_",training_name,"(",category,")"); 
+
+    var cat_en = '';
+    var category_environment = '<?php echo $_SESSION["category_environment"]; ?>';
+    if(category_environment === '1' ) {
+        cat_en = '環境';
+    }
+
+    var cat_sh = '';
+    var category_safety_and_hygiene = '<?php echo $_SESSION["category_safety_and_hygiene"]; ?>';
+    if(category_safety_and_hygiene === '1' ) {
+        cat_sh = '安全衛生';
+    }
+
+    var cat_o = '';
+    var category_others = '<?php echo $_SESSION["category_others"]; ?>';
+    if(category_others === '1' ) {
+        cat_o = 'その他';
+    }
+
+    var cat_name = '';
+    var category_others_manual = '<?php echo $_SESSION["category_others_manual"]; ?>';
+    if(category_others === '1' ) {
+        cat_name = category_others_manual;
+    }
+
+    var file_name_try = training_id.concat("_",date_file_name,"_",training_name,"(",cat_q,cat_en,cat_sh,cat_o,cat_name,")"); 
 
     console.log(file_name_try);
 
