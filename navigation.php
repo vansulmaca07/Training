@@ -68,7 +68,6 @@ include("includes/dbh2.inc.php");
                  <a href="progress.php" class = "btn-34"><span>進捗状況</span></a>
                  <a href="newform.php" class = "btn-34"><span>新規作成</span></a>
                  <a href="training.php" class = "btn-34"><span>訓練</span></a>
-                 <a href="approval.php" class = "btn-34"><span>確認者確認・提出</span></a>
                  <a href="idregistration.php" class = "btn-34"><span>IDカード登録</span></a>
                  <a href="" class = "btn-34"><span>ユーザー管理</span></a>'
                  ;
@@ -79,7 +78,6 @@ include("includes/dbh2.inc.php");
                 '<button class="btn4" onclick="displayRegForm()" disabled>新規作成</button></a>
                 <button class="btn4" onclick="displayProgress()" disabled>進捗状況</button></a>
                 <a href="training.php" class = "btn-34">訓練</a>
-                <button class="btn4" onclick="regSignature()" disabled >確認者確認・提出</button></a>
                 <button class="btn4" onclick="regSignature()" disabled >IDカード登録</button></a>
                 <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
                 }
@@ -89,7 +87,6 @@ include("includes/dbh2.inc.php");
                 '<a href="progress.php" class = "btn-34">進捗状況</a>
                  <a href="newform.php" class = "btn-34">新規作成</a>
                  <a href="training.php" class = "btn-34">訓練</a>
-                 <a href="approval.php" class = "btn-34">確認者確認・提出</a>
                  <a href="idregistration.php" class = "btn-34">IDカード登録</a>
                  <a href="" class = "btn4" disabled>ユーザー管理</a>';
                 }
