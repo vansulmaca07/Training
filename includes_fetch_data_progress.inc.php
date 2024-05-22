@@ -57,20 +57,20 @@ if(isset($_POST["action"])) {
                             <td style='vertical-align: middle;'>" . $row["training_name"] .  "</td>
                             <td style='vertical-align: middle;'>" . $row["category"] .  "</td>
                             <td style='vertical-align: middle;'>" . $row["usage_id"] .  "</td>
-                            <td> ";
+                           ";
 
-            foreach($result2 as $row_file) {
+        /*    foreach($result2 as $row_file) {
                 $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
             
                 $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
 
-                $output .= "<a href = $file_path download>$file_name</a><br>";
+                $output .= " <td> <a href = $file_path download>$file_name</a><br></td>";
                 }
 
-           
+           */
             
             $output .= "
-                            </td>
+                            
                             <td style='vertical-align: middle;'>" . $row["status_name"] .  "</td>
                             <td style='vertical-align: middle;'>
                             <form action='includes/documentNo.inc.php' method ='POST'>
