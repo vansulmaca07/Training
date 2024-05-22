@@ -39,7 +39,6 @@
                                             </ul>   
                                     </th>
                                     <th style="width:10%; vertical-align:middle;">使用資料</th> <!--Training References-->
-                                    <th style="width:15%; vertical-align:middle;">研修教材 </th><!--Training Materials---> 
                                     <th style="width:15%; vertical-align:middle;">全体状態</th> <!--Category-->
                                    <!-- <th style="width:10%; vertical-align:middle;">進捗</th> -->
                                     <th style="width:15%; vertical-align:middle;">【サイン進捗 </th>
