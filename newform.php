@@ -166,7 +166,7 @@ foreach ($result_previous_data as $prev_data) {
                                     <input type="text"
                                     name="educationID"
                                     id="educationID"
-                                    value="<?php echo $training_name_prev; ?>"
+                                    value="<?php /* echo $training_name_prev; */?>"
                                     
                                     style="width:90%"
                                     required>
@@ -215,7 +215,7 @@ foreach ($result_previous_data as $prev_data) {
                                 <input type="datetime-local" name="datetimeRegularStart" id="datetimeRegularStart" value="" required>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeRegularEnd" id="datetimeRegularEnd" value="" required>
+                                <input type="datetime-local" name="datetimeRegularEnd" id="datetimeRegularEnd" value=""  required>
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
@@ -545,23 +545,26 @@ foreach ($result_previous_data as $prev_data) {
                                 </td> -->
 
                                 <td style="width:25%">
-                                    <input type="checkbox" id="categoryQuality" name="category_quality" value="1" checked> <!--Quality-->
+                                    <input type="checkbox" id="categoryQuality"
+                                    
+                                    name="category[]"
+                                    value="1"> <!--Quality-->
                                     <label for="categoryQuality">品質</label>
                                 </td> 
 
                                 <td style="width:25%">
                                     <input type="checkbox" 
                                     id="categoryEnvironment"
-                                    name="category_environment" 
-                                    value="1">
+                                    name="category[]" 
+                                    value="2">
                                     <label for="categoryEnvironment">環境</label> <!--Environment-->
                                 </td>
 
                                 <td style="width:25%">
                                     <input type="checkbox" 
                                     id="categorySafetyAndHygiene" 
-                                    name="category_safety_and_hygiene" 
-                                    value="1">
+                                    name="category[]" 
+                                    value="3">
                                     <label for="categorySafetyAndHygiene">安全衛生</label> <!--Safety and Hygiene-->
                                 </td>
 
@@ -569,8 +572,8 @@ foreach ($result_previous_data as $prev_data) {
                                     <div>
                                         <input type="checkbox" 
                                         id="categoryOther" 
-                                        name="category_others" 
-                                        value="1">
+                                        name="category[]" 
+                                        value="4">
                                         <label for="categoryOther">その他</label>
                                         <input type="text" 
                                         id="categoryOtherManual" 
@@ -591,7 +594,7 @@ foreach ($result_previous_data as $prev_data) {
                     <table id="purposeTable" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">目的：</td>
-                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="<?php echo $purpose_prev;?>" style="width:96%" required></td>
+                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="<?php /*echo $purpose_prev; */?>" style="width:96%" required></td>
                         </tr>
                         <tr>
                             <td colspan ="1" style="width:10%">対象者：</td>
@@ -701,7 +704,7 @@ foreach ($result_previous_data as $prev_data) {
                 <caption><b>内容</b></caption>
                     <table id="contentsTable" border="1" class="contentsT">
                         <tr>
-                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php echo $contents_prev;?></textarea></td>
+                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php /* echo $contents_prev; */?></textarea></td>
                         </tr>
                     </table>
                 </div>
@@ -709,7 +712,7 @@ foreach ($result_previous_data as $prev_data) {
                 <caption><b>使用資料（作業標準がある場合には、作業標準№を記入、ない場合には資料名等を記入）</b></caption>
                     <table id="usageTable" border="1" class="usageT">
                         <tr>
-                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required><?php echo $usage_id_prev;?></textarea></td>
+                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required><?php /*echo $usage_id_prev; */?></textarea></td>
                         </tr>
                         <tr>
                             
@@ -738,7 +741,8 @@ foreach ($result_previous_data as $prev_data) {
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">日勤者：</td>
-                            <td colspan="3" style="width:90%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="" style="width:100%"></td>
+                            <td colspan="2" style="width:65%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="" style="width:100%"></td>
+                            <td colspan="1" style="width:25%"><input type="datetime-local" name="checker_date_regular" id="checker_date_regular" value="" style="width:90%"></td>
                         </tr>
                         <tr>
                             <td colspan="4" style="width:100%"><input type="text" name="checker_comment_regular" id="checker_comment_regular"
@@ -746,7 +750,7 @@ foreach ($result_previous_data as $prev_data) {
                         </tr>
                     </table>
                 </div>
-                    <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;"><span>送信</span></button>
+                    <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;" id="checkBtn"><span>送信</span></button>
             </form>   
             </div>
         </div> <!--main-->
@@ -756,6 +760,7 @@ foreach ($result_previous_data as $prev_data) {
 <!-----SCRIPT------>
 
 <script type="text/javascript">
+
 
 /** Search Instructor **/
 const wrapper = document.querySelector(".wrapper"),
@@ -802,16 +807,21 @@ selectBtn.addEventListener("click", () => {
 wrapper.classList.toggle("active");
 });
 
-
 /**Participants **/
-
 
 $(document).ready(function() {
 
-   
+    $('#checkBtn').click(function() {
+        checked = $('input[name="GIDcheck[]"]:checked').length;
+
+        if(!checked) {
+            alert("You must select at least one participant");
+            return false;
+        }
+    });
 
     filter_data();
-  function filter_data() {
+    function filter_data() {
       //$('#post_list').html();
       var action = 'fetch_data';
       var shift = get_filter('shift');
@@ -842,6 +852,9 @@ $(document).ready(function() {
       filter_data();
   });
 });
+
+
+
 
 function toggle(source) {
     checkboxes = document.getElementsByName('GIDcheck[]');
