@@ -25,7 +25,7 @@
             <div id="table-wrapper3">
             <h4 style="text-align:center;">訓練</h4>
                 <div id="table-scroll3">
-                    <table id="trainingTable" border="1" class="trainingT">
+                    <table id="trainingTable" border="1" class="table trainingT">
                         <thead>
                             <tr id="firstrow">
                                 <th style="width:15%">No</th>
@@ -108,123 +108,7 @@
                     
                     </table>
 
-                      <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">
-                                        <?php 
-                                        
-                                        foreach ($result_contents as $contents_training_name) {
-
-                                                $training_name = $contents_training_name["training_name"]; 
-                                        }
-
-                                        
-                                        echo $training_name; ?>
-                                        </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                    <div class="modal-body">
-                                
-
-                                            <?php
-                                        
-                                        ?>
-
-                                        <table class="table-reference-files" style="width:100%; height:50px;">
-                                            <thead>
-                                                <th style="width:100%;">
-                                                内容
-                                                </th>
-                                            </thead>
-                                                <td style="width:100%; height:50px;">
-
-                                            <?php
-                                                foreach ($result_contents as $contents) {
-                                            
-                                                    echo $contents["contents"];
-                                                    $usage_materials = $contents["usage_id"];
-                                                    
-                                                    
-                                                    }
-                                            
-                                                
-                                            ?>
-                                                </td>
-                                                                            
-                                        </table>
-
-                                        <hr>
-                                            
-                                        <table class="table-reference-files" style="width:100%; height:50px;">
-                                            <thead>
-                                                <th style="width:100%;">
-                                                研修教材
-                                                </th>
-                                            </thead>
-                                                <td style="width:100%; height:50px;">
-
-                                            <?php
-
-                                            echo $usage_materials . '<br>';
-                                                
-                                            ?>
-                                                </td>
-                                                                            
-                                        </table>
-
-                                        <hr>
-
-                                        <table class="table-reference-materials">
-                                            <thead>
-                                                <th>
-                                                使用資料	
-                                                </th>
-                                                <th>
-
-                                                </th>
-                                            </thead>
-                                                
-
-                                                <?php
-                                                $query_materials = "SELECT * FROM file_storage WHERE training_id = '$training_id'";
-                                                
-                                                $stmt_materials = $pdo->prepare($query_materials);
-                                                $stmt_materials->execute();
-
-                                                $result_materials = $stmt_materials->fetchAll();
-
-                                                
-                                                foreach ($result_materials as $materials) {
-
-                                                    $file_path = "includes/uploads/" . $materials['file_name'] . "." . $materials['file_ext'];
-                                                    echo "
-                                                    <td>
-                                                        $materials[file_name]
-                                                    </td>
-                                                    <td>
-                                                        <a href = $file_path class='btn btn-primary' download style ='vertical-align:middle;'><i style='vertical-align: middle;' class='bi bi-download'></i></a>
-                                                        
-                                                    </td>
-                                                    ";
-
-                                                }
-
-                                                ?>
-                                                
-                                                </td>
-                                        </table>
-                                    </div>
-                                
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Understood</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
