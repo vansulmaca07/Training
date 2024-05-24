@@ -1,95 +1,47 @@
-<?php  
-    include_once 'navigation.php';
-    include("includes/dbh2.inc.php");
-?>
+<?php
 
-        <div class="progress" id="progress">
-            <h4>進捗状況</h4>
-                <div id="table-wrapper">
-                    <div id="table-scroll"> 
-                        <table id="progressTable" border="1" class="table table-hover rounded-3 overflow-hidden progressT">
-                            <thead>
-                                <tr id="firstrow">
-                                    <th style="width:10%; vertical-align:middle;">No</th>
-                                    <th style="width:15%; vertical-align:middle;">作成者</th> <!--creator-->
-                                    <th style="width:10%; vertical-align:middle;">ファイル名</th>
-                                    <th style="width:10%; vertical-align:middle;">
-                                        <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">区分</a>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                <?php
-                                                    $query = "SELECT DISTINCT(category) FROM training_form
-                                                        ;";
-                                                    $stmt = $pdo->prepare($query);
-                                                    $stmt->execute();
-                                                    $result = $stmt->fetchAll();
-                                                    foreach($result as $row)
-                                                        {
-                                                ?>
-                                                    <div class="list-group-item checkbox">
-                                                        <label><input type="checkbox" class="common_selector category" value="
-                                                            <?php echo $row["category"];
-                                                            ?>
-                                                            "> <?php echo $row["category"];
-                                                                ?>
-                                                        </label>
-                                                    </div>
-                                                        <?php
-                                                        }
-                                                        ?> 
-                                            </ul>   
-                                    </th>
-                                    <th style="width:10%; vertical-align:middle;">使用資料</th> <!--Training References-->
-                                    <th style="width:15%; vertical-align:middle;">全体状態</th> <!--Category-->
-                                   <!-- <th style="width:10%; vertical-align:middle;">進捗</th> -->
-                                    <th style="width:15%; vertical-align:middle;">【サイン進捗 </th>
-                                </tr>
-                            </thead>
-                            <tbody id="post_list2">
-                            </tbody>
-                        </table>        
-                    </div>
-                </div>
-        </div>
-    </div> <!--mainwrapper-->
-</div> <!--full-->
+session_start();
 
-<script type="text/javascript">
+include("dbh.inc.php");
 
-$(document).ready(function() {
 
-  filter_data();
 
-  function filter_data() {
-      $('#post_list2').html();
-      var action = 'fetch_data';
-      var category = get_filter('category');
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+
+    $training_id = $_POST["training_id_pdf"];
     
-      $.ajax({
-          url: "includes/fetch_data_progress.inc.php",
-          method: "POST",
-          data: {action:action, category:category},
-          success:function(data){
-            $('#post_list2').html(data);
-          }
-      });
-  }
+    $sql = "SELECT training_id, training_name, process_prefix, process_suffix,
+    start_time_regular, end_time_regular, location_regular, instructor_regular,
+    category, purpose, contents, usage_id, audience, area, department_name FROM training_form
+    
+    INNER JOIN department on training_form.creation_department = department.department_id 
+    where training_id = '$training_id';";
+                            
+    $result = $conn->query($sql);
+                            
+    if (!$result) {
+    die("Invalid Query: " . $connection->error);
+    }
 
-  function get_filter(class_name)
-  {
-    var filter = [];
-    $('.'+class_name+':checked').each(function(){
-        filter.push($(this).val());
-    });
+    while($row = $result->fetch_assoc()) {
+    
+    $_SESSION["creation_department"] = $row["department_name"];
+    $_SESSION["training_id"] = $row["training_id"];
+    $_SESSION["training_name"] = $row["training_name"];
+    $_SESSION["process_prefix"] = $row["process_prefix"]; 
+    $_SESSION["process_suffix"] = $row["process_suffix"];
+    $_SESSION["start_time_regular"] = $row["start_time_regular"];
+    $_SESSION["end_time_regular"] = $row["end_time_regular"];
+    $_SESSION["location_regular"] = $row["location_regular"];
+    $_SESSION["instructor_regular"] = $row["instructor_regular"];
+    $_SESSION["category"] = $row["category"];
+    $_SESSION["purpose"] = $row["purpose"];
+    $_SESSION["contents"] = $row["contents"];
+    $_SESSION["usage_id"] = $row["usage_id"];
+    $_SESSION["audience"] = $row["audience"];
+    $_SESSION["area"] = $row["area"];
+    
+    header("location: ../pdf_preview.php");
 
-    return filter;
-  }
-
-  $('.common_selector').click(function(){
-      filter_data();
-  });
-});
-
-</script>
-</body>
-</html>
-
+    exit();
+    }
