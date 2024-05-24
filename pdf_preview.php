@@ -4,7 +4,13 @@ session_start();
 
 include('includes/dbh2.inc.php');
 
-$training_id = $_SESSION["training_id"];
+$training_id = '';
+if(isset($_GET["training_id"])) {
+    $training_id = $_GET["training_id"];
+}
+else {
+    $training_id = $_SESSION["training_id"];
+}
 
 $query = "SELECT date_id, affiliation, GIDh, name_, judgement_name FROM attendance
 INNER JOIN judgement on attendance.judgement = judgement.id
@@ -72,7 +78,13 @@ $total_row_06 = $stmt_06->rowCount();
 $result_06 = $stmt_06->fetchAll();
 
 
-$query_07 = "SELECT * FROM training_form
+$query_07 = "SELECT approval, approval_date, modified_date, status_id, creator, training_name, area, start_time_regular, end_time_regular, location_regular, instructor_regular,
+        category_quality, category_environment, category_safety_and_hygiene, category_others, category_others_manual, purpose, count_, audience, contents, usage_id, confirmation_by,
+        confirmation_date, checker_people_regular, checker_comment_regular, name_, checker_date_regular
+     FROM training_form
+
+     INNER JOIN users ON users.GID = training_form.creator
+
     WHERE training_id = '$training_id'";
 
 $stmt_07 = $pdo->prepare($query_07);
@@ -90,7 +102,48 @@ foreach ($result_07 as $result_approval) {
     $approval_date = $result_approval["approval_date"];
     $modified_date = $result_approval["modified_date"];
     $status_id = $result_approval["status_id"];
+    $training_creator = $result_approval["name_"];
+    $training_name = $result_approval["training_name"];
+    $area = $result_approval["area"];
+    $start_time_regular = $result_approval["start_time_regular"];
+    $end_time_regular = $result_approval["end_time_regular"];
+    $location_regular = $result_approval["location_regular"];
+    $instructor_regular = $result_approval["instructor_regular"];
+    $category_quality = $result_approval["category_quality"];
+    $category_environment = $result_approval["category_environment"];
+    $category_safety_and_hygiene = $result_approval["category_safety_and_hygiene"];
+    $category_others = $result_approval["category_others"];
+    $category_others_manual = $result_approval["category_others_manual"];
+    $purpose = $result_approval["purpose"];
+    $count_ = $result_approval["count_"];
+    $audience = $result_approval["audience"];
+    $contents = $result_approval["contents"];
+    $usage_id = $result_approval["usage_id"];
+    $confirmation_by = $result_approval["confirmation_by"];
+    $confirmation_date = $result_approval["confirmation_date"];
+    $checker_people_regular = $result_approval["checker_people_regular"];
+    $checker_comment_regular = $result_approval["checker_comment_regular"];
+    $checker_date_regular = $result_approval["checker_date_regular"];
+}
+
+
+$query_08 = "SELECT category.category_id, category_name FROM category
     
+INNER JOIN category_ref on
+    category_ref.category_id = category.category_id
+    
+WHERE training_id = '$training_id'";
+
+$stmt_08 = $pdo->prepare($query_08);
+
+$stmt_08->execute();
+
+$result_cat = $stmt_08->fetchAll();
+
+$category = array ();
+
+foreach ($result_cat as $categories) {
+    $category[] = $categories["category_id"];
 }
 ?>
 
@@ -131,7 +184,7 @@ foreach ($result_07 as $result_approval) {
                 <br>
                 <span>氏名</span>
                 <input type="text"
-                value="<?php echo $_SESSION["training_creator"];?>"
+                value="<?php echo $training_creator;?>"
                 id="input-creator"
                 class="input-creator input-left"
                 onkeyup="input_data();"
@@ -160,7 +213,7 @@ foreach ($result_07 as $result_approval) {
             </div>
 
             <?php
-            if ($approval === '1' && $status_id === '3') {
+            if ($approval === '1' && $status_id === '4') {
 
             echo "
             <form action='includes/approval.inc.php' method='POST'>
@@ -201,7 +254,7 @@ foreach ($result_07 as $result_approval) {
                             </div>
                         </div>
                         <div class="header-2" style="width:27%; text-align:center;">
-                            <span style=""><u>NO.<?php echo $_SESSION["training_id"];?></u></span>
+                            <span style=""><u>NO.<?php echo $training_id;?></u></span>
                             <table style="width:100%; margin-top:5px;">
                                 <tr>
                                     <td style="width:50%; text-align:center;">
@@ -241,7 +294,7 @@ foreach ($result_07 as $result_approval) {
                                     </td>
                                     <td style="height:75px;  align-items: center; justify-content: center;">
                                     
-                                    <div class="parent">
+                                    <div class="parent" style = "display:flex;">
                                         <div class="child">
                                             <span-a id="deployment_creator">製造部</span-a>
                                             <span-a id="date_created"></span-a>
@@ -259,11 +312,11 @@ foreach ($result_07 as $result_approval) {
                         <table id="main_record" class="main_record" style="width:100%; margin-top: 10px;">
                             <tr>
                                 <td style="width:70%;">
-                                    <span>名称：<?php echo $_SESSION["training_name"];?></span>
+                                    <span>名称：<?php echo $training_name;?></span>
                                 </td>
                                 <td style="width:15%; text-align:center;"> 
                                     <input type="checkbox" 
-                                    <?php if ($_SESSION["area"]==='1'){
+                                    <?php if ($area ==='1'){
                                         echo "checked";
                                     }
                                     
@@ -273,7 +326,7 @@ foreach ($result_07 as $result_approval) {
                                 </td>
                                 <td style="width:15%; text-align:center;">
                                 <input type="checkbox"
-                                    <?php if ($_SESSION["area"]==='2'){
+                                    <?php if ($area ==='2'){
                                         echo "checked";
                                     }
                                     
@@ -291,16 +344,16 @@ foreach ($result_07 as $result_approval) {
                                     <span>日勤者実施日時：</span>
                                 </td>
                                 <td style="width:20%; text-align:center;"> 
-                                    <span style="font-size:12px;"><?php echo $_SESSION["start_time_regular"]; ?></span>
+                                    <span style="font-size:12px;"><?php echo $start_time_regular; ?></span>
                                 </td>
                                 <td style="width:20%; text-align:center;">
-                                    <span style="font-size:12px;"><?php echo $_SESSION["end_time_regular"]; ?></span>
+                                    <span style="font-size:12px;"><?php echo $end_time_regular; ?></span>
                                 </td>
                                 <td style="width:20%;">
-                                    <span style="">場所：</span><span style="font-size:10px;"><?php echo $_SESSION["location_regular"]; ?></span>
+                                    <span style="">場所：</span><span style="font-size:10px;"><?php echo $location_regular; ?></span>
                                 </td>
                                 <td style="width:20%;">
-                                    <span style="">講師：</span><span style="font-size:12px;"><?php echo $_SESSION["instructor_regular"]; ?></span>
+                                    <span style="">講師：</span><span style="font-size:12px;"><?php echo $instructor_regular; ?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -379,49 +432,33 @@ foreach ($result_07 as $result_approval) {
                             <tr>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category_quality"]==='1'){
-                                        echo "checked";
-                                    }
-                                    
-                                    ?>
+                                <?php if(in_array(1,$category)) {echo 'checked';}?>
                                     
                                     >
                                     <span>品質</span>
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category_environment"]==='1'){
-                                        echo "checked";
-                                    }
-                                    
-                                    ?>
+                                <?php if(in_array(2,$category)) {echo 'checked';}?>
                                     
                                     >
                                     <span>環境</span>                                   
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category_safety_and_hygiene"]==='1'){
-                                        echo "checked";
-                                    }
-                                    
-                                    ?>
+                                <?php if(in_array(3,$category)) {echo 'checked';}?>
                                     
                                     >
                                 <span>安全衛生</span>                               
                                 </td>
                                 <td style="width:25%; text-align:center;">
                                 <input type="checkbox"
-                                <?php if ($_SESSION["category_others"]==='1'){
-                                        echo "checked";
-                                    }
-                                    
-                                    ?>
+                                <?php if(in_array(4,$category)) {echo 'checked';}?>
                                     
                                     >
                                     <span>その他:
-                                    <?php if ($_SESSION["category_others"]==='1'){
-                                        echo $_SESSION["category_others_manual"];
+                                    <?php if ($category_others ==='1'){
+                                        echo $category_others_manual;
                                     }
                                     
                                     ?>
@@ -436,15 +473,15 @@ foreach ($result_07 as $result_approval) {
                         <table id="purpose_table" class="purpose_table" style="width:100%">
                             <tr>
                                 <td colspan="2" style="width:100%;">
-                                    <span>目的：<?php echo $_SESSION["purpose"]; ?></span>
+                                    <span>目的：<?php echo $purpose; ?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width:25%;">
-                                    <span>対象者：<?php echo $_SESSION["audience"]; ?></span>
+                                    <span>対象者：<?php echo $audience; ?></span>
                                 </td>
                                 <td style="width:25%;">
-                                    <span>名：<?php echo $_SESSION["count_"]; ?></span>                                   
+                                    <span>名：<?php echo $count_; ?></span>                                   
                                 </td>
                             </tr>
                         </table>
@@ -454,7 +491,7 @@ foreach ($result_07 as $result_approval) {
                         <table id="contents_table" class="contents_table" style="width:100%">
                             <tr>
                                 <td style="width:100%; height: 70px;">
-                                    <span><?php echo $_SESSION["contents"]; ?></span>
+                                    <span><?php echo $contents; ?></span>
                                 </td>
                             </tr>
                         </table>
@@ -468,7 +505,7 @@ foreach ($result_07 as $result_approval) {
                             </tr>
                             <tr>
                                 <td style="width:100%; height: 40px;">
-                                    <span><?php echo $_SESSION["usage_id"]; ?></span>
+                                    <span><?php echo $usage_id; ?></span>
                                 </td>
                             </tr>
                         </table>
@@ -478,12 +515,12 @@ foreach ($result_07 as $result_approval) {
                         <table id="methods_schedule_table" class="methods_schedule_table" style="width:100%">
                             <tr>
                                 <td style="width:100%;">
-                                    <span><?php echo $_SESSION["confirmation_by"]; ?></span>
+                                    <span><?php echo $confirmation_by; ?></span>
                                 </td> 
                             </tr>
                             <tr>
                                 <td style="width:100%;">
-                                    <span>最終確認予定日：<?php echo $_SESSION["confirmation_date"]; ?></span>
+                                    <span>最終確認予定日：<?php echo $confirmation_date; ?></span>
                                 </td>
                             </tr>
                         </table>
@@ -493,10 +530,10 @@ foreach ($result_07 as $result_approval) {
                             <caption>教育効果の確認結果</caption>
                             <table class="result_confirmation_regular" id="result_confirmation_regular" style="width:100%; margin-top:30px;">
                                 <tr>
-                                <td><span>日勤者：<?php echo $_SESSION["checker_people_regular"]; ?></span></td>
+                                <td><span>日勤者：<?php echo $checker_people_regular; ?></span></td>
                                 </tr>
                                 <tr>
-                                <td style="height:20px;"><span><?php echo $_SESSION["checker_comment_regular"]; ?></span></td>
+                                <td style="height:20px;"><span><?php echo $checker_comment_regular; ?></span></td>
                                 </tr>
                             </table>
                             <table class="result_confirmation_regular" id="result_confirmation_regular" style="width:100%;  margin-top:30px;">
@@ -538,7 +575,31 @@ foreach ($result_07 as $result_approval) {
                                     <td><span>効果確認者</span></td>
                                 </tr>
                                 <tr>
-                                    <td style="height: 75px;"></td>
+                                    <td style="height: 75px;">
+                                        <div class="parent" 
+                                        
+                                        <?php  
+                                            if($status_id === '4') {
+                                                echo "style='display:flex; left:10px;'";
+                                            }
+                                            
+                                            else if($status_id === '2') {
+                                                echo "style='display:flex;  left:10px;'";
+                                            }
+
+                                            else {
+                                                echo "style='display:none;'";
+                                            }
+                                        ?>
+                
+                                        id="checker_regular_div">
+                                                <div class="child">
+                                                    <span-a id="deployment_checker_regular">製造部</span-a>
+                                                    <span-a id="date_checker_regular"><?php echo "$checker_date_regular";?></span-a>
+                                                    <span-a id="checker_regular_stamp"><?php echo "$instructor_regular";?></span-a>
+                                                </div>
+                                            </div>                        
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="height: 75px;"></td>
@@ -981,10 +1042,22 @@ foreach ($result_07 as $result_approval) {
 
 window.onload =function() {
     input_data();
+
+//get the date checker regular
+    
+    var checker_date_regular = new Date('<?php echo $checker_date_regular;?>');
+    var checker_date_regular_day = String(checker_date_regular.getDate()).padStart(2, '0');
+    var checker_date_regular_month = String(checker_date_regular.getMonth() + 1).padStart(2, '0');
+    var checker_date_regular_year = checker_date_regular.getFullYear();
+
+    
+    var checker_date_regular_stamp = checker_date_regular_year + "." + checker_date_regular_month + "." + checker_date_regular_day;
+
+    document.getElementById('date_checker_regular').innerHTML =checker_date_regular_stamp;
 // get the date created
     var date_created;
 
-    var date_created = new Date('<?php echo $_SESSION["start_time_regular"];?>');
+    var date_created = new Date('<?php echo $start_time_regular;?>');
     var date_created_day =String(date_created.getDate()).padStart(2, '0');
     var date_created_month = String(date_created.getMonth() + 1).padStart(2, '0');
     var date_created_year = date_created.getFullYear();
@@ -999,8 +1072,8 @@ window.onload =function() {
     document.getElementById('date_created').innerHTML =date_created_stamp;
 
     var training_id = '<?php echo $training_id; ?>';
-    var training_name = '<?php echo $_SESSION["training_name"]; ?>';
-    var category_quality = '<?php echo $_SESSION["category_quality"]; ?>';
+    var training_name = '<?php echo $training_name; ?>';
+    var category_quality = '<?php echo $category_quality; ?>';
     var cat_q = '';
     if(category_quality === '1' ) {
         cat_q = '品質';
@@ -1008,25 +1081,25 @@ window.onload =function() {
 
 
     var cat_en = '';
-    var category_environment = '<?php echo $_SESSION["category_environment"]; ?>';
+    var category_environment = '<?php echo $category_environment; ?>';
     if(category_environment === '1' ) {
         cat_en = '環境';
     }
 
     var cat_sh = '';
-    var category_safety_and_hygiene = '<?php echo $_SESSION["category_safety_and_hygiene"]; ?>';
+    var category_safety_and_hygiene = '<?php echo $category_safety_and_hygiene; ?>';
     if(category_safety_and_hygiene === '1' ) {
         cat_sh = '安全衛生';
     }
 
     var cat_o = '';
-    var category_others = '<?php echo $_SESSION["category_others"]; ?>';
+    var category_others = '<?php echo $category_others; ?>';
     if(category_others === '1' ) {
         cat_o = 'その他';
     }
 
     var cat_name = '';
-    var category_others_manual = '<?php echo $_SESSION["category_others_manual"]; ?>';
+    var category_others_manual = '<?php echo $category_others_manual; ?>';
     if(category_others === '1' ) {
         cat_name = category_others_manual;
     }
@@ -1038,9 +1111,6 @@ window.onload =function() {
 //get the date today
 
     
-
-
-
     document.getElementById("download")
     .addEventListener("click", () => {
         var test = this.document.getElementById("test");
@@ -1066,12 +1136,8 @@ window.onload =function() {
     input_creator = document.getElementById('input-creator').value; 
     document.getElementById('creator_stamp').innerHTML = input_creator;
 
-    input_creator = document.getElementById('input-approver').value; 
+    input_approver = document.getElementById('input-approver').value; 
     document.getElementById('approver_stamp').innerHTML = input_creator;
-
- 
-
-
 
     }
     
