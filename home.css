@@ -281,7 +281,7 @@ td {
     color: #FFFFFF;
     cursor: pointer;
     font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     line-height: 24px;
     display: flex;
@@ -428,7 +428,7 @@ a {
     border: 1;
     border-radius: 5px;
     color: gray;
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
     transition: all .3s;
     padding: 0px 10px;
@@ -879,7 +879,7 @@ text-align: center;
     border: none;
     width: 100%;
     margin: 25px 0;
-    font-size: 10px;
+    font-size: 15px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
@@ -888,17 +888,29 @@ text-align: center;
     margin-bottom: 20px;
 }
 
+.progressT tbody {
+    display: block;
+    height: 330px;
+   /* overflow: auto; */
+    overflow-y: scroll;
+}
+
 .progressT thead tr {
     background-color: rgba(4, 73, 129, 0.808);
     color: #ffffff;
     text-align: center;
     font-weight: bold;
     height: 40px;
+    font-size: 12px;
+    display: table;
+    width: 100%;
 }
 
 .progressT tbody tr {
     border-bottom: 1px solid #dddddd;
     height: 40px;
+    display: table;
+    width: 100%;
 
 }
 
@@ -988,7 +1000,7 @@ text-align: center;
     border: none;
     width: 100%;
     margin: 25px 0;
-    font-size: 10px;
+    font-size: 15px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
@@ -1003,11 +1015,15 @@ text-align: center;
     text-align: center;
     font-weight: bold;
     height: 40px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 .trainingT tbody tr {
     border-bottom: 1px solid #dddddd;
     height: 40px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 
 }
 
@@ -1112,7 +1128,7 @@ text-align: center;
     border: none;
     width: 100%;
     margin: 25px 0;
-    font-size: 10px;
+    font-size: 15px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
@@ -1127,11 +1143,13 @@ text-align: center;
     text-align: center;
     font-weight: bold;
     height: 40px;
+    font-size: 15px;
 }
 
 .IDregT tbody tr {
     border-bottom: 1px solid #dddddd;
-    height: 40px;
+    height: 35px;
+    font-size: 15px;
 
 }
 
@@ -1168,7 +1186,7 @@ text-align: center;
     cursor: pointer;
     color: #0000EE;
     padding: 0;
-    text-decoration: underline;
+    text-decoration: none;
     font-family: inherit;
     font-size: inherit;
     vertical-align: middle;
@@ -1281,8 +1299,8 @@ text-align: center;
     word-break: break-word;
     border: 0;
     transition: 0.2s;
-    float: right;
     margin-bottom: 20px;
+    float: right;
   }
 
 .btn-update span {
