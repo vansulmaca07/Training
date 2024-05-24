@@ -45,34 +45,54 @@ if(isset($_POST["action"])) {
             $file_name = '';
             $file_path = '';
 
+
+            $query_category = "SELECT category.category_id, category_name FROM category
+
+            inner join category_ref on category_ref.category_id = category.category_id
+
+            where training_id = '$row[training_id]'";
+
+            $stmt3 = $pdo->prepare($query_category);
+            $stmt3->execute();
+            $result3 = $stmt3->fetchAll();
+
           
 
             $output .= 
                 "<tr>
-                            <td style='vertical-align: middle;'><form action = 'includes/edit_form.inc.php' method ='post' id='edit_form'>
+                            <td style='vertical-align: middle; width: 10.1%;'><form action = 'includes/edit_form.inc.php' method ='post' id='edit_form'>
                             <input type='text' hidden name= 'training_id' value = '$row[training_id]'><button type='submit' class='btn-link'>" . $row["training_id"] .  "</button>
                             </form>
                             </td>
-                            <td style='vertical-align: middle;'>" . $row["name_"] .  "</td>
-                            <td style='vertical-align: middle;'>" . $row["training_name"] .  "</td>
-                            <td style='vertical-align: middle;'>" . $row["category"] .  "</td>
-                            <td style='vertical-align: middle;'>" . $row["usage_id"] .  "</td>
+
+                            <td style='vertical-align: middle; font-size:20px; width:10.2%;'><a href = 'pdf_preview.php?training_id=$row[training_id]' target='_blank'><i class='bi bi-file-pdf'></i></a></button>
+                            </td>
+
+                            <td style='vertical-align: middle; width: 10.2%;'>" . $row["name_"] .  "</td>
+                            <td style='vertical-align: middle; width: 20.3%;'>" . $row["training_name"] .  "</td>
+                            <td style='vertical-align: middle; width: 10.2%;'>  
                            ";
 
-        /*    foreach($result2 as $row_file) {
-                $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
-            
-                $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
+                            foreach($result3 as $row_file) {
+                                
+                                    $output .= "$row_file[category_name],";
+                                    }
 
-                $output .= " <td> <a href = $file_path download>$file_name</a><br></td>";
-                }
+             /*   foreach($result3 as $row_file) {
+                    $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
+                
+                    $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
+    
+                    $output .= " <td> <a href = $file_path download>$file_name</a><br></td>";
+                    } */
+    
 
-           */
+           
             
-            $output .= "
-                            
-                            <td style='vertical-align: middle;'>" . $row["status_name"] .  "</td>
-                            <td style='vertical-align: middle;'>
+            $output .= "    </td> 
+                            <td style='vertical-align: middle; width: 10.2%;'>" . $row["usage_id"] .  "</td>
+                            <td style='vertical-align: middle; width:15.1% ;'>" . $row["status_name"] .  "</td>
+                            <td style='vertical-align: middle; width: ;'>
                             <form action='includes/documentNo.inc.php' method ='POST'>
                             <input type='text' hidden value='$row[training_id]' name='documentNo'>             
                             <button type='submit' class='btn-attendance'><span>サイン</span></button>
