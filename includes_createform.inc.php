@@ -4,7 +4,7 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt');
+    $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt','pptx');
     $file_name_checking = $_FILES['file']['name'];
     $file_size_checking = $_FILES['file']['size'];
 
@@ -18,11 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
     }
 
+
+    define('KB', 1024);
+    define('MB', 1048576);
+    define('GB', 1073741824);
+    define('TB', 1099511627776);
+
     $file_name_check_ext = '';
     $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
 
     if($file_name_check_ext === true) {
-        if(max($file_size_checking) < 1000000) {
+        if(max($file_size_checking) < 20971520) {
 
             $process_prefix = ($_POST["trainingDepartment"]);
             $creationdepartment = $_SESSION["department"];
@@ -59,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $count_value = ($_POST["count_value"]);
             $checker_comment_regular =($_POST["checker_comment_regular"]);
             $checker_people_regular =($_POST["checker_people_regular"]);
+            $checker_date_regular = ($_POST["checker_date_regular"]);
             
             $category_quality='';
             if(isset($_POST["category_quality"])) {
@@ -130,6 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     count_,
                     checker_comment_regular,
                     checker_people_regular,
+                    checker_date_regular,
                     category_quality,
                     category_environment,
                     category_safety_and_hygiene,
@@ -173,6 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     :count_value,
                     :checker_comment_regular,
                     :checker_people_regular,
+                    :checker_date_regular,
                     :category_quality,
                     :category_environment,
                     :category_safety_and_hygiene,
@@ -217,6 +226,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(":count_value", $count_value);
                 $stmt->bindParam(":checker_comment_regular", $checker_comment_regular);
                 $stmt->bindParam(":checker_people_regular", $checker_people_regular);
+                $stmt->bindParam(":checker_date_regular", $checker_date_regular);
                 $stmt->bindParam(":category_quality", $category_quality);
                 $stmt->bindParam(":category_environment", $category_environment);
                 $stmt->bindParam(":category_safety_and_hygiene", $category_safety_and_hygiene);
