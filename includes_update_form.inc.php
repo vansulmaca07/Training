@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $endtimeD = ($_POST["datetimeDEnd"]);
     $instructorD = ($_POST["instructorDID"]);
     $locationD = ($_POST["LocationD"]); 
+   
     
     /*$category = ($_POST["category"]);*/
    
@@ -50,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST["category_others"])) {
     $category_others = $_POST["category_others"];}
 
-    
+    $category_others_manual='';
     if(isset($_POST["category_others_manual"])) {
     $category_others_manual = $_POST["category_others_manual"];}
 
@@ -64,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $checker_comment_regular =($_POST["checker_comment_regular"]);
     $checker_people_regular =($_POST["checker_people_regular"]);
     $confirmation_by = ($_POST["confirmation_by"]);
+    $checker_date_regular = ($_POST["checker_date_regular"]);
 
     $training_id_temp = $process_prefix . $process_suffix;
    
@@ -112,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 count_ = :count_value,
                 checker_comment_regular = :checker_comment_regular,
                 checker_people_regular = :checker_people_regular,
+                checker_date_regular = :checker_date_regular,
                 confirmation_by = :confirmation_by,
                 modified_date = now()
             
@@ -153,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(":checker_comment_regular", $checker_comment_regular);
             $stmt->bindParam(":checker_people_regular", $checker_people_regular);
             $stmt->bindParam(":confirmation_by", $confirmation_by);
+            $stmt->bindParam(":checker_date_regular", $checker_date_regular);
             
             
             $stmt->execute();
@@ -184,9 +188,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
             } 
 
-            $stmt2 = null; 
-            $pdo = null;
+            $stmt2->closeCursor();
+
+            $query_03 = "SELECT * FROM training_form where training_id = '$training_id'";
+
+            $stmt3 = $pdo->prepare($query_03);
+            $stmt3->execute();
+
+            $result = $stmt3->fetchAll();
+
+            $status_id='';
+            $confirmation_date_regular_check = '';
+            $confirmation_comment_regular_check = '';
+            foreach ($result as $result_status_id) {
+                $status_id = $result_status_id["status_id"];
+                $confirmation_date_regular_check = $result_status_id["checker_date_regular"];
+                $confirmation_comment_regular_check = $result_status_id["checker_comment_regular"];
+                $confirmation_people_regular_check = $result_status_id["checker_people_regular"];
+            }
+
+            $stmt3->closeCursor();
+
+            if ($status_id === '3' && $checker_date_regular !== '' && $confirmation_comment_regular_check !== '' && $confirmation_people_regular_check !== '') {
+                
+                $query_change_stat = "UPDATE training_form
+                    SET status_id = '4'
+                    where training_id = '$training_id' ";
+                
+                $stmt4 = $pdo->prepare($query_change_stat);
+
+                $stmt4->execute();
+            }
+
+            $query5 = "DELETE FROM category where training_id = '$training_id'
+            ";
+            $stmt5 = $pdo->prepare($query5);
+            $stmt5->execute();
+
+            $new_category = array();
+            $new_category = ($_POST["category"]);
+
+            foreach ($new_category as $category_id) {
+                $query5 = "INSERT INTO category (category_id, category_others_name, training_id)
+                      VALUES(
+                        :category_id,
+                        :category_others_name,
+                        :training_id
+                      )
+                      ";
+                
+                $stmt5=$pdo->prepare($query5);
+                $stmt5->bindParam(":category_id", $category_id);
+                $stmt5->bindParam(":category_others_name", $category_others_manual);
+                $stmt5->bindParam(":training_id", $training_id);
+
+                $stmt5->execute();
+            }
+
+
+            
+
+
             $stmt = null;
+            
+            $pdo = null;
+           
 
 
             $_SESSION["training_id"] = $process_prefix . $process_suffix;
@@ -204,6 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     else {
         echo "Training ID already exist!";
+        header(("location: ../editform.php?error=training_id_duplicate"));
     }
 
 }
