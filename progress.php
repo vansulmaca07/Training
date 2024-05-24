@@ -4,15 +4,16 @@
 ?>
 
         <div class="progress" id="progress">
-            <h4>進捗状況</h4>
+            <h4><b>進捗状況</b></h4>
                 <div id="table-wrapper">
                     <div id="table-scroll"> 
-                        <table id="progressTable" border="1" class="table table-hover rounded-3 overflow-hidden progressT">
-                            <thead>
-                                <tr id="firstrow">
+                        <table id="progressTable" border="1" class="table table-hover rounded-3 overflow-hidden progressT" >
+                            <thead class="theadstyle">
+                                <tr id="firstrow" style="width:100%">
                                     <th style="width:10%; vertical-align:middle;">No</th>
-                                    <th style="width:15%; vertical-align:middle;">作成者</th> <!--creator-->
-                                    <th style="width:10%; vertical-align:middle;">ファイル名</th>
+                                    <th style="width:10%; vertical-align:middle;">PDF Preview</th>
+                                    <th style="width:10%; vertical-align:middle;">作成者</th> <!--creator-->
+                                    <th style="width:20%; vertical-align:middle;">ファイル名</th>
                                     <th style="width:10%; vertical-align:middle;">
                                         <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">区分</a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -37,11 +38,13 @@
                                                         }
                                                         ?> 
                                             </ul>   
+
+                                      
                                     </th>
                                     <th style="width:10%; vertical-align:middle;">使用資料</th> <!--Training References-->
                                     <th style="width:15%; vertical-align:middle;">全体状態</th> <!--Category-->
                                    <!-- <th style="width:10%; vertical-align:middle;">進捗</th> -->
-                                    <th style="width:15%; vertical-align:middle;">【サイン進捗 </th>
+                                    <th style="width:15%; vertical-align:middle; text-align:center;">【サイン進捗 </th>
                                 </tr>
                             </thead>
                             <tbody id="post_list2">
