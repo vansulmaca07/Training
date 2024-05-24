@@ -1,5 +1,9 @@
 <?php
-    include_once 'navigation.php';  
+    include_once 'navigation.php'; 
+    
+    $category_array = array ();
+    $category_array = $_SESSION["category"];
+
 
 ?>
          <!-----------REGISTRATION FORM----------->
@@ -9,7 +13,18 @@
         <div class="main" id="main">
             <div class="scroll" id="div-scroll">
                 <div class="new-form-header"  style="position:absolute;">
-                    <a href="pdf_preview.php" target="_blank" class="btn-pdf" ><span style="">PDF 表示&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-filetype-pdf"></i></span></a>
+                    <a href="pdf_preview.php?<?php echo$_SESSION['training_id'];?>" target="_blank" class="btn-pdf" ><span style="">PDF 表示&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-filetype-pdf"></i></span></a>
+                        <?php 
+                        if (isset($_GET["error"])) {
+                                if ($_GET["error"] == "training_id_duplicate") {
+                                echo "<p> DUPLICATE TRAINING ID! </p>";
+                                }
+
+                                else if ($_GET["error"] == "wronglogin") {
+                                echo "<p>間違ったログイン情報";
+                                }
+                        }
+                        ?>
                 </div>
             <form action="includes/update_form.inc.php" method="post">
             <div  id="creationdepartment">
@@ -205,25 +220,25 @@
                 -->
 
                     <td>
-                    <input type="checkbox" id="categoryQuality" name="category_quality" value="1" <?php if ($_SESSION["category_quality"]==='1'){ echo 'checked';}?>> 
+                    <input type="checkbox" id="categoryQuality" name="category[]" value="1" <?php if(in_array(1,$category_array)) {echo 'checked';}?>> 
                     <label for="categoryQuality">品質</label>
                     </td>
 
                     <td style="width:25%">
                     <input type="checkbox" 
                     id="categoryEnvironment"
-                    name="category_environment" 
-                    value="1"
-                    <?php if ($_SESSION["category_environment"]==='1'){ echo 'checked';}?>>
+                    name="category[]" 
+                    value="2"
+                    <?php if(in_array(2,$category_array)) {echo 'checked';}?>>
                     <label for="categoryEnvironment">環境</label> <!--Environment-->
                     </td>
 
                     <td style="width:25%">
                     <input type="checkbox" 
                     id="categorySafetyAndHygiene" 
-                    name="category_safety_and_hygiene" 
-                    value="1"
-                    <?php if ($_SESSION["category_safety_and_hygiene"]==='1'){ echo 'checked';}?>>
+                    name="category[]" 
+                    value="3"
+                    <?php if(in_array(3,$category_array)) {echo 'checked';}?>>
                     <label for="categorySafetyAndHygiene">安全衛生</label> <!--Safety and Hygiene-->
                     </td>
 
@@ -231,9 +246,9 @@
                     <div>
                     <input type="checkbox" 
                     id="categoryOther" 
-                    name="category_others" 
-                    value="1"
-                    <?php if ($_SESSION["category_others"]==='1'){ echo "checked";}?>>
+                    name="category[]" 
+                    value="4"
+                    <?php if(in_array(4,$category_array)) {echo 'checked';}?>>
                     <label for="categoryOther">その他</label>
                     <input type="text" 
                     id="categoryOtherManual" 
@@ -400,7 +415,8 @@
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">日勤者：</td>
-                            <td colspan="3" style="width:90%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="<?php echo  $_SESSION["checker_people_regular"]; ?>" style="width:100%"></td>
+                            <td colspan="2" style="width:65%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="<?php echo  $_SESSION["checker_people_regular"]; ?>" style="width:100%"></td>
+                            <td colspan="1" style="width:25%"><input type="datetime-local" name="checker_date_regular" id="checker_date_regular" value="<?php echo  $_SESSION["checker_date_regular"]; ?>" style="width:90%"></td>
                         </tr>
                         <tr>
                             <td colspan="4" style="width:100%"><input type="text" name="checker_comment_regular" id="checker_comment_regular" value="<?php echo  $_SESSION["checker_comment_regular"]; ?>" style="width:100%"></td>
@@ -412,8 +428,17 @@
                
             <!--------------------------------------->
             </div>
+            <div class="row">
+                <div class="column1">
+                                         
+                </div>
+                <div class="column2">
+                <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;  left:100px; !important"><span>UPDATE</span></button>                           
+                </div>
+            </div>
 
-            <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px; margin-bottom:30px;"><span>UPDATE</span></button>
+            
+            
             </form>
         </div>
 </div>
