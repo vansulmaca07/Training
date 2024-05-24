@@ -1,5 +1,7 @@
 <?php
-    include_once 'navigation.php'
+    include_once 'navigation.php';
+    
+    $group_ = $_SESSION["group_"];
 ?>
         
         <div class="idregistration" id="idregistration">
@@ -9,76 +11,140 @@
                     <table id="IDregTable" border="1" class="table table-hover rounded-3 overflow-hidden IDregT">
                         <thead>
                             <tr id="firstrow">
-                                <th style="width:17.5%">GID</th>
-                                <th style="width:17.5%">名前</th>
-                                <th style="width:17.5%">姓</th>
-                                <th style="width:17.5%">工程</th> <!--process-->
-                                <th style="width:30%"><b>ID登録状況</b></th> <!--ID registration status-->
+                                <th style="width:15%; vertical-align:middle;">GID</th>
+                                <th style="width:15%; vertical-align:middle;">名前</th>
+                                <th style="width:15%; vertical-align:middle;height:40px; vertical-align:middle;">
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Team</a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <?php
+                                                $query = "SELECT distinct(shift_description) FROM users
+                                                    INNER JOIN shift ON users.shift_id = shift.shift_id
+                                                    WHERE group_ = '$group_'
+                                                    ORDER BY shift.shift_description ASC;";
+                                                $stmt = $pdo->prepare($query);
+                                                $stmt->execute();
+                                                $result = $stmt->fetchAll();
+                                                foreach($result as $row)
+                                                    {
+                                            ?>
+                                                <div class="list-group-item checkbox">
+                                                    <label><input type="checkbox" class="common_selector shift" value="
+                                                        <?php echo $row["shift_description"];
+                                                        ?>
+                                                        "> <?php echo $row["shift_description"];
+                                                        ?>
+                                                    </label>
+                                                </div>
+                                                    <?php
+                                                    }
+                                                    ?>        
+                                        </ul>  
+                                </th>
+                                <th style="width:15%; vertical-align:middle; height:40px;">
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">工程</a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <?php
+                                                $query = "SELECT DISTINCT(department_name) FROM users
+                                                    INNER JOIN department ON users.department_id = department.department_id
+                                                    WHERE group_ = '$group_'
+                                                    ;";
+                                                $stmt = $pdo->prepare($query);
+                                                $stmt->execute();
+                                                $result = $stmt->fetchAll();
+                                                foreach($result as $row)
+                                                    {
+                                            ?>
+                                                <div class="list-group-item checkbox">
+                                                    <label><input type="checkbox" class="common_selector process" value="
+                                                        <?php echo $row["department_name"];
+                                                        ?>
+                                                        "> <?php echo $row["department_name"];
+                                                        ?>
+                                                    </label>
+                                                </div>
+                                                    <?php
+                                                    }
+                                                    ?> 
+                                        </ul>  
+                                </th> <!--process-->
+                                <th style="width:10%; vertical-align:middle;">
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Building</a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <?php
+                                                $query = "SELECT DISTINCT(building) FROM users
+                                                    WHERE group_ = '$group_'
+                                                    ORDER by building ASC
+                                                    ;";
+                                                $stmt = $pdo->prepare($query);
+                                                $stmt->execute();
+                                                $result = $stmt->fetchAll();
+                                                foreach($result as $row)
+                                                    {
+                                            ?>
+                                                <div class="list-group-item checkbox">
+                                                    <label><input type="checkbox" class="common_selector building" value="
+                                                        <?php echo $row["building"];
+                                                        ?>
+                                                        "> <?php echo $row["building"];?>
+                                                    </label>
+                                                </div>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                        </ul>   
+                                </th> 
+                                <th style="width:30%; vertical-align:middle;"><b>ID登録状況</b></th> <!--ID registration status-->
                             </tr>  
                         </thead>
-                            <?php
-                            $servername = "localhost";
-                                $username = "root";
-                                $password = "";
-                                $database = "trainingdb";
-                                
-                                //Create connection
+                        <tbody id="post_list">
 
-                                $connection = new mysqli($servername, $username, $password, $database);
-
-                                //Check connection
-
-                                if ($connection->connect_error) {
-                                    die("Connection failed: " . $connection->connect_error);
-                                }
-                                
-                                //read all row from database table
-                                 
-                                $department = $_SESSION["department"];
-                                $sql = "SELECT GID, name_, RFID, department_name, shift_description
-                                FROM users
-                                INNER JOIN department on users.department_id = department.department_id
-                                INNER JOIN shift on users.shift_id = shift.shift_id
-                                WHERE users.department_id ='$department';";
-
-                                $result = $connection->query($sql);
-                                
-                                if (!$result) {
-                                    die("Invalid Query: " . $connection->error);
-                                }
-
-                                //read data of each row
-                                while ($row = $result->fetch_assoc()){
-
-                                echo "<tr>
-                                        <td style='vertical-align: middle;'>" . $row["GID"] .  "</td>
-                                        <td style='vertical-align: middle;'>" . $row["name_"] .  "</td>
-                                        <td style='vertical-align: middle;'>" . $row["shift_description"] .  "</td>
-                                        <td style='vertical-align: middle;'>" . $row["department_name"] .  "</td>";
-                                
-                                if ($row["RFID"] == '') {
-                                    echo "<td style='vertical-align: middle;'>
-                                            <form action = 'includes/idregister.php' method ='post' id='idregform'>
-                                                <div class='form-inline'>
-                                                    <input type='text' hidden name= 'GIDfetch' value = '$row[GID]'>
-                                                    <input type='text' class='register_input' placeholder='Please TAP your ID' value='' name ='rfid'>
-                                                    <button class='btn-36' name='submit' type='submit' style='vertical-align: middle;'>登録</button>
-                                                </div>
-                                            </form>
-                                            </td>";
-                                }
-                                else {
-                                    echo "<td style='vertical-align: middle'>登録完了</td>";
-                                }
-                    
-                                }
-                                ?>           
+                        </tbody>
                     </table>                        
                 </div>
             </div>
         </div>
     </div> <!--mainwrapper-->
 </div> <!--full-->
+
+<script type="text/javascript">
+    
+$(document).ready(function() {
+
+
+
+filter_data();
+function filter_data() {
+  //$('#post_list').html();
+  var action = 'fetch_data';
+  var shift = get_filter('shift');
+  var process = get_filter('process');
+  var building = get_filter('building');
+
+  $.ajax({
+      url: "includes/fetch_data_id_register.inc.php",
+      method: "POST",
+      data: {action:action,shift:shift,process:process,building:building},
+      success:function(data){
+        $('#post_list').html(data);
+      }
+  });
+}
+
+function get_filter(class_name)
+{
+var filter = [];
+$('.'+class_name+':checked').each(function(){
+    filter.push($(this).val());
+});
+
+return filter;
+}
+
+$('.common_selector').click(function(){
+  filter_data();
+});
+});
+</script>
 </body>
 
 </html>
