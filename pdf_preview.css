@@ -131,7 +131,7 @@ table, th, td, caption {
   border-radius: 100px;
   width: 5rem;
   height: 5rem;
-  display: flex;
+
   justify-content: center;
   align-items: center;
   overflow: hidden;
