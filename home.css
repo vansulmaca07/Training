@@ -454,15 +454,34 @@ h2 {
     margin-top: 3rem;
 }
 
+/*
 input {
     background-color: lightgoldenrodyellow;
-    font-size: 10px;
+    font-size: 10px; 
     border-radius: 0.3rem;
     margin: 0.5rem 0;
-    padding: 5px 10px;
+    padding: 5px 10px; 
     color: black; 
     border: none;
-    height: 30px;
+    height: 30px; 
+} */
+
+textarea:disabled {
+    background-color: lightgray;
+}
+.input-main-form {
+    background-color: lightgoldenrodyellow;
+    font-size: 10px; 
+    border-radius: 0.3rem;
+    margin: 0.5rem 0;
+    padding: 5px 10px;  
+    color: black; 
+    border: none;
+    height: 30px; 
+}
+
+.input-main-form:disabled {
+    background-color:lightgray;
 }
 
 .register_input {
@@ -479,12 +498,17 @@ input {
 
 select {
     background-color:  lightgoldenrodyellow;
-    font-size: 10px;
+    font-size: 14px;
     border-radius: 0.3rem;
     margin: 0.5rem 0;
     padding: 5px 10px;
     color: black; 
     border: none;
+    height: 35px;
+}
+
+.judgement:disabled {
+    background-color: lightgray;
 }
 
 .mainrecord {
@@ -498,7 +522,7 @@ select {
     border-collapse: collapse;
     border: none;
     width: 100%;
-    font-size: 10px;
+    font-size: 12px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
@@ -511,14 +535,14 @@ select {
     border-collapse: collapse;
     border: none;
     width: 100%;
-    margin: 25px 0;
-    font-size: 10px;
+    font-size: 14px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     margin: auto;
     margin-bottom: 20px;
+    
 }
 
 .mainrecordT2 thead tr {
@@ -695,18 +719,22 @@ text-align: center;
 
 .participantsT {
     text-align: center;
-    border-collapse: collapse;
-    border: none;
+    border-color: lightgray;
     width: 100%;
     margin: 25px 0;
-    font-size: 10px;
-    min-width: 400px;
+    font-size: 14px;
+    max-height: 350px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     margin: auto;   
     margin-bottom: 20px;
+    
 }
+
+
+
+
 
 .participantsT thead tr {
     background-color: rgba(4, 73, 129, 0.808);
@@ -717,13 +745,12 @@ text-align: center;
 }
 
 .participantsT tbody tr {
-    border-bottom: 1px solid #dddddd;
+  /*  border-bottom: 1px solid #dddddd; */
     height: 40px;
 
 }
 
-.participantsT tbody tr:nth-of-type(even) {
-    
+.participantsT tbody tr:nth-of-type(even) {    
     height: 40px;
 
 }
@@ -875,8 +902,6 @@ text-align: center;
 
 .progressT {
     text-align: center;
-    border-collapse: collapse;
-    border: none;
     width: 100%;
     margin: 25px 0;
     font-size: 15px;
@@ -993,11 +1018,10 @@ text-align: center;
 
 /*******Training************/
 
-
 .trainingT {
     text-align: center;
-    border-collapse: collapse;
-    border: none;
+    
+    
     width: 100%;
     margin: 25px 0;
     font-size: 15px;
@@ -1009,23 +1033,34 @@ text-align: center;
     margin-bottom: 20px;
 }
 
+.trainingT tbody {
+    display: block;
+    height: 330px;
+   /* overflow: auto; */
+    overflow-y: scroll;
+}
+
 .trainingT thead tr {
     background-color: rgba(4, 73, 129, 0.808);
     color: #ffffff;
     text-align: center;
     font-weight: bold;
     height: 40px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    font-size: 12px;
+    display: table;
+    width: 100%;
 }
 
 .trainingT tbody tr {
     border-bottom: 1px solid #dddddd;
     height: 40px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    display: table;
+    width: 100%;
 
 }
+
+
+
 
 .trainingT tbody tr:nth-of-type(even) {
     
@@ -1119,13 +1154,9 @@ text-align: center;
 
 /*******Home********/
 
-
-
-
+/*
 .IDregT {
     text-align: center;
-    border-collapse: collapse;
-    border: none;
     width: 100%;
     margin: 25px 0;
     font-size: 15px;
@@ -1152,7 +1183,47 @@ text-align: center;
     font-size: 15px;
 
 }
+*/
 
+
+.IDregT {
+    text-align: center;
+    width: 100%;
+    margin: 25px 0;
+    font-size: 15px;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin: auto;   
+    margin-bottom: 20px;
+}
+
+.IDregT tbody {
+    display: block;
+    height: 330px;
+   /* overflow: auto; */
+    overflow-y: scroll;
+}
+
+.IDregT thead tr {
+    background-color: rgba(4, 73, 129, 0.808);
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    height: 40px;
+    font-size: 12px;
+    display: table;
+    width: 100%;
+}
+
+.IDregT tbody tr {
+    border-bottom: 1px solid #dddddd;
+    height: 40px;
+    display: table;
+    width: 100%;
+
+}
 .IDregT tbody tr:nth-of-type(even) {
     
     height: 40px;
@@ -1395,6 +1466,69 @@ text-align: center;
     color: white;
 } 
 
+
+/*********button completion *********/
+
+.btn-completion {
+    /*   background: rgba(4, 73, 129, 0.808); */
+       background-color: rgb(50, 168, 236);
+       border-radius: 5px;
+       box-shadow: rgba(4, 73, 129, 0.808) 0 10px 20px -10px;
+       box-sizing: border-box;
+       color: #FFFFFF;
+       cursor: pointer;
+       font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+       font-size: 13px;
+       font-weight: 700;
+       line-height: 24px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       opacity: 1;
+       outline: 0 solid transparent;
+       padding: 5px 18px;
+       user-select: none;
+       -webkit-user-select: none;
+       touch-action: manipulation;
+       width: 140px;
+       word-break: break-word;
+       border: 0;
+       transition: 0.2s;
+       margin: auto;
+       
+     }
+   
+   .btn-completion span {
+       cursor: pointer;
+       display: inline-block;
+       position: relative;
+       transition: 0.5s;
+     }
+   
+   .btn-completion span:after {
+       content: '\00bb';
+       position: absolute;
+       opacity: 0;
+       top: 0;
+       right: -20px;
+       transition: 0.5s;
+     }
+   
+   .btn-completion:hover span {
+       padding-right: 25px;
+     }
+     
+   .btn-completion:hover span:after {
+       opacity: 1;
+       right: 0;
+       
+     } 
+   
+   .btn-completion:hover{
+       
+       color: white;
+   } 
+
 /*********button upload**********/
 
 .btn-upload {
@@ -1477,3 +1611,101 @@ text-align: center;
     
     cursor: pointer;
   }
+
+
+/*****/
+
+.wrapper {
+    width: 100%;
+    margin: 0;
+   
+}
+
+.wrapper.active .content {
+    display: block;
+}
+
+.select-btn, .options li{
+    display: flex;    
+    cursor: pointer;
+    align-items: center;
+}
+.select-btn {
+    height: 30px;
+    padding: 0 7.5px;
+    border-radius: 7px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: lightgoldenrodyellow;
+    width: 95%;
+    border: black;
+    
+}
+
+.select-btn:focus {
+    border: black;
+}
+
+
+.select-btn i {
+    font-size: 10px;
+    transition: transform 0.3s linear;
+    
+}
+
+.wrapper.active .select-btn i {
+    transform: rotate(-180deg);
+}
+
+.content {
+    display: none;
+    background: #fff;
+    margin-top: 15px;
+    border-radius: 7px;
+    padding: 2px;
+    width: 170px;
+}
+
+.content .search {
+    position: relative;
+}
+
+.search i {
+    left: 13px;
+    color: #999;
+    font-size: 10px;
+    line-height: 45px;
+    position: absolute;
+}
+
+.search input {
+    height: 30px;
+    width: 100%;
+    outline: none;
+    font-size: 10px;
+    border-radius: 5px;
+    padding: 0 15px 0 43px;
+    border: 1px solid #b3b3b3;
+}
+
+/** Set the height of the box here**/
+.content .options {                           
+    margin-top: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.options li{
+    height: 50px;
+    padding: 0 13px;
+    font-size: 10px;
+    border-radius: 5px;
+}
+
+.options li:hover{
+    background: #f2f2f2
+}
+
