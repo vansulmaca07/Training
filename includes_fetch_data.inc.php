@@ -10,13 +10,18 @@ if(isset($_POST["action"])) {
     FROM users
     INNER JOIN department on users.department_id = department.department_id
     INNER JOIN shift on users.shift_id = shift.shift_id
-    WHERE users.group_ ='$group_'";
+    WHERE users.group_ ='$group_'"; 
+
+  /*  $query = "SELECT GID, name_, RFID, department_name, shift_description, group_, building
+    FROM users
+    INNER JOIN department on users.department_id = department.department_id
+    INNER JOIN shift on users.shift_id = shift.shift_id
+    "; */
 
     if(isset($_POST["shift"]))
     {   
        $shift_trimmed = array_map('trim',$_POST["shift"]);
        $shift_filter = implode("','",$shift_trimmed);
-       //$shift_filter = implode("','",$_POST["shift"]);
        $query .= "AND shift.shift_description IN('".$shift_filter."')";
     }
 
@@ -46,12 +51,12 @@ if(isset($_POST["action"])) {
         {
             $output .= "
             <tr>
-            <td><input type='checkbox' name='GIDcheck[]' class='z' value= '$row[GID]' onchange ='count()' ></td>
-            <td><input type='text' hidden name='GIDname[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
-            <td><input type='text' hidden name='name_[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
-            <td><input type='text' hidden name='shift_description[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
-            <td><input type='text' hidden name='department_name[]' value= '$row[department_name]'>" . $row["department_name"] .  "</td>
-            <td><input type='text' hidden name='building[]' value= '$row[building]'>" . $row["building"] .  "</td>
+            <td style='width:10.2%; padding:0;' ><input type='checkbox' name='GIDcheck[]'  value= '$row[GID]' onchange ='count()'></td>
+            <td style='width:18.2%; padding:0; font-size:15px;' ><input type='text' hidden name='GIDname[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
+            <td style='width:18.3%; padding:0; font-size:15px;' ><input type='text' hidden name='name_[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
+            <td style='width:18.3%; padding:0; font-size:15px;' ><input type='text' hidden name='shift_description[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
+            <td style='width:18.2%; padding:0; font-size:15px;' ><input type='text' hidden name='department_name[]' value= '$row[department_name]'>" . $row["department_name"] .  "</td>
+            <td style=' padding:0; font-size:15px;' ><input type='text' hidden name='building[]' value= '$row[building]'>" . $row["building"] .  "</td>
             </tr>";
         }
     }
