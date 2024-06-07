@@ -1,39 +1,25 @@
 <?php
-
 session_start();
 include('dbh2.inc.php');
 
-$group_ = $_SESSION["group_"]; 
+$GID_session = $_SESSION["GID"];
 
 if(isset($_POST["action"])) {
-    $query = "SELECT GID, name_, RFID, department_name, shift_description, group_, building
-    FROM users
-    INNER JOIN department on users.department_id = department.department_id
-    INNER JOIN shift on users.shift_id = shift.shift_id
-    WHERE users.group_ ='$group_'";
 
-    if(isset($_POST["shift"]))
+    $query = "SELECT training_form.training_id, training_name, GID, contents, sign_progress 
+    FROM attendance
+    INNER JOIN training_form ON attendance.training_id = training_form.training_id
+    WHERE attendance.GIDh  = '$GID_session'";
+
+    if(isset($_POST["sign_progress"]))
     {   
-       $shift_trimmed = array_map('trim',$_POST["shift"]);
-       $shift_filter = implode("','",$shift_trimmed);
-       $query .= "AND shift.shift_description IN('".$shift_filter."')";
+       $sign_progress_trimmed = array_map('trim',$_POST["sign_progress"]);
+       $sign_progress_filter = implode("','",$sign_progress_trimmed);
+       $query .= "AND status_ref.status_name IN('".$sign_progress_filter."')";
     }
 
-    if(isset($_POST["process"]))
-    {
-       $process_trimmed = array_map('trim',$_POST["process"]);
-       $process_filter = implode("','",$process_trimmed); 
-       $query .= "AND department.department_name IN('".$process_filter."')";
-    }
+    $query .="ORDER by training_form.training_id DESC";
 
-    if(isset($_POST["building"]))
-    {
-       $building_trimmed = array_map('trim',($_POST["building"]));
-       $building_filter = implode("','",$building_trimmed); 
-       $query .= "AND users.building IN('".$building_filter."')";
-    }
-
-    $query .= "ORDER BY shift.shift_description ASC";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll();
@@ -42,16 +28,56 @@ if(isset($_POST["action"])) {
     if($total_row > 0)
     {
         foreach($result as $row)
-        {
+        {   
+
+            $query_files =  "SELECT * FROM file_storage
+            where training_id = '$row[training_id]'";
+        
+            $stmt2 = $pdo->prepare($query_files);
+            $stmt2->execute();
+            $result2 = $stmt2->fetchAll();
+            $file_name = '';
+            $file_path = '';
+
+            $output .= 
+             "<tr>
+            <td style='width:10.25%;'>" . $row["training_id"] .  "</td>
+            <td style='width:25.3%;'>" . $row["training_name"] .  "</td>
+            <td style='width:25.5%;'>" . $row["contents"] .  "</td>
+            <td style='width:20.3%'>";
+
+            foreach($result2 as $row_file) {
+                    $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
+                
+                    $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
+    
+                    $output .= "  <a href = $file_path download>$file_name</a><br>";
+                    } 
+                
+            if ($row["sign_progress"]==="1") {
+            
             $output .= "
-            <tr>
-            <td style='width:10%; padding:0;' ><input type='checkbox' name='GIDcheck[]'  value= '$row[GID]' onchange ='count()'></td>
-            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden name='GIDname[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
-            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden name='name_[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
-            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden name='shift_description[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
-            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden name='department_name[]' value= '$row[department_name]'>" . $row["department_name"] .  "</td>
-            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden name='building[]' value= '$row[building]'>" . $row["building"] .  "</td>
-            </tr>";
+                </td>
+                <td style='vertical-align:middle; text-align:center;'>
+                <form action = 'includes/complete.inc.php' method ='post' id='complete_training'>
+                <input type='text' hidden name= 'training_id' value = '$row[training_id]'>
+                <input type='text' hidden name= 'GIDfetch' value = '$GID_session'>
+                <button type='submit' class='btn-completion'><span>Complete</span></button>                 
+                </td>
+                </form>
+                </tr>"
+                ;
+
+            }
+            else {
+            $output .= "
+                </td>
+                <td style='text-align:center;'>
+                完了
+                </td>
+                </tr>
+            ";
+            }
         }
     }
 
@@ -60,5 +86,5 @@ if(isset($_POST["action"])) {
     }
 
     echo $output;
-   
+
 }
