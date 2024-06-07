@@ -68,20 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $categories = ($_POST["category"]);
 
-          
-
-
-
-
-
             //attendance table
-
-            
 
             $checked_array = ($_POST["GIDcheck"]);
             $GIDname = ($_POST["GIDname"]);
             $firstname = ($_POST["name_"]);
-            
             $department_attendee = ($_POST["department_name"]);
 
             //
