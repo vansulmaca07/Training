@@ -4,140 +4,89 @@
     include_once 'includes/dbh2.inc.php';
     $GID_creator = $_SESSION["GID"];
     
-
-$query_previous = 
-    "SELECT * FROM training_form
-        WHERE 
-            creator = '$GID_creator'
-        ORDER BY date_created DESC LIMIT 1";
-
-$stmt_previous = $pdo->prepare($query_previous);
-$stmt_previous->execute();
-
-$result_previous_data = $stmt_previous->fetchAll();
-
-$training_name_prev = '';
-$process_prefix_prev = '';
-$instructor_regular_prev = '';
-$location_regular_prev = '';
-$purpose_prev = '';
-$audience_prev = '';
-$contents_prev = '';
-$usage_id_prev = '';
+$training_name = '';
+$process_prefix = '';
+$instructor_regular = '';
+$location_regular = '';
+$purpose = '';
+$audience = '';
+$contents = '';
+$usage_id = '';
+$training_id = '';
+$category = array ();
 
 
-foreach ($result_previous_data as $prev_data) {
-    $training_name_prev = $prev_data["training_name"];
-    $process_prefix_prev = $prev_data["process_prefix"];
-    $instructor_regular_prev = $prev_data["instructor_regular"];
-    $location_regular_prev = $prev_data["location_regular"];
-    $purpose_prev = $prev_data["purpose"];
-    $audience_prev = $prev_data["audience"];
-    $contents_prev = $prev_data["contents"];
-    $usage_id_prev = $prev_data["usage_id"];
+
+if(isset($_GET["training_id"])) {
+    $training_id = $_GET["training_id"];
+    $query_copy = "SELECT * FROM training_form
+    where training_id = '$training_id'
+    ";
+    $stmt_copy = $pdo->prepare($query_copy);
+    $stmt_copy-> execute();
+    $result_copy = $stmt_copy->fetchAll();
+    
+    foreach ($result_copy as $copy_data) {
+        $training_name = $copy_data["training_name"];
+        //$process_prefix = $copy_data["instructor_regular"];
+        //$instructor_regular = $copy_data["instructor_regular"];
+        //$location_regular = $copy_data["location_regular"];
+        $purpose = $copy_data["purpose"];
+        /*$audience = $copy_data["audience"];*/
+        $contents = $copy_data["contents"];
+        $usage_id = $copy_data["usage_id"];
+
+    }
+     
+    $query_cat = "SELECT category.category_id, category_name FROM category
+    
+    INNER JOIN category_ref on
+        category_ref.category_id = category.category_id
+        
+    WHERE training_id = '$training_id'";
+
+    $stmt_cat = $pdo->prepare($query_cat);
+
+    $stmt_cat->execute();
+
+    $result_cat = $stmt_cat->fetchAll();
+
+    foreach ($result_cat as $categories) {
+        $category[] = $categories["category_id"];
+    }
+
+
 }
 
+else if(!isset($_GET["training_id"])) {
 
+    $query_previous = 
+    "SELECT * FROM training_form
+        WHERE creator = '$GID_creator'
+        ORDER BY date_created DESC LIMIT 1";
 
+    $stmt_previous = $pdo->prepare($query_previous);
+    $stmt_previous->execute();
 
+    $result_previous_data = $stmt_previous->fetchAll();
+
+    foreach ($result_previous_data as $prev_data) {
+       // $training_name = $prev_data["training_name"];
+        $process_prefix = $prev_data["process_prefix"];
+        $instructor_regular = $prev_data["instructor_regular"];
+        $location_regular = $prev_data["location_regular"];
+       // $purpose = $prev_data["purpose"];
+        $audience = $prev_data["audience"];
+       // $contents = $prev_data["contents"];
+       // $usage_id = $prev_data["usage_id"];
+    }
+}
 
 ?>
     <!-----------REGISTRATION FORM----------->
 
 <style> 
-.wrapper {
-    width: 100%;
-    margin: 0;
-   
-}
 
-.wrapper.active .content {
-    display: block;
-}
-
-.select-btn, .options li{
-    display: flex;    
-    cursor: pointer;
-    align-items: center;
-}
-.select-btn {
-    height: 30px;
-    padding: 0 7.5px;
-    border-radius: 7px;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    background-color: lightgoldenrodyellow;
-    width: 95%;
-    border: black;
-    
-}
-
-.select-btn:focus {
-    border: black;
-}
-
-
-.select-btn i {
-    font-size: 10px;
-    transition: transform 0.3s linear;
-    
-}
-
-.wrapper.active .select-btn i {
-    transform: rotate(-180deg);
-}
-
-.content {
-    display: none;
-    background: #fff;
-    margin-top: 15px;
-    border-radius: 7px;
-    padding: 2px;
-    width: 170px;
-}
-
-.content .search {
-    position: relative;
-}
-
-.search i {
-    left: 13px;
-    color: #999;
-    font-size: 10px;
-    line-height: 45px;
-    position: absolute;
-}
-
-.search input {
-    height: 30px;
-    width: 100%;
-    outline: none;
-    font-size: 10px;
-    border-radius: 5px;
-    padding: 0 15px 0 43px;
-    border: 1px solid #b3b3b3;
-}
-
-/** Set the height of the box here**/
-.content .options {                           
-    margin-top: 10px;
-    max-height: 250px;
-    overflow-y: auto;
-}
-
-.options li{
-    height: 50px;
-    padding: 0 13px;
-    font-size: 10px;
-    border-radius: 5px;
-}
-
-.options li:hover{
-    background: #f2f2f2
-}
 </style>
         <div class="main" id="main">
             
@@ -166,19 +115,20 @@ foreach ($result_previous_data as $prev_data) {
                                     <input type="text"
                                     name="educationID"
                                     id="educationID"
-                                    value="<?php /* echo $training_name_prev; */?>"
+                                    value="<?php echo $training_name;?>"
+                                    class="input-main-form"
                                     
-                                    style="width:90%"
+                                    style="width:80%;"
                                     required>
                                 </td>
                                 <td style="width:20%">
                                     <span>工程：</span>
-                                    <select style="height: 30px;" name="trainingDepartment" id="trainingDepartment" required>
+                                    <select style="height: 30px;" name="trainingDepartment" id="trainingDepartment" class="input-main-form" required>
                                     <option value="" disabled selected hidden>Select</option>
                                         <?php
 
-                                        if ($process_prefix_prev !== '') {
-                                            echo "<option value= '$process_prefix_prev' selected>$process_prefix_prev</option>";
+                                        if ($process_prefix !== '') {
+                                            echo "<option value= '$process_prefix' selected>$process_prefix</option>";
                                         }
 
                                         $query = "SELECT * FROM process_prefix
@@ -208,38 +158,38 @@ foreach ($result_previous_data as $prev_data) {
                     </table>
                     <table id="mainrecordTable2" class="table table-hover table-sm rounded-3 overflow-hidden mainrecordT2">
                         <tr style="width:100%;">
-                            <td style="width:12%;">
+                            <td style="width:10%;">
                                 <span>日勤者実施日時：</span>
                             </td>
-                            <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeRegularStart" id="datetimeRegularStart" value="" required>
+                            <td style="vertical-align:middle; width:15%; padding:0;">
+                                <input type="datetime-local" name="datetimeRegularStart" id="datetimeRegularStart" value="" required class="input-main-form" >
                             </td>
-                            <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeRegularEnd" id="datetimeRegularEnd" value=""  required>
+                            <td style="vertical-align:middle; width:15%;">
+                                <input type="datetime-local" name="datetimeRegularEnd" id="datetimeRegularEnd" value=""  required class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
-                            <td style=" width:15%;">
-                                <input type="text" id="LocationRegular" name="LocationRegular" value="<?php echo $location_regular_prev; ?>" required>
+                            <td style="width:10%;">
+                                <input type="text" id="LocationRegular" name="LocationRegular" value="<?php echo $location_regular; ?>" required class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
                             </td>
-                            <td>
+                            <td style="width:15%;">
                                 <input type="text" id="trial_input" name="instructorRegularID" value="<?php
-                                    if($instructor_regular_prev!=='') {
-                                        echo $instructor_regular_prev;
+                                    if($instructor_regular!=='') {
+                                        echo $instructor_regular;
                                     }
                                 ?>" required hidden>
                             <!--SEARCH INSTRUCTOR-->
                                 <div class="wrapper">
                                     <div class="select-btn">        
                                         <!--<span class="instructor_input">選択講師</span>-->
-                                        <span class="instructor_input"><?php   if($instructor_regular_prev!=='') {
-                                        echo $instructor_regular_prev;
+                                        <span class="instructor_input"><?php   if($instructor_regular!=='') {
+                                        echo $instructor_regular;
                                     }
-                                    else if ($instructor_regular_prev==='') {
+                                    else if ($instructor_regular==='') {
                                         echo "選択講師";
                                     } ?></span>
                                         <i class="uil uil-angle-down"></i>
@@ -251,10 +201,7 @@ foreach ($result_previous_data as $prev_data) {
                                         </div>
                                         <ul class="options">
                                         <?php
-
-                                          
-
-                                           
+   
                                                 $query = "SELECT name_ from users
                                                     WHERE userlevel ='2'
                                                     ;";
@@ -283,22 +230,22 @@ foreach ($result_previous_data as $prev_data) {
                                 <span>Ａ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeAStart" id="datetimeAStart" value="" >
+                                <input type="datetime-local" name="datetimeAStart" id="datetimeAStart" value="" class="input-main-form">
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeAEnd" id="datetimeAEnd" value="">
+                                <input type="datetime-local" name="datetimeAEnd" id="datetimeAEnd" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="LocationA" name="LocationA" value="">
+                                <input type="text" id="LocationA" name="LocationA" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
                             </td>
                             <td>
-                                <input type="text" id="trial_input" name="instructorAID" value=""  hidden>
+                                <input type="text" id="trial_input" name="instructorAID" value=""  hidden class="input-main-form">
                             <!--SEARCH INSTRUCTOR-->
                                 <div class="wrapper">
                                     <div class="select-btn">        
@@ -339,16 +286,16 @@ foreach ($result_previous_data as $prev_data) {
                                 <span>Ｂ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeBStart" id="datetimeRegularStart" value="">
+                                <input type="datetime-local" name="datetimeBStart" id="datetimeRegularStart" value="" class="input-main-form">
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeBEnd" id="datetimeRegularEnd" value="">
+                                <input type="datetime-local" name="datetimeBEnd" id="datetimeRegularEnd" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="LocationRegular" name="LocationB" value="">
+                                <input type="text" id="LocationRegular" name="LocationB" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
@@ -395,16 +342,16 @@ foreach ($result_previous_data as $prev_data) {
                                 <span>Ｃ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeCStart" id="datetimeRegularStart" value="">
+                                <input type="datetime-local" name="datetimeCStart" id="datetimeRegularStart" value="" class="input-main-form">
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeCEnd" id="datetimeRegularEnd" value="">
+                                <input type="datetime-local" name="datetimeCEnd" id="datetimeRegularEnd" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="CRegular" name="LocationC" value="">
+                                <input type="text" id="CRegular" name="LocationC" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
@@ -451,16 +398,16 @@ foreach ($result_previous_data as $prev_data) {
                                 <span>Ｄ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeDStart" id="datetimeRegularStart" value="" >
+                                <input type="datetime-local" name="datetimeDStart" id="datetimeRegularStart" value="" class="input-main-form">
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeDEnd" id="datetimeRegularEnd" value="" >
+                                <input type="datetime-local" name="datetimeDEnd" id="datetimeRegularEnd" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="LocationD" name="LocationD" value="" >
+                                <input type="text" id="LocationD" name="LocationD" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
@@ -509,46 +456,13 @@ foreach ($result_previous_data as $prev_data) {
                     <table id="categoryTable" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tbody>
                             <tr>
-                          <!--  Quality
-                                <td style="width:25%">
-                                    <input type="radio" id="categoryQuality" name="category" value="品質" checked>
-                                    <label for="categoryQuality">品質</label>
-                                </td> 
-                                <td style="width:25%">
-                                    <input type="radio" 
-                                    id="categoryEnvironment"
-                                    name="category" 
-                                    value="環境">
-                                    <label for="categoryEnvironment">環境</label> Environment
-                                </td>
-                                <td style="width:25%">
-                                    <input type="radio" 
-                                    id="categorySafetyAndHygiene" 
-                                    name="category" 
-                                    value="安全衛生">
-                                    <label for="categorySafetyAndHygiene">安全衛生</label> Safety and Hygiene
-                                </td>
-                                <td style="width:25%">
-                                    <div>
-                                        <input type="radio" 
-                                        id="categoryOther" 
-                                        name="category" 
-                                        value="Other">
-                                        <label for="categoryOther">その他</label>
-                                        <input type="text" 
-                                        id="categoryOtherManual" 
-                                        value="" 
-                                        name="category_other_manual" 
-                                        placeholder="PLEASE SPECIFY"
-                                        style="width:70%">
-                                    </div>
-                                </td> -->
-
+                         
                                 <td style="width:25%">
                                     <input type="checkbox" id="categoryQuality"
                                     
                                     name="category[]"
-                                    value="1"> <!--Quality-->
+                                    value="1"
+                                    <?php if(in_array(1,$category)) {echo 'checked';}?>> <!--Quality-->
                                     <label for="categoryQuality">品質</label>
                                 </td> 
 
@@ -556,7 +470,8 @@ foreach ($result_previous_data as $prev_data) {
                                     <input type="checkbox" 
                                     id="categoryEnvironment"
                                     name="category[]" 
-                                    value="2">
+                                    value="2"
+                                    <?php if(in_array(2,$category)) {echo 'checked';}?>>
                                     <label for="categoryEnvironment">環境</label> <!--Environment-->
                                 </td>
 
@@ -564,7 +479,8 @@ foreach ($result_previous_data as $prev_data) {
                                     <input type="checkbox" 
                                     id="categorySafetyAndHygiene" 
                                     name="category[]" 
-                                    value="3">
+                                    value="3"
+                                    <?php if(in_array(3,$category)) {echo 'checked';}?>>
                                     <label for="categorySafetyAndHygiene">安全衛生</label> <!--Safety and Hygiene-->
                                 </td>
 
@@ -573,14 +489,16 @@ foreach ($result_previous_data as $prev_data) {
                                         <input type="checkbox" 
                                         id="categoryOther" 
                                         name="category[]" 
-                                        value="4">
+                                        value="4"
+                                        <?php if(in_array(4,$category)) {echo 'checked';}?>>
                                         <label for="categoryOther">その他</label>
                                         <input type="text" 
                                         id="categoryOtherManual" 
                                         value="" 
                                         name="category_others_manual" 
                                         placeholder="PLEASE SPECIFY"
-                                        style="width:70%">
+                                        style="width:70%"
+                                        class="input-main-form">
                                     </div>
                                 </td> 
 
@@ -594,20 +512,20 @@ foreach ($result_previous_data as $prev_data) {
                     <table id="purposeTable" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">目的：</td>
-                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="<?php /*echo $purpose_prev; */?>" style="width:96%" required></td>
+                            <td colspan="4"><input type="text" name="purposeID" id="purposeID" value="<?php echo $purpose; ?>" style="width:96%" required class="input-main-form"></td>
                         </tr>
                         <tr>
                             <td colspan ="1" style="width:10%">対象者：</td>
-                            <td style ="50%"><input type="text" name="audienceID" id="audienceID" value="<?php echo $audience_prev;?>" style="width:92%" required></td>
+                            <td style ="50%"><input type="text" name="audienceID" id="audienceID" value="<?php echo $audience;?>" style="width:92%" required class="input-main-form"></td>
                             <td colspan ="1" style="width:2.5%">名:</td>
-                            <td style="width:2.5%"><span class="jqValue" id="jqValue"></span><input type="text" id="count_value" name="count_value" hidden class="count_value" value=""></td>
+                            <td style="width:2.5%"><span class="jqValue" id="jqValue"></span><input type="text" id="count_value" name="count_value" hidden class="count_value input-main-form" value=""></td>
                             <td style="width:35%"></td>
                         </tr>
                     </table>
                 </div>
                 <div id="participantsDIV" class="participantsDIV">
                     <caption><b>受講者（製造）</b></caption>        
-                    <table id="participantsTable" border="1" class="table table-hover rounded-3 table-sm overflow-hidden participantsT">
+                    <table id="participantsTable" class="table table-hover table-bordered rounded-3 table-sm overflow-hidden participantsT">
                         <thead class="table text-center theadstyle participants_thead" style="width: 98.5%;">
                             <tr id="firstrow" style="height: 40px;">
                                 <th style="width:10%; vertical-align:middle;height:40px;"><input type="checkbox"  id="select_all" onClick="toggle(this)" onchange="count()" style="vertical-align:middle;">すべて選択</th>
@@ -619,7 +537,7 @@ foreach ($result_previous_data as $prev_data) {
                                             <?php
                                                 $query = "SELECT distinct(shift_description) FROM users
                                                     INNER JOIN shift ON users.shift_id = shift.shift_id
-                                                    WHERE group_ = '$group_'
+                                                    
                                                     ORDER BY shift.shift_description ASC;";
                                                 $stmt = $pdo->prepare($query);
                                                 $stmt->execute();
@@ -642,11 +560,11 @@ foreach ($result_previous_data as $prev_data) {
                                 </th>
                                 <th style="width:18%; vertical-align:middle; height:40px;">
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">工程</a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="max-height: 300px; overflow-y:scroll">
                                             <?php
                                                 $query = "SELECT DISTINCT(department_name) FROM users
                                                     INNER JOIN department ON users.department_id = department.department_id
-                                                    WHERE group_ = '$group_'
+                                                    where group_ = '$group_'
                                                     ;";
                                                 $stmt = $pdo->prepare($query);
                                                 $stmt->execute();
@@ -655,8 +573,9 @@ foreach ($result_previous_data as $prev_data) {
                                                     {
                                             ?>
                                                 <div class="list-group-item checkbox">
-                                                    <label><input type="checkbox" class="common_selector process" value="
-                                                        <?php echo $row["department_name"];
+                                                    <label><input type="checkbox" class="common_selector process" 
+                                                       
+                                                        value="<?php echo $row["department_name"];
                                                         ?>
                                                         "> <?php echo $row["department_name"];
                                                         ?>
@@ -672,7 +591,7 @@ foreach ($result_previous_data as $prev_data) {
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
                                                 $query = "SELECT DISTINCT(building) FROM users
-                                                    WHERE group_ = '$group_'
+                                                    
                                                     ORDER by building ASC
                                                     ;";
                                                 $stmt = $pdo->prepare($query);
@@ -698,13 +617,14 @@ foreach ($result_previous_data as $prev_data) {
                         <tbody id="post_list" class="participants_tbody">
                         </tbody>
                     
-                    </table>          
+                    </table> 
+                           
                 </div> 
                 <div id="contentsDIV" class="contentsDIV">
                 <caption><b>内容</b></caption>
                     <table id="contentsTable" border="1" class="contentsT">
                         <tr>
-                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php /* echo $contents_prev; */?></textarea></td>
+                            <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php  echo $contents; ?></textarea></td>
                         </tr>
                     </table>
                 </div>
@@ -712,11 +632,11 @@ foreach ($result_previous_data as $prev_data) {
                 <caption><b>使用資料（作業標準がある場合には、作業標準№を記入、ない場合には資料名等を記入）</b></caption>
                     <table id="usageTable" border="1" class="usageT">
                         <tr>
-                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required><?php /*echo $usage_id_prev; */?></textarea></td>
+                            <td colspan="4"><textarea type="text" name="usageID" id="usageID" value="" rows="3" class="usageInput" required><?php echo $usage_id; ?></textarea></td>
                         </tr>
                         <tr>
                             
-                            <td style="justify-tems:center; width:45%;">訓練資料を追加(任意):<input type="file" name="file[]" multiple ></td>
+                            <td style="justify-tems:center; width:45%;">訓練資料を追加(任意):<input type="file" name="file[]" multiple class="input-main-form"></td>
                         
                             <td style="width: 60%;"></td>
                         </tr>
@@ -726,11 +646,11 @@ foreach ($result_previous_data as $prev_data) {
                     <caption style="text-align:center;"><b>教育効果の確認方法、確認予定日</b></caption>
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
-                            <td colspan="4" style="width:100%"><input type="text" name="confirmation_by" id="confirmation_by_id" value="インタビュー式による確認" style="width:100%" required></td>
+                            <td colspan="4" style="width:100%"><input type="text" name="confirmation_by" id="confirmation_by_id" value="インタビュー式による確認" class="input-main-form" style="width:100%" required></td>
                         </tr>
                         <tr>
                             <td colspan="1" style="width:25%; vertical-align:middle;">最終確認予定日：</td>
-                            <td colspan="1" style="width:25%"><input type="datetime-local" name="confirmation_date" id="confirmation_date_id" value="" style="width:90%" required></td>
+                            <td colspan="1" style="width:25%"><input type="datetime-local" name="confirmation_date" class="input-main-form" id="confirmation_date_id" value="" style="width:90%" required></td>
                             <td colspan="1"></td>
                             <td colspan="1"></td>
                         </tr>
@@ -741,11 +661,11 @@ foreach ($result_previous_data as $prev_data) {
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
                             <td colspan="1" style="width:10%">日勤者：</td>
-                            <td colspan="2" style="width:65%"><input type="text" name="checker_people_regular" id="checker_people_regular" value="" style="width:100%"></td>
-                            <td colspan="1" style="width:25%"><input type="datetime-local" name="checker_date_regular" id="checker_date_regular" value="" style="width:90%"></td>
+                            <td colspan="2" style="width:65%"><input type="text" class="input-main-form" name="checker_people_regular" id="checker_people_regular" disabled value="" style="width:100%"></td>
+                            <td colspan="1" style="width:25%"><input type="datetime-local" class="input-main-form" name="checker_date_regular" id="checker_date_regular" disabled value="" style="width:90%"></td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="width:100%"><input type="text" name="checker_comment_regular" id="checker_comment_regular"
+                            <td colspan="4" style="width:100%"><input type="text" class="input-main-form" name="checker_comment_regular" id="checker_comment_regular"
                              value="上記の人にインタビューを実施し、理解できたことを確認できました。" style="width:100%"></td>
                         </tr>
                     </table>
@@ -760,6 +680,8 @@ foreach ($result_previous_data as $prev_data) {
 <!-----SCRIPT------>
 
 <script type="text/javascript">
+
+
 
 
 /** Search Instructor **/
@@ -807,15 +729,22 @@ selectBtn.addEventListener("click", () => {
 wrapper.classList.toggle("active");
 });
 
-/**Participants **/
+/**Participants**/
 
 $(document).ready(function() {
 
     $('#checkBtn').click(function() {
         checked = $('input[name="GIDcheck[]"]:checked').length;
 
+        checked_2 = $('input[name="category[]"]:checked').length;
+
         if(!checked) {
             alert("You must select at least one participant");
+            return false;
+        }
+        
+        if(!checked_2) {
+            alert("You must select at least one category!");
             return false;
         }
     });
@@ -836,7 +765,7 @@ $(document).ready(function() {
             $('#post_list').html(data);
           }
       });
-  }
+    }
 
   function get_filter(class_name)
   {
@@ -854,13 +783,11 @@ $(document).ready(function() {
 });
 
 
-
-
 function toggle(source) {
     checkboxes = document.getElementsByName('GIDcheck[]');
     for(var i=0, n=checkboxes.length;i<n;i++) {    
     checkboxes[i].checked = source.checked;  
-}
+    }
 }
 
 function count() {
