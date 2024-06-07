@@ -39,6 +39,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                      
         $stmt->execute();
 
+        $stmt->closeCursor();
+        
+        $query_02 = "SELECT * FROM attendance
+        where
+            training_id = '$training_id'
+        ";
+
+        $stmt_02 = $pdo->prepare($query_02);
+        $stmt_02->execute();
+        $result=$stmt_02->fetchAll();
+
+       
+
+        $attendance_check = array();
+
+        foreach ($result as $attendance) {
+            $attendance_check[] = $attendance["sign_progress"];
+        }
+
+        if (arrayContainsOnlyZero($attendance_check) === true) {
+            $query_03 = 
+            "UPDATE training_form
+                SET status_id = '3'
+            WHERE training_id = '$training_id'     
+            "; 
+            
+            $stmt_03 = $pdo->prepare($query_03);
+
+            $stmt_03->execute();
+            
+            $stmt_03->closeCursor();
+            
+             
+        } 
+
+
         $pdo = null;
         $stmt = null;
    
@@ -52,4 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 else {
     header("Location: ../training.php");
+}
+
+function arrayContainsOnlyZero($array) {
+    // Filter the array
+    $filteredArray = array_filter($array, function($value) {
+        return $value !== '2';
+    });
+    
+    // Return boolean if only zero or not. True means all items are 0
+    return empty($filteredArray);
 }
