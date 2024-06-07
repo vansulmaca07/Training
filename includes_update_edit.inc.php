@@ -12,7 +12,7 @@ include("dbh2.inc.php");
     $sql = "SELECT training_id, training_name, process_prefix, process_suffix,
     start_time_regular, end_time_regular, location_regular, instructor_regular, count_, date_created,
     category_quality, category_environment, category_safety_and_hygiene, category_others, category_others_manual, purpose, contents, usage_id, audience, area, confirmation_by, confirmation_date, department_name, name_, start_time_regular,
-    checker_comment_regular, checker_people_regular, modified_date
+    checker_comment_regular, checker_people_regular, modified_date, creation_department
     FROM training_form
 
     INNER JOIN department on training_form.creation_department = department.department_id
