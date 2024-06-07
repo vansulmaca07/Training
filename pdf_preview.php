@@ -8,9 +8,10 @@ $training_id = '';
 if(isset($_GET["training_id"])) {
     $training_id = $_GET["training_id"];
 }
-else {
+else if(!isset($_GET["training_id"])) {
     $training_id = $_SESSION["training_id"];
 }
+
 
 $query = "SELECT date_id, affiliation, GIDh, name_, judgement_name FROM attendance
 INNER JOIN judgement on attendance.judgement = judgement.id
@@ -77,13 +78,12 @@ $total_row_06 = $stmt_06->rowCount();
 
 $result_06 = $stmt_06->fetchAll();
 
-
 $query_07 = "SELECT approval, approval_date, modified_date, status_id, creator, training_name, area, start_time_regular, end_time_regular, location_regular, instructor_regular,
         category_quality, category_environment, category_safety_and_hygiene, category_others, category_others_manual, purpose, count_, audience, contents, usage_id, confirmation_by,
-        confirmation_date, checker_people_regular, checker_comment_regular, name_, checker_date_regular
-     FROM training_form
+        confirmation_date, checker_people_regular, checker_comment_regular, name_, checker_date_regular, approved_by
+    FROM training_form
 
-     INNER JOIN users ON users.GID = training_form.creator
+    INNER JOIN users ON users.GID = training_form.creator
 
     WHERE training_id = '$training_id'";
 
@@ -94,8 +94,10 @@ $result_07 = $stmt_07->fetchAll();
 
 $approval ='';
 $approval_date = '';
+$approved_by = '';
 $modified_date= '';
 $status_id = '';
+
 
 foreach ($result_07 as $result_approval) {
     $approval = $result_approval["approval"];
@@ -124,6 +126,7 @@ foreach ($result_07 as $result_approval) {
     $checker_people_regular = $result_approval["checker_people_regular"];
     $checker_comment_regular = $result_approval["checker_comment_regular"];
     $checker_date_regular = $result_approval["checker_date_regular"];
+    $approved_by = $result_approval["approved_by"];
 }
 
 
@@ -145,6 +148,9 @@ $category = array ();
 foreach ($result_cat as $categories) {
     $category[] = $categories["category_id"];
 }
+
+
+
 ?>
 
 
@@ -203,24 +209,39 @@ foreach ($result_cat as $categories) {
                 >
                <br>
                 <span>氏名</span>
+                <form action='includes/approval.inc.php' method='POST'>
                 <input type="text"
-                value="<?php echo $_SESSION["name_"];?>"
+                value="<?php
+                if($status_id === "2") {
+                    echo $approved_by;
+                }
+                else {
+                    echo $_SESSION["name_"];
+                }
+                ?>"
                 id="input-approver"
                 class="input-approver input-left"
                 onkeyup="input_data();"
+                name="approver"
+                <?php
+                if($status_id === 2) {
+                    echo "disabled";
+                }
+                ?>
                 >
             
             </div>
-
+            
             <?php
             if ($approval === '1' && $status_id === '4') {
 
             echo "
-            <form action='includes/approval.inc.php' method='POST'>
+            <input type='text' hidden name='approver_GID' value='$_SESSION[GID]'  id='approver_db'>
+            <input type='text' hidden name='training_id_approve' value='$training_id'  id='training_id_approve'>
             <button type='submit' name='submit' class='btn-approve input-left'>
                 <span>確認</span>
             </button>
-            </form>
+           
             ";
             }
 
@@ -234,6 +255,8 @@ foreach ($result_cat as $categories) {
             }
             
             ?>
+            
+            </form>
             <div class="pdf-download">
             <button id="download" class="btn-pdf"><span>PDFダウンロード&nbsp;&nbsp;&nbsp;<i class="bi bi-file-earmark-arrow-down"></i></span></button>
             </div>
@@ -278,10 +301,7 @@ foreach ($result_cat as $categories) {
                                         }
                                         
                                     ?>
-
-
-                                  
-             
+                               
                                     id="approver_div">
                                             <div class="child">
                                                 <span-a id="deployment_approver">製造部</span-a>
@@ -882,7 +902,6 @@ foreach ($result_cat as $categories) {
 
             <!----- PAGE 3 (IF NECCESSARY)------> 
 
-
             <?php 
                 if ($total_row_05 !== 0) {
 
@@ -1074,35 +1093,25 @@ window.onload =function() {
     var training_id = '<?php echo $training_id; ?>';
     var training_name = '<?php echo $training_name; ?>';
     var category_quality = '<?php echo $category_quality; ?>';
+    
     var cat_q = '';
-    if(category_quality === '1' ) {
-        cat_q = '品質';
-    }
+    cat_q = '<?php if(in_array(1,$category))
+     {echo '品質';}?>';
 
-
-    var cat_en = '';
-    var category_environment = '<?php echo $category_environment; ?>';
-    if(category_environment === '1' ) {
-        cat_en = '環境';
-    }
+    var cat_en = ''; 
+    cat_en = '<?php if(in_array(2,$category))
+     {echo '環境';}?>';
 
     var cat_sh = '';
-    var category_safety_and_hygiene = '<?php echo $category_safety_and_hygiene; ?>';
-    if(category_safety_and_hygiene === '1' ) {
-        cat_sh = '安全衛生';
-    }
+    cat_sh = '<?php if(in_array(3,$category))
+     {echo '安全衛生';}?>';
 
     var cat_o = '';
-    var category_others = '<?php echo $category_others; ?>';
-    if(category_others === '1' ) {
-        cat_o = 'その他';
-    }
+    cat_o = '<?php if(in_array(4,$category))
+     {echo 'その他';}?>';
 
     var cat_name = '';
-    var category_others_manual = '<?php echo $category_others_manual; ?>';
-    if(category_others === '1' ) {
-        cat_name = category_others_manual;
-    }
+
 
     var file_name_try = training_id.concat("_",date_file_name,"_",training_name,"(",cat_q,cat_en,cat_sh,cat_o,cat_name,")"); 
 
@@ -1131,19 +1140,20 @@ window.onload =function() {
     var input_creator;
     var input_approver;
     function input_data() {
-
-    
+ 
     input_creator = document.getElementById('input-creator').value; 
     document.getElementById('creator_stamp').innerHTML = input_creator;
 
-    input_approver = document.getElementById('input-approver').value; 
-    document.getElementById('approver_stamp').innerHTML = input_creator;
+ /*   input_approver = document.getElementById('input-approver').value; 
+    document.getElementById('approver_stamp').innerHTML = input_creator; */
 
     }
     
 // function approve_data() {
     input_approver = document.getElementById('input-approver').value; 
     document.getElementById('approver_stamp').innerHTML = input_approver;
+  //  document.getElementByID('approver_db').value = document.getElementById('input-approver').value;
+    
 
     var date_approved;
 
