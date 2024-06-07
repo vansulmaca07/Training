@@ -165,6 +165,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             //attendance table
 
+            $training_id_new = $process_prefix . $process_suffix;
+
             $GIDname = ($_POST["GIDname"]);
             $judgement = ($_POST["judgement"]);
 
@@ -183,14 +185,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $stmt2->bindParam(":GID", $GIDname[$key]);
                 $stmt2->bindParam(":judgement", $judgement[$key]);
-                $stmt2->bindParam(":training_id", $training_id);
+                $stmt2->bindParam(":training_id", $training_id_new);
                 $stmt2->execute();
                 
             } 
 
             $stmt2->closeCursor();
 
-            $query_03 = "SELECT * FROM training_form where training_id = '$training_id'";
+            
+
+            $query_03 = "SELECT * FROM training_form where training_id = '$training_id_new'";
 
             $stmt3 = $pdo->prepare($query_03);
             $stmt3->execute();
@@ -213,7 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 $query_change_stat = "UPDATE training_form
                     SET status_id = '4'
-                    where training_id = '$training_id' ";
+                    where training_id = '$training_id'";
                 
                 $stmt4 = $pdo->prepare($query_change_stat);
 
@@ -228,6 +232,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $new_category = array();
             $new_category = ($_POST["category"]);
 
+            $training_id_new = $process_prefix . $process_suffix;
+
             foreach ($new_category as $category_id) {
                 $query5 = "INSERT INTO category (category_id, category_others_name, training_id)
                       VALUES(
@@ -240,21 +246,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt5=$pdo->prepare($query5);
                 $stmt5->bindParam(":category_id", $category_id);
                 $stmt5->bindParam(":category_others_name", $category_others_manual);
-                $stmt5->bindParam(":training_id", $training_id);
+                $stmt5->bindParam(":training_id", $training_id_new);
 
                 $stmt5->execute();
             }
 
-
-            
-
-
-            $stmt = null;
-            
+            $stmt = null;            
             $pdo = null;
            
-
-
             $_SESSION["training_id"] = $process_prefix . $process_suffix;
 
             header("Location: update_edit.inc.php");
