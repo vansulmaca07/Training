@@ -1,0 +1,93 @@
+<?php
+
+session_start();
+include('dbh2.inc.php');
+
+$group_ = $_SESSION["group_"]; 
+$training_id = $_SESSION["training_id"];
+
+if(isset($_POST["action"])) {
+
+    $query = "SELECT GID, name_, RFID, department_name, shift_description, group_, building
+    FROM users
+    INNER JOIN department on users.department_id = department.department_id
+    INNER JOIN shift on users.shift_id = shift.shift_id
+    
+
+    ";
+
+    if(isset($_POST["shift"]))
+    {   
+       $shift_trimmed = array_map('trim',$_POST["shift"]);
+       $shift_filter = implode("','",$shift_trimmed);
+       $query .= "AND shift.shift_description IN('".$shift_filter."')";
+    }
+
+    if(isset($_POST["process"]))
+    {
+       $process_trimmed = array_map('trim',$_POST["process"]);
+       $process_filter = implode("','",$process_trimmed); 
+       $query .= "AND department.department_name IN('".$process_filter."')";
+    }
+
+    if(isset($_POST["building"]))
+    {
+       $building_trimmed = array_map('trim',($_POST["building"]));
+       $building_filter = implode("','",$building_trimmed); 
+       $query .= "AND users.building IN('".$building_filter."')";
+    }
+
+    if(isset($_POST["GID_search"]))
+    {   
+        $GID_search = $_POST['GID_search'];
+        $query .= "AND GID LIKE ('%$GID_search%')
+        ";
+    }
+
+    if(isset($_POST["name_search"]))
+    {   
+        $name_search = $_POST['name_search'];
+        $query .= "AND name_ LIKE ('%$name_search%')
+        ";
+    }
+
+       
+    $query .=   "EXCEPT
+
+    SELECT GIDh, attendance.name_, attendance.RFID, department_name, shift_description, group_, building
+	from attendance
+    INNER JOIN users on users.GID = attendance.GIDh
+    INNER JOIN department on users.department_id = department.department_id
+    INNER JOIN shift on users.shift_id = shift.shift_id
+    WHERE training_id = '$training_id'";
+
+    $query .= "ORDER BY shift_description ASC";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    $total_row = $stmt->rowCount();
+    $output = '';
+    if($total_row > 0)
+    {
+        foreach($result as $row)
+        {
+            $output .= "
+            <tr>
+            <td style='width:10%; padding:0;' ><input type='checkbox' class='GIDcheck' name='GIDcheck_add[]'  value= '$row[GID]' onchange ='count()'></td>
+            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='GIDname'  name='GIDname_add[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
+            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='name_'  name='name_add[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
+            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='shift_description' hidden name='shift_description_add[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
+            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='department_name'  name='department_name_add[]' value= '$row[department_name]'>" . $row["department_name"] .  "</td>
+            <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='building' hidden name='building_add[]' value= '$row[building]'>" . $row["building"] .  "</td>
+            </tr>";
+        }
+    }
+
+    else {
+        $output = '<h3>No Data Found </h3>';
+    }
+
+    echo $output;
+   
+}
