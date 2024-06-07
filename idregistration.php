@@ -8,11 +8,29 @@
         <h4>IDカード登録</h4>
             <div id="table-wrapper5">
                 <div id="table-scroll5">
-                    <table id="IDregTable" border="1" class="table table-hover rounded-3 overflow-hidden IDregT">
-                        <thead>
+                    <table id="IDregTable" class="table table-hover table-bordered rounded-3 overflow-auto IDregT">
+                        <thead class="theadstyle">
                             <tr id="firstrow">
-                                <th style="width:15%; vertical-align:middle;">GID</th>
-                                <th style="width:15%; vertical-align:middle;">名前</th>
+                                <th style="width:15%; vertical-align:middle;">GID
+                                <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle"></a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <div class="list-group-item">
+                                                    <div class="form-group">
+                                                        <input type="text" name="GID_search" id="GID_search" class="form-control" placeholder="Search GID">
+                                                    </div>
+                                                </div>              
+                                            </ul> 
+                                </th>
+                                <th style="width:15%; vertical-align:middle;">名前
+                                <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle"></a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <div class="list-group-item">
+                                                    <div class="form-group">
+                                                        <input type="text" name="name_search" id="name_search" class="form-control" placeholder="Search Name">
+                                                    </div>
+                                                </div>              
+                                            </ul> 
+                                </th>
                                 <th style="width:15%; vertical-align:middle;height:40px; vertical-align:middle;">
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Team</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -119,11 +137,13 @@ function filter_data() {
   var shift = get_filter('shift');
   var process = get_filter('process');
   var building = get_filter('building');
+  var GID_search = $('#GID_search').val();
+  var name_search = $('#name_search').val();
 
   $.ajax({
       url: "includes/fetch_data_id_register.inc.php",
       method: "POST",
-      data: {action:action,shift:shift,process:process,building:building},
+      data: {action:action,shift:shift,process:process,building:building,GID_search:GID_search,name_search:name_search},
       success:function(data){
         $('#post_list').html(data);
       }
@@ -142,6 +162,18 @@ return filter;
 
 $('.common_selector').click(function(){
   filter_data();
+});
+
+$('#GID_search').keyup(function(event){
+  event.preventDefault();
+  filter_data();
+
+});
+
+$('#name_search').keyup(function(event){
+  event.preventDefault();
+  filter_data();
+
 });
 });
 </script>
