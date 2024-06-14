@@ -4,31 +4,8 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt','pptx');
-    $file_name_checking = $_FILES['file']['name'];
-    $file_size_checking = $_FILES['file']['size'];
-
-    $file_name_check_actual_ext = array();
-
-    foreach ($file_name_checking as $extension_files) {
-
-        $extension_actual = explode('.', $extension_files);
-        $file_actual_Ext = strtolower(end($extension_actual));
-        $file_name_check_actual_ext[] = $file_actual_Ext;
-        
-    }
-
-
-    define('KB', 1024);
-    define('MB', 1048576);
-    define('GB', 1073741824);
-    define('TB', 1099511627776);
-
-    $file_name_check_ext = '';
-    $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
-
-    if($file_name_check_ext === true) {
-        if(max($file_size_checking) < 20971520) {
+            $file_size_get = '';
+            $file_type_get = '';
 
             $process_prefix = ($_POST["trainingDepartment"]);
             $creationdepartment = $_SESSION["department"];
@@ -63,9 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $confirmation_by = ($_POST["confirmation_by"]);
             $confirmation_date = ($_POST["confirmation_date"]); 
             $count_value = ($_POST["count_value"]);
-            $checker_comment_regular =($_POST["checker_comment_regular"]);
-            $checker_people_regular =($_POST["checker_people_regular"]);
-            $checker_date_regular = ($_POST["checker_date_regular"]);
+            
+            
+        //    $checker_comment_regular =($_POST["checker_comment_regular"]);
+        //    $checker_people_regular =($_POST["checker_people_regular"]);
+        //    $checker_date_regular = ($_POST["checker_date_regular"]);
             
             $category_quality='';
             if(isset($_POST["category_quality"])) {
@@ -87,12 +66,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["category_others_manual"])) {
             $category_others_manual = $_POST["category_others_manual"];}
 
+            $categories = ($_POST["category"]);
+
             //attendance table
 
             $checked_array = ($_POST["GIDcheck"]);
             $GIDname = ($_POST["GIDname"]);
             $firstname = ($_POST["name_"]);
-            
             $department_attendee = ($_POST["department_name"]);
 
             //
@@ -111,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     end_time_regular,
                     location_regular,
                     instructor_regular,
-                    start_time_a,
+                 /*   start_time_a,
                     end_time_a,
                     location_a,
                     instructor_a,
@@ -126,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     start_time_d,
                     end_time_d,
                     location_d,
-                    instructor_d,  
+                    instructor_d,  */
                     purpose,
                     audience,
                     contents,
@@ -135,13 +115,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     confirmation_by,
                     confirmation_date,
                     count_,
-                    checker_comment_regular,
+                  /*  checker_comment_regular,
                     checker_people_regular,
-                    checker_date_regular,
+                    checker_date_regular, 
                     category_quality,
                     category_environment,
                     category_safety_and_hygiene,
-                    category_others,
+                    category_others,*/
                     category_others_manual
                     )
 
@@ -155,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     :endtimereg,
                     :locationreg,
                     :instructorreg,
-                    :starttimeA,
+              /*      :starttimeA,
                     :endtimeA,
                     :locationA,
                     :instructorA,
@@ -170,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     :starttimeD,
                     :endtimeD,
                     :locationD,
-                    :instructorD, 
+                    :instructorD, */
                     :purpose,
                     :audience,
                     :contents,
@@ -179,13 +159,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     :confirmation_by,
                     :confirmation_date,
                     :count_value,
-                    :checker_comment_regular,
+                  /*  :checker_comment_regular,
                     :checker_people_regular,
-                    :checker_date_regular,
+                    :checker_date_regular, 
                     :category_quality,
                     :category_environment,
                     :category_safety_and_hygiene,
-                    :category_others,
+                    :category_others,*/
                     :category_others_manual
                 );";
                 
@@ -200,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(":endtimereg", $endtimereg);
                 $stmt->bindParam(":locationreg",  $locationreg);
                 $stmt->bindParam(":instructorreg", $instructorreg);
-                $stmt->bindParam(":starttimeA", $starttimeA);
+            /*    $stmt->bindParam(":starttimeA", $starttimeA);
                 $stmt->bindParam(":endtimeA", $endtimeA);
                 $stmt->bindParam(":locationA", $locationA);
                 $stmt->bindParam(":instructorA", $instructorA);
@@ -215,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(":starttimeD", $starttimeD);
                 $stmt->bindParam(":endtimeD", $endtimeD);
                 $stmt->bindParam(":locationD", $locationD);
-                $stmt->bindParam(":instructorD", $instructorD);  
+                $stmt->bindParam(":instructorD", $instructorD);  */
                 $stmt->bindParam(":purpose", $purpose);
                 $stmt->bindParam(":audience", $audience);
                 $stmt->bindParam(":contents", $contents);
@@ -224,13 +204,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(":confirmation_by", $confirmation_by); 
                 $stmt->bindParam(":confirmation_date", $confirmation_date);
                 $stmt->bindParam(":count_value", $count_value);
-                $stmt->bindParam(":checker_comment_regular", $checker_comment_regular);
+               /* $stmt->bindParam(":checker_comment_regular", $checker_comment_regular);
                 $stmt->bindParam(":checker_people_regular", $checker_people_regular);
-                $stmt->bindParam(":checker_date_regular", $checker_date_regular);
+                $stmt->bindParam(":checker_date_regular", $checker_date_regular); 
                 $stmt->bindParam(":category_quality", $category_quality);
                 $stmt->bindParam(":category_environment", $category_environment);
                 $stmt->bindParam(":category_safety_and_hygiene", $category_safety_and_hygiene);
-                $stmt->bindParam(":category_others", $category_others);
+                $stmt->bindParam(":category_others", $category_others);*/
                 $stmt->bindParam(":category_others_manual", $category_others_manual);
 
                 $stmt->execute(); 
@@ -276,56 +256,166 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt3 = $pdo->prepare($query3);
                 $stmt3->execute();
 
-                /****Upload File ****/
+                //Upload File 
 
-                foreach ($_FILES['file']['tmp_name'] as $key => $value) {
-                    $file_name = $_FILES['file']['name'][$key];
-                    $file_tmp_name = $_FILES['file']['tmp_name'][$key];
-                    $file_size = $_FILES['file']['size'][$key];
-                    $file_error = $_FILES['file']['error'][$key];
-                    $file_type = $_FILES['file']['type'][$key];
-    
-                    $file_ext = explode('.', $file_name);
-                    $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
-                    $file_actual_Ext = strtolower(end($file_ext));
-                    
-                    $file_name_new = $file_name_original.".".$file_actual_Ext; 
-    
-                    $file_destination = 'uploads/'.$file_name_new;
-    
-                    move_uploaded_file($file_tmp_name, $file_destination);
-    
-                    $query4 = "INSERT INTO file_storage (
-                        file_name,
-                        file_size,
-                        file_type,
-                        file_ext,
-                        training_id,
-                        uploaded_by
-                        )
-                        VALUES (
-                            :file_name, 
-                            :file_size, 
-                            :file_type,
-                            :file_ext,
-                            :training_id,
-                            :uploaded_by
-                        ) 
-                    ";
-    
-                    $stmt4=$pdo->prepare($query4);
-                    $stmt4->bindParam(":file_name", $file_name_original);
-                    $stmt4->bindParam(":file_size", $file_size);
-                    $stmt4->bindParam(":file_type", $file_type);
-                    $stmt4->bindParam(":file_ext", $file_actual_Ext);
-                    $stmt4->bindParam(":training_id", $training_id);
-                    $stmt4->bindParam(":uploaded_by", $creator);
-    
-                    $stmt4->execute();
+                $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt','pptx','csv', 'doc', 'mp4', 'mp3');
+                $file_name_checking = $_FILES['file']['name'];
+                $file_size_checking = $_FILES['file']['size'];
 
+                $file_name_check_actual_ext = array();
+
+                foreach ($file_name_checking as $extension_files) {
+                    $extension_actual = explode('.', $extension_files);
+                    $file_actual_Ext = strtolower(end($extension_actual));
+                    $file_name_check_actual_ext[] = $file_actual_Ext;   
                 }
 
-                /******UPLOAD FILE END **********/
+                define('KB', 1024);
+                define('MB', 1048576);
+                define('GB', 1073741824);
+                define('TB', 1099511627776);
+
+                $file_name_check_ext = '';
+                $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
+
+                if($file_name_check_ext === true) {
+                    if(max($file_size_checking) < 20971520) {
+
+                        foreach ($_FILES['file']['tmp_name'] as $key => $value) {
+                            $file_name = $_FILES['file']['name'][$key];
+                            $file_tmp_name = $_FILES['file']['tmp_name'][$key];
+                            $file_size = $_FILES['file']['size'][$key];
+                            $file_error = $_FILES['file']['error'][$key];
+                            $file_type = $_FILES['file']['type'][$key];
+                            $file_ext = explode('.', $file_name);
+                            $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
+                            $file_actual_Ext = strtolower(end($file_ext));
+                            $file_name_new = $file_name_original . "." . $file_actual_Ext; 
+                            $file_name_new_destination = $file_name_new . "_" . uniqid(rand(),true);                        
+                            $file_destination = 'uploads/'.$file_name_new; 
+                            
+                            //$file_destination_storage = "D:/smartFactory/DataStore/TrainingMaterials/" . $file_name_new; 
+                            //$file_destination_storage = "../try/";
+                            //"D:\smartFactory\DataStore\TrainingMaterials\Try"; THIS FILE EXIST!!!!!!!!
+                            // file path
+
+                            $date_year = date("Y");
+                            $date_month = date("m");
+                            $date_day = date("d");
+
+                            $query_files = "SELECT * FROM file_storage_main";
+                            $stmt_files = $pdo->prepare($query_files);
+                            $stmt_files->execute();
+                            $result_files = $stmt_files->fetchAll();
+
+                            $main_directory;
+
+                            foreach ($result_files as $fetch_main_dir) {
+                                $main_directory = $fetch_main_dir["main_storage_directory"];
+                            }
+
+                            $file_path_year = $main_directory . $date_year;
+                            $file_path_month = $main_directory . $date_year . "/" . $date_month;
+                            $file_path_day = $main_directory . $date_year . "/" . $date_month . "/" . $date_day;
+                            $file_path_process = $main_directory . $date_year . "/" . $date_month . "/" . $date_day . "/" . $process_prefix . "/";
+                            $file_path = $date_year . "/" . $date_month . "/" . $date_day . "/" . $process_prefix . "/";
+
+                            switch ($file_path_year) {
+                                case(!file_exists($file_path_year)):
+                                    mkdir($file_path_year);
+                            }
+
+                            switch ($file_path_month) {
+                                case(!file_exists($file_path_month)):
+                                    mkdir($file_path_month);
+                            }
+
+                            switch ($file_path_day) {
+                                case(!file_exists($file_path_day)):
+                                    mkdir($file_path_day);
+                            } 
+
+                            switch ($file_path_process) {
+                                case(!file_exists($file_path_process)):
+                                    mkdir($file_path_process);
+                            } 
+
+                            //file path end
+                            //$file_destination_storage = "D:/smartFactory/DataStore/TrainingMaterials/2024/" . $file_name_new;
+                            $file_destination_storage = $file_path_process . $file_name_new;
+                            $file_destination_01 = $_SERVER["DOCUMENT_ROOT"] . "/Training/includes/uploads/" . $file_name_new;
+                            
+                            //$file_destination_storage= $_SERVER["DOCUMENT_ROOT"] . "/Training/includes/uploads/copy/" .$file_name_new ;
+                            //$file_destination_storage = 'uploads/copy/'.$file_name_new . "_copy";
+                            //move_uploaded_file($file_tmp_name, $file_destination);
+                            //copy($file_destination, $file_destination_storage);
+
+                            move_uploaded_file($file_tmp_name, $file_destination);
+                           
+                            copy($file_destination_01, $file_destination_storage);
+
+                            $query4 = "INSERT INTO file_storage (
+                                file_name,
+                                file_size,
+                                file_type,
+                                file_ext,
+                                training_id,
+                                uploaded_by,
+                                file_path
+                                )
+                                VALUES (
+                                    :file_name, 
+                                    :file_size, 
+                                    :file_type,
+                                    :file_ext,
+                                    :training_id,
+                                    :uploaded_by,
+                                    :file_path
+                                ) 
+                            ";
+
+                            $stmt4=$pdo->prepare($query4);
+                            $stmt4->bindParam(":file_name", $file_name_original);
+                            $stmt4->bindParam(":file_size", $file_size);
+                            $stmt4->bindParam(":file_type", $file_type);
+                            $stmt4->bindParam(":file_ext", $file_actual_Ext);
+                            $stmt4->bindParam(":training_id", $training_id);
+                            $stmt4->bindParam(":uploaded_by", $creator);
+                            $stmt4->bindParam(":file_path", $file_path);
+                            //$stmt4->bindParam(":file_unique_name", $file_name_new);
+
+                            $stmt4->execute();
+
+                            unlink($file_destination_01);
+
+                        }
+                    } 
+                    else {      
+                        $file_size_get = "?error=large_file";
+                    }
+                } 
+                else {     
+                    $file_type_get = "?error=file_type";
+                }
+
+                //UPLOAD FILE END 
+                //CATEGORY TABLE 
+
+                foreach ($categories as $category_id) {
+                    $query5 = "INSERT INTO category (category_id, category_others_name, training_id)
+                          VALUES(
+                            :category_id,
+                            :category_others_name,
+                            :training_id
+                          )";
+                    
+                    $stmt5=$pdo->prepare($query5);
+                    $stmt5->bindParam(":category_id", $category_id);
+                    $stmt5->bindParam(":category_others_name", $category_others_manual);
+                    $stmt5->bindParam(":training_id", $training_id);
+
+                    $stmt5->execute();
+                }
 
                 $pdo = null;
                 $stmt = null;
@@ -333,7 +423,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2= null;
                 $stmt3= null;
                 $stmt4= null;
-                header("Location: ../progress.php");
+                header("Location: ../progress.php". $file_type_get . $file_size_get);
 
                 die();
 
@@ -341,17 +431,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 die("Query failed: " . $e->getMessage());
 
             }
-        } //maximum files
-
-        else {
-            header("Location: ../newform.php");
-        }
-    } //allowable files
-
-    else {
-        header("Location: ../newforrm.php");
-    }
+      
 }
+
+   
+
 else {
     header("Location: ../progress.php");
 }
