@@ -4,10 +4,31 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    
+    $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt','pptx');
+    $file_name_checking = $_FILES['file']['name'];
+    $file_size_checking = $_FILES['file']['size'];
 
-            $file_size_get = '';
-            $file_type_get = '';
+    $file_name_check_actual_ext = array();
+
+    foreach ($file_name_checking as $extension_files) {
+
+        $extension_actual = explode('.', $extension_files);
+        $file_actual_Ext = strtolower(end($extension_actual));
+        $file_name_check_actual_ext[] = $file_actual_Ext;
+        
+    }
+
+
+    define('KB', 1024);
+    define('MB', 1048576);
+    define('GB', 1073741824);
+    define('TB', 1099511627776);
+
+    $file_name_check_ext = '';
+    $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
+
+    if($file_name_check_ext === true) {
+        if(max($file_size_checking) < 20971520) {
 
             $process_prefix = ($_POST["trainingDepartment"]);
             $creationdepartment = $_SESSION["department"];
@@ -66,13 +87,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["category_others_manual"])) {
             $category_others_manual = $_POST["category_others_manual"];}
 
-            $categories = ($_POST["category"]);
-
             //attendance table
 
             $checked_array = ($_POST["GIDcheck"]);
             $GIDname = ($_POST["GIDname"]);
             $firstname = ($_POST["name_"]);
+            
             $department_attendee = ($_POST["department_name"]);
 
             //
@@ -256,110 +276,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt3 = $pdo->prepare($query3);
                 $stmt3->execute();
 
-                //Upload File 
+                /****Upload File ****/
 
-                  $allowed = array('jpg','jpeg','png','pdf','xlsx','docs','xls','docx','ppt','pptx');
-                $file_name_checking = $_FILES['file']['name'];
-                $file_size_checking = $_FILES['file']['size'];
-
-                $file_name_check_actual_ext = array();
-
-                foreach ($file_name_checking as $extension_files) {
-
-                    $extension_actual = explode('.', $extension_files);
-                    $file_actual_Ext = strtolower(end($extension_actual));
-                    $file_name_check_actual_ext[] = $file_actual_Ext;
+                foreach ($_FILES['file']['tmp_name'] as $key => $value) {
+                    $file_name = $_FILES['file']['name'][$key];
+                    $file_tmp_name = $_FILES['file']['tmp_name'][$key];
+                    $file_size = $_FILES['file']['size'][$key];
+                    $file_error = $_FILES['file']['error'][$key];
+                    $file_type = $_FILES['file']['type'][$key];
+    
+                    $file_ext = explode('.', $file_name);
+                    $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
+                    $file_actual_Ext = strtolower(end($file_ext));
                     
+                    $file_name_new = $file_name_original.".".$file_actual_Ext; 
+    
+                    $file_destination = 'uploads/'.$file_name_new;
+    
+                    move_uploaded_file($file_tmp_name, $file_destination);
+    
+                    $query4 = "INSERT INTO file_storage (
+                        file_name,
+                        file_size,
+                        file_type,
+                        file_ext,
+                        training_id,
+                        uploaded_by
+                        )
+                        VALUES (
+                            :file_name, 
+                            :file_size, 
+                            :file_type,
+                            :file_ext,
+                            :training_id,
+                            :uploaded_by
+                        ) 
+                    ";
+    
+                    $stmt4=$pdo->prepare($query4);
+                    $stmt4->bindParam(":file_name", $file_name_original);
+                    $stmt4->bindParam(":file_size", $file_size);
+                    $stmt4->bindParam(":file_type", $file_type);
+                    $stmt4->bindParam(":file_ext", $file_actual_Ext);
+                    $stmt4->bindParam(":training_id", $training_id);
+                    $stmt4->bindParam(":uploaded_by", $creator);
+    
+                    $stmt4->execute();
+
                 }
 
-
-                define('KB', 1024);
-                define('MB', 1048576);
-                define('GB', 1073741824);
-                define('TB', 1099511627776);
-
-                $file_name_check_ext = '';
-                $file_name_check_ext = !array_diff($file_name_check_actual_ext, $allowed);
-
-                if($file_name_check_ext === true) {
-                    if(max($file_size_checking) < 20971520) {
-
-                        foreach ($_FILES['file']['tmp_name'] as $key => $value) {
-                            $file_name = $_FILES['file']['name'][$key];
-                            $file_tmp_name = $_FILES['file']['tmp_name'][$key];
-                            $file_size = $_FILES['file']['size'][$key];
-                            $file_error = $_FILES['file']['error'][$key];
-                            $file_type = $_FILES['file']['type'][$key];
-
-                            $file_ext = explode('.', $file_name);
-                            $file_name_original = pathinfo($file_name, PATHINFO_FILENAME);
-                            $file_actual_Ext = strtolower(end($file_ext));
-                            
-                            $file_name_new = $file_name_original.".".$file_actual_Ext; 
-
-                            $file_destination = 'uploads/'.$file_name_new;
-
-                            move_uploaded_file($file_tmp_name, $file_destination);
-
-                            $query4 = "INSERT INTO file_storage (
-                                file_name,
-                                file_size,
-                                file_type,
-                                file_ext,
-                                training_id,
-                                uploaded_by
-                                )
-                                VALUES (
-                                    :file_name, 
-                                    :file_size, 
-                                    :file_type,
-                                    :file_ext,
-                                    :training_id,
-                                    :uploaded_by
-                                ) 
-                            ";
-
-                            $stmt4=$pdo->prepare($query4);
-                            $stmt4->bindParam(":file_name", $file_name_original);
-                            $stmt4->bindParam(":file_size", $file_size);
-                            $stmt4->bindParam(":file_type", $file_type);
-                            $stmt4->bindParam(":file_ext", $file_actual_Ext);
-                            $stmt4->bindParam(":training_id", $training_id);
-                            $stmt4->bindParam(":uploaded_by", $creator);
-
-                            $stmt4->execute();
-
-                        }
-                    } 
-                    else {      
-                        $file_size_get = "?error=large_file";
-                    }
-                } 
-                else {     
-                    $file_type_get = "?error=file_type";
-                }
-
-                //UPLOAD FILE END 
-
-                //CATEGORY TABLE 
-
-                
-
-                foreach ($categories as $category_id) {
-                    $query5 = "INSERT INTO category (category_id, category_others_name, training_id)
-                          VALUES(
-                            :category_id,
-                            :category_others_name,
-                            :training_id
-                          )";
-                    
-                    $stmt5=$pdo->prepare($query5);
-                    $stmt5->bindParam(":category_id", $category_id);
-                    $stmt5->bindParam(":category_others_name", $category_others_manual);
-                    $stmt5->bindParam(":training_id", $training_id);
-
-                    $stmt5->execute();
-                }
+                /******UPLOAD FILE END **********/
 
                 $pdo = null;
                 $stmt = null;
@@ -367,7 +333,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2= null;
                 $stmt3= null;
                 $stmt4= null;
-                header("Location: ../progress.php". $file_type_get . $file_size_get);
+                header("Location: ../progress.php");
 
                 die();
 
@@ -375,11 +341,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 die("Query failed: " . $e->getMessage());
 
             }
-      
+        } //maximum files
+
+        else {
+            header("Location: ../newform.php");
+        }
+    } //allowable files
+
+    else {
+        header("Location: ../newforrm.php");
+    }
 }
-
-   
-
 else {
     header("Location: ../progress.php");
 }
