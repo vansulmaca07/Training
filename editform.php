@@ -10,6 +10,8 @@
 
     $group_ = $_SESSION["group_"];
 
+    $training_id = $_SESSION["training_id"];
+
 
 
 
@@ -312,43 +314,7 @@
                     <table id="categoryTable" border="1" class="categoryT">
                     <tbody>
                     <tr>
-                    <!--    
-                    <td style="width:25%">
-                    <input type="radio" id="categoryQuality" name="category" value="品質" <?php if ($_SESSION["category"]=='品質'){ echo 'checked';}?>> <!--Quality
-                    <label for="categoryQuality">品質</label>
-                    </td>
-                    <td style="width:25%">
-                    <input type="radio" 
-                    id="categoryEnvironment"
-                    name="category" 
-                    value="環境"
-                    <?php /* if ($_SESSION["category"]=='環境'){ echo 'checked';} */?>>
-                    <label for="categoryEnvironment">環境</label> Environment
-                    </td>
-                    <td style="width:25%">
-                    <input type="radio" 
-                    id="categorySafetyAndHygiene" 
-                    name="category" 
-                    value="安全衛生"
-                    <?php /*if ($_SESSION["category"]=='安全衛生'){ echo 'checked';} */?>>
-                    <label for="categorySafetyAndHygiene">安全衛生</label> Safety and Hygiene
-                    </td>
-                    <td style="width:25%">
-                    <div>
-                    <input type="radio" 
-                    id="categoryOther" 
-                    name="category" 
-                    value="Other">
-                    <label for="categoryOther">その他</label>
-                    <input type="text" 
-                    id="categoryOtherManual" 
-                    value="" 
-                    name="categoryOtherManual" 
-                    placeholder="PLEASE SPECIFY"
-                    style="width:70%">
-                    </div>
-                    </td> 
-                -->
+                    
 
                     <td>
                     <input
@@ -467,13 +433,20 @@
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Team</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
-                                                $query = "SELECT distinct(shift_description) FROM users
+                                              /*  $query = "SELECT distinct(shift_description) FROM users
                                                     INNER JOIN shift ON users.shift_id = shift.shift_id
                                                     WHERE group_ = '$group_'
+                                                    ORDER BY shift.shift_description ASC;"; */
+                                                    $query_shift = "SELECT distinct(shift_description) FROM attendance
+                                                    INNER JOIN users on attendance.GIDh = users.GID
+                                                    INNER JOIN shift ON users.shift_id = shift.shift_id
+                                                    WHERE training_id = :training_id
                                                     ORDER BY shift.shift_description ASC;";
-                                                $stmt = $pdo->prepare($query);
-                                                $stmt->execute();
-                                                $result = $stmt->fetchAll();
+
+                                                $stmt_shift = $pdo->prepare($query_shift);
+                                                $stmt_shift->bindParam(":training_id",$training_id);
+                                                $stmt_shift->execute();
+                                                $result = $stmt_shift->fetchAll();
                                                 foreach($result as $row)
                                                     {
                                             ?>
@@ -494,11 +467,19 @@
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">工程</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
-                                                $query = "SELECT DISTINCT(department_name) FROM users
+                                               /* $query = "SELECT DISTINCT(department_name) FROM users
                                                     INNER JOIN department ON users.department_id = department.department_id
                                                     WHERE group_ = '$group_'
-                                                    ;";
+                                                    ;";*/
+                                                $query = "SELECT DISTINCT(department_name) FROM attendance
+                                                    INNER JOIN users on users.GID = attendance.GIDh
+                                                    INNER JOIN department ON users.department_id = department.department_id
+                                                    WHERE training_id = :training_id
+                                                    "
+                                                    ;
+
                                                 $stmt = $pdo->prepare($query);
+                                                $stmt->bindParam("training_id",$training_id);
                                                 $stmt->execute();
                                                 $result = $stmt->fetchAll();
                                                 foreach($result as $row)
@@ -521,11 +502,17 @@
                                     <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Building</a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
-                                                $query = "SELECT DISTINCT(building) FROM users
+                                               /* $query = "SELECT DISTINCT(building) FROM users
                                                     WHERE group_ = '$group_'
                                                     ORDER by building ASC
-                                                    ;";
+                                                    ;"; */
+                                                $query = "SELECT DISTINCT(building) FROM attendance
+                                                    INNER JOIN users on users.GID = attendance.GIDh
+                                                    
+                                                    WHERE training_id = :training_id";   
+
                                                 $stmt = $pdo->prepare($query);
+                                                $stmt->bindParam("training_id",$training_id);
                                                 $stmt->execute();
                                                 $result = $stmt->fetchAll();
                                                 foreach($result as $row)
@@ -558,12 +545,91 @@
                       
             </div>
             <div style="width:100%; height: 60px;">
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:left;">
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:left;" <?php if($department !== $creation_department) {
+                        echo "disabled";
+                     }?>>
                     研修生を追加<i class="bi bi-person-fill-add"></i>
                     </button>   
                     
             </div>
-            
+
+            <div class="reference_material_div">
+                <table class="table table-bordered table-hover rounded-3 overflow-hidden reference_material_T">
+                    <thead class="table text-center theadstyle reference_material_thead" style="width: 98.5%;">
+                        <th style="width:10%;">No.</th>
+                        <th style="width:65%;">Reference Materials</th>
+                        <th style="width:12.5%;">Download</th>
+                        <th style="width:12.5%;">Delete</th>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $query_materials = "SELECT 
+                                    file_id, 
+                                    file_name, 
+                                    file_ext, 
+                                    training_id, 
+                                    active_status, 
+                                    file_path, 
+                                    file_path_main_directory, 
+                                    main_directory_id, 
+                                    main_storage_directory 
+                                FROM file_Storage
+	                            INNER JOIN
+		                            file_storage_main ON file_storage_main.main_directory_id = file_storage.file_path_main_directory
+	                            WHERE training_id = '$training_id'";
+                                        
+                        $stmt_materials = $pdo->prepare($query_materials);
+                        $stmt_materials->execute();
+
+                        $result_materials = $stmt_materials->fetchAll();
+
+                        $index = 0;
+               
+                        foreach ($result_materials as $materials) {
+  
+                            $main_directory = $materials["main_storage_directory"];
+                            $file_path = $materials["file_path"];
+                            $file_name = $materials["file_name"];
+                            $file_ext = $materials["file_ext"];
+                            $file_id = $materials["file_id"];
+                            
+                            $ip_add = $_SERVER['HTTP_HOST'];
+                            $http = "http://";
+                           
+                            $full_path = $main_directory .  $file_path . $file_name . "." . $file_ext;
+                            echo "<tr>
+                                    <td style='width:10.2%;'>";
+                            $index = $index +1;
+                            echo $index;     
+                            echo "</td>";
+                            echo "<td style='width:66%;'>$materials[file_name].$materials[file_ext]</td>
+                             <td style='width:12.8%;'><a href = 'download.php?file_id=$file_id' class='btn btn-primary' style ='vertical-align:middle;'><i style='vertical-align: middle;' class='bi bi-download'></i></a></td>         
+                            <td><button type ='button' value='$materials[file_id]' class ='btn btn-danger'>削除<i class='bi bi-x-circle'></i></button></td>
+                            </tr>
+                           ";
+                           
+                        }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+  
+            <!--
+            <div class="upload_div">
+                <div class="mb-3">
+                    <label for="formFileMultiple" class="form-label">Upload Additional Files</label>
+                    <input class="form-control" type="file" id="formFileMultiple" name="file[]" style="width:50%; background-color:lightyellow;" multiple>
+                </div>
+            </div> -->
+
+            <div style="width:100%; height: 60px;">
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:left;" <?php if($department !== $creation_department) {
+                        echo "disabled";
+                     }?>>
+                    Upload Additional Files<i class="bi bi-person-fill-add"></i>
+                    </button>   
+                    
+            </div>
             
             <div id="contentsDIV" class="contentsDIV">
             <caption>内容</caption>
@@ -719,7 +785,7 @@
                                                     {
                                             ?>
                                                 <div class="list-group-item checkbox">
-                                                    <label><input type="checkbox" class="common_selector_add shift" value="
+                                                    <label><input type="checkbox" class="common_selector_add shift_add" value="
                                                         <?php echo $row["shift_description"];
                                                         ?>
                                                         "> <?php echo $row["shift_description"];
@@ -751,10 +817,8 @@
                                                         if ($row["department_name"] === $_SESSION["department_name"]) {
                                                             echo "checked";
                                                         }
-                                                        
                                                         ?>
-                                                        class="common_selector_add process" 
-                                                       
+                                                        class="common_selector_add process_add" 
                                                         value="<?php echo $row["department_name"];
                                                         ?>
                                                         "> <?php echo $row["department_name"];
@@ -782,7 +846,7 @@
                                                     {
                                                 ?>
                                                     <div class="list-group-item checkbox">
-                                                        <label><input type="checkbox" class="common_selector_add building" value="
+                                                        <label><input type="checkbox" class="common_selector_add building_add" value="
                                                             <?php echo $row["building"];
                                                             ?>
                                                             "> <?php echo $row["building"];?>
@@ -894,20 +958,22 @@ $(document).ready(function() {
 
     });
 
+
+
     filter_add_data();
     function filter_add_data() {
       //$('#post_list').html();
       var action = 'fetch_data';
-      var shift = get_filter('shift');
-      var process = get_filter('process');
-      var building = get_filter('building');
+      var shift_add = get_filter('shift_add');
+      var process_add = get_filter('process_add');
+      var building_add = get_filter('building_add');
       var GID_search = $('#GID_search').val();
       var name_search = $('#name_search').val();
 
       $.ajax({
           url: "includes/fetch_data_add_participants.inc.php",
           method: "POST",
-          data: {action:action,shift:shift,process:process,building:building,GID_search:GID_search},
+          data: {action:action,shift_add:shift_add,process_add:process_add,building_add:building_add,GID_search:GID_search},
           success:function(data){
             $('#post_list_add').html(data);
           }
@@ -940,6 +1006,7 @@ $(document).ready(function() {
             name_add:name_add,
             department_name_add:department_name_add},
           success:function(data){ 
+            console.log("success");
             filter_data();
             filter_add_data();
           },
@@ -978,6 +1045,16 @@ $(document).ready(function() {
       }); 
 
     }
+
+    var download_button;
+    $('button_download').click(function() {
+    download_button = $(this).val();
+    
+    
+
+    alert(download_button);
+    //console.log(fired_button);
+    });
 
       
 
