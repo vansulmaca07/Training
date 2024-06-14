@@ -691,6 +691,43 @@ text-align: center;
     text-align: center;
 }
 
+.reference_material_div {
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+}
+
+.upload_div {
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+}
+
+.reference_material_T {
+    text-align: center;
+    border-color: lightgray;
+    width: 100%;
+    margin: 25px 0;
+    font-size: 14px;
+    max-height: 350px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin: auto;   
+    margin-bottom: 20px;
+    
+}
+
+.reference_material_T thead tr {
+    background-color: rgba(4, 73, 129, 0.808);
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    height: 40px;
+}
+
 /*
 .participantsT {
     text-align: center;
@@ -731,10 +768,6 @@ text-align: center;
     margin-bottom: 20px;
     
 }
-
-
-
-
 
 .participantsT thead tr {
     background-color: rgba(4, 73, 129, 0.808);
@@ -1273,12 +1306,29 @@ text-align: center;
 
 .participants_tbody {
     display: block;
-    height: 450px;
+    max-height: 450px;
    /* overflow: auto; */
     overflow-y: scroll;
 }
 
 .participants_thead tr {
+    display: table;
+    width: 100%;
+}
+
+.reference_material_T tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
+}
+
+.reference_material_T tbody {
+    display: block;
+   /* overflow: auto; */
+    overflow-y: scroll;
+}
+
+.reference_material_thead tr {
     display: table;
     width: 100%;
     
