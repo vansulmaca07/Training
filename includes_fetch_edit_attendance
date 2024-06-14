@@ -17,7 +17,7 @@ if(isset($_POST["action"])) {
 
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
 
-  /*  $query = "SELECT GID, name_, RFID, affiliation, shift_description, group_, building, judgement
+/*  $query = "SELECT GID, name_, RFID, affiliation, shift_description, group_, building, judgement
     FROM attendance
     INNER JOIN department on users.department_id = department.department_id
     INNER JOIN shift on users.shift_id = shift.shift_id
@@ -37,9 +37,9 @@ if(isset($_POST["action"])) {
        $shift_trimmed = array_map('trim',$_POST["shift"]);
        $shift_filter = implode("','",$shift_trimmed);
        $query .= "AND shift.shift_description IN('".$shift_filter."')";
-    }
+    }  
 
-    if(isset($_POST["process"]))
+      if(isset($_POST["process"]))
     {
        $process_trimmed = array_map('trim',$_POST["process"]);
        $process_filter = implode("','",$process_trimmed); 
@@ -51,7 +51,7 @@ if(isset($_POST["action"])) {
        $building_trimmed = array_map('trim',($_POST["building"]));
        $building_filter = implode("','",$building_trimmed); 
        $query .= "AND users.building IN('".$building_filter."')";
-    }
+    } 
 
     $query .= "ORDER BY shift.shift_description ASC";
     $stmt = $pdo->prepare($query);
@@ -76,7 +76,7 @@ if(isset($_POST["action"])) {
 
             if ($row["judgement"] === '1') {
             
-                $output .=    "<select id='judgement' name=judgement[] class='judgement'  $class>
+                $output .=    "<select id='judgement' name=judgement[] class='judgement' $class>
                         <option value='1' selected>
                         合</option>
                         <option value='2'>
@@ -100,7 +100,7 @@ if(isset($_POST["action"])) {
                 ";
                 }
 
-            $output .= "<td style=''><button type ='button' value='$row[GIDh]' class ='btn btn-danger'>削除<i class='bi bi-x-circle'></i></button></td>
+            $output .= "<td style=''><button type ='button' value='$row[GIDh]' class ='btn btn-danger' $class>削除<i class='bi bi-x-circle'></i></button></td>
             </tr>";
         };
     }
