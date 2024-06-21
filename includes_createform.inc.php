@@ -7,6 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $file_size_get = '';
             $file_type_get = '';
 
+            
+
             $process_prefix = ($_POST["trainingDepartment"]);
             $creationdepartment = $_SESSION["department"];
             $trainingname = ($_POST["educationID"]);
@@ -15,10 +17,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $endtimereg = ($_POST["datetimeRegularEnd"]);
             $instructorreg = ($_POST["instructorRegularID"]);
             $locationreg = ($_POST["LocationRegular"]);
-            $starttimeA = ($_POST["datetimeAStart"]);
-            $endtimeA = ($_POST["datetimeAEnd"]);
-            $instructorA = ($_POST["instructorAID"]);
-            $locationA = ($_POST["LocationA"]);
+            
+            if(isset($_POST["datetime_a_start"])) {
+            $start_time_a = ($_POST["datetime_a_start"]);
+            }
+            else {
+            $start_time_a = null;
+            }
+           
+            if(isset($_POST["datetime_a_end"])) {
+            $end_time_a = ($_POST["datetime_a_end"]);
+            }
+            else {
+            $end_time_a = null;
+            }
+     
+            $location_a = $_POST["location_a"];
+           /*$instructor_a = ($_POST["instructor_a"]);
             $starttimeB = ($_POST["datetimeBStart"]);
             $endtimeB = ($_POST["datetimeBEnd"]);
             $instructorB = ($_POST["instructorBID"]);
@@ -30,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $starttimeD = ($_POST["datetimeDStart"]);
             $endtimeD = ($_POST["datetimeDEnd"]);
             $instructorD = ($_POST["instructorDID"]);
-            $locationD = ($_POST["LocationD"]); 
+            $locationD = ($_POST["LocationD"]); */
             $purpose = ($_POST["purposeID"]);
             $audience = ($_POST["audienceID"]);
             $contents = ($_POST["contentsID"]);
@@ -91,11 +106,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     end_time_regular,
                     location_regular,
                     instructor_regular,
-                 /*   start_time_a,
+                    start_time_a,
                     end_time_a,
                     location_a,
-                    instructor_a,
-                    start_time_b,
+                    /*instructor_a,
+                   start_time_b,
                     end_time_b,
                     location_b,
                     instructor_b,
@@ -135,10 +150,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     :endtimereg,
                     :locationreg,
                     :instructorreg,
-              /*      :starttimeA,
-                    :endtimeA,
-                    :locationA,
-                    :instructorA,
+                    :start_time_a,
+                    :end_time_a,
+                    :location_a,
+                   /* :instructor_a,
                     :starttimeB,
                     :endtimeB,
                     :locationB,
@@ -180,10 +195,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(":endtimereg", $endtimereg);
                 $stmt->bindParam(":locationreg",  $locationreg);
                 $stmt->bindParam(":instructorreg", $instructorreg);
-            /*    $stmt->bindParam(":starttimeA", $starttimeA);
-                $stmt->bindParam(":endtimeA", $endtimeA);
-                $stmt->bindParam(":locationA", $locationA);
-                $stmt->bindParam(":instructorA", $instructorA);
+                
+                if(!isset($_POST["datetime_a_start"])) {
+                    $stmt->bindParam(":start_time_a", $start_time_a, PDO::PARAM_NULL); }
+                else {
+                    $stmt->bindParam(":start_time_a", $start_time_a);
+                }
+                
+               /* if (!isset($_POST["start_time_a"])) {
+                $stmt->bindParam(":start_time_a", $start_time_a);
+                }*/
+
+                if(!isset($_POST["datetime_a_end"])) {
+                    $stmt->bindParam(":end_time_a", $end_time_a, PDO::PARAM_NULL); }
+                else {
+                    $stmt->bindParam(":end_time_a", $end_time_a);
+                }
+
+               // $stmt->bindParam(":endtime_a", $endtime_a);
+                $stmt->bindParam(":location_a", $location_a);
+               /* $stmt->bindParam(":instructor_a", $instructor_a);
                 $stmt->bindParam(":starttimeB", $starttimeB);
                 $stmt->bindParam(":endtimeB", $endtimeB);
                 $stmt->bindParam(":locationB", $locationB);
@@ -398,6 +429,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $file_type_get = "?error=file_type";
                 }
 
+                //copy material
+
+                $copied_materials = $_POST["file_id"];
+                
+                foreach($copied_materials as $reference_file) {
+                    $query ="INSERT into file_storage 
+                    (
+                        training_id,
+                        file_name, 
+                        file_ext, 
+                        file_size, 
+                        file_type, 
+                        uploaded_by, 
+                        file_path, 
+                        file_path_main_directory)
+                    SELECT
+                        :training_id,
+                        file_name, 
+                        file_ext, 
+                        file_size, 
+                        file_type, 
+                        uploaded_by, 
+                        file_path, 
+                        file_path_main_directory from file_storage
+                    where file_id = :file_id"; 
+
+                    $stmt = $pdo->prepare($query);
+                    $stmt->bindParam(":training_id", $training_id);
+                    $stmt->bindParam(":file_id", $reference_file);
+
+                    $stmt->execute();
+
+                }
+
                 //UPLOAD FILE END 
                 //CATEGORY TABLE 
 
@@ -423,7 +488,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2= null;
                 $stmt3= null;
                 $stmt4= null;
-                header("Location: ../progress.php". $file_type_get . $file_size_get);
+                header("Location: ../progress_test.php". $file_type_get . $file_size_get);
 
                 die();
 
