@@ -9,11 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
    //attendance table
    
-    $checked_array = ($_POST["GIDcheck_add"]);
-    
+    $checked_array = ($_POST["GIDcheck_add"]);    
     $GIDname = ($_POST["GIDname_add"]);
     $firstname = ($_POST["name_add"]);
-    
     $department_attendee = ($_POST["department_name_add"]);
     
     try {
@@ -29,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $judgement = "1";
         
         foreach ($GIDname as $key => $value) {
-
             if(in_array($GIDname[$key], $checked_array)){
             $stmt2->bindParam(":GID", $GIDname[$key]);
             $stmt2->bindParam(":firstname", $firstname[$key]);
@@ -54,12 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     catch (PDOException $e) {
-    
         die("Query failed: " . $e->getMessage());
-
-    }
-
-     
+    } 
 }
 
 else {
