@@ -44,14 +44,14 @@ if(isset($_POST["action"])) {
             <td style='width:10.25%;'>" . $row["training_id"] .  "</td>
             <td style='width:25.3%;'>" . $row["training_name"] .  "</td>
             <td style='width:25.5%;'>" . $row["contents"] .  "</td>
-            <td style='width:20.3%'>";
+            <td style='width:20.3% ;word-break: break-all;'>";
 
             foreach($result2 as $row_file) {
                     $file_path = "includes/uploads/" . $row_file["file_name"] . "." . $row_file["file_ext"];
                 
                     $file_name = $row_file["file_name"] . "." . $row_file["file_ext"];
     
-                    $output .= "  <a href = $file_path download>$file_name</a><br>";
+                    $output .= "  <a href='download.php?file_id=$row_file[file_id]'>$file_name</a><br>";
                     } 
                 
             if ($row["sign_progress"]==="1") {
