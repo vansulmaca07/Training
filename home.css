@@ -65,21 +65,15 @@ td {
 }
 
 #main{
-    background: #fdfdfd;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    pad: 25px 25px;
-    border-radius: 20px;
-    box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
-    0 32px 64px -48px rgba(0,0,0,0.5);
-    width: 85%;
-    height: 600px;
+   
+/*  display: flex;
+    flex-direction: column; 
+    height: 100%; */
+
+    
     font-size: 15px;
     align-items: center;
     justify-content: center;
-    float: right;
-   
     overflow-y: auto;
     
 }
@@ -538,11 +532,10 @@ select {
     font-size: 14px;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
-    overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     margin: auto;
     margin-bottom: 20px;
-    
+
 }
 
 .mainrecordT2 thead tr {
@@ -803,6 +796,8 @@ text-align: center;
     text-align: center;
 }
 
+
+
 /* checker comment */
 
 
@@ -811,6 +806,11 @@ text-align: center;
     margin: auto;
     justify-content: center;
     text-align: center;
+}
+
+.checker_comment_regular_div .selectpicker {
+    height: 400px;
+    overflow-y: scroll;
 }
 
 
@@ -936,20 +936,25 @@ text-align: center;
 .progressT {
     text-align: center;
     width: 100%;
-    margin: 25px 0;
+    /*margin: 25px 0; */
     font-size: 15px;
-    min-width: 400px;
+    /*min-width: 500px;*/
     border-radius: 5px 5px 0 0;
-    overflow: hidden;
+   /* overflow: hidden; */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    margin: auto;   
+    /*margin: auto;  */ 
     margin-bottom: 20px;
+    table-layout: fixed;
+    
 }
 
+
 .progressT tbody {
-    display: block;
-    height: 330px;
+    display: block;  
+  /*  height: 350px; */
    /* overflow: auto; */
+   height:100%;
+   width: 100%;
     overflow-y: scroll;
 }
 
@@ -960,28 +965,25 @@ text-align: center;
     font-weight: bold;
     height: 40px;
     font-size: 12px;
-    display: table;
-    width: 100%;
+    display: table; 
+    
 }
 
 .progressT tbody tr {
     border-bottom: 1px solid #dddddd;
     height: 40px;
-    display: table;
+    display: table; 
     width: 100%;
 
 }
 
-.progressT tbody tr:nth-of-type(even) {
-    height: 40px;
-
+.progressT, .IDregT, .trainingT td {
+    word-break: break-all;
 }
 
-.progressT tbody tr.active-row {
-    font-weight: bold;
-    color: rgba(4, 73, 129, 0.808);
-    height: 40px;
-}
+
+
+
 
 
 #table-wrapper {
@@ -1068,7 +1070,7 @@ text-align: center;
 
 .trainingT tbody {
     display: block;
-    height: 330px;
+    height: 100%;
    /* overflow: auto; */
     overflow-y: scroll;
 }
@@ -1080,15 +1082,15 @@ text-align: center;
     font-weight: bold;
     height: 40px;
     font-size: 12px;
-    display: table;
+    display: table; 
     width: 100%;
 }
 
 .trainingT tbody tr {
     border-bottom: 1px solid #dddddd;
     height: 40px;
-    display: table;
     width: 100%;
+    display: table; 
 
 }
 
@@ -1234,10 +1236,13 @@ text-align: center;
 
 .IDregT tbody {
     display: block;
-    height: 330px;
-   /* overflow: auto; */
+   /* height: 330px;
+    overflow: auto; */
+    height:100%;
     overflow-y: scroll;
 }
+
+
 
 .IDregT thead tr {
     background-color: rgba(4, 73, 129, 0.808);
@@ -1759,3 +1764,17 @@ text-align: center;
     background: #f2f2f2
 }
 
+input[type=checkbox]{
+    accent-color: green;
+}
+
+.header-1 {
+    margin-top: 2%;
+    text-align: center;
+}
+
+/******Navigation Links **********/
+
+.nav-link:hover {
+    background-color: rgb(8, 114, 235);
+}
