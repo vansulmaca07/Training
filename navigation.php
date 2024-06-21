@@ -1,97 +1,125 @@
 <?php
-session_start();
-include("includes/dbh2.inc.php");
+    session_start();
+    include("includes/dbh2.inc.php");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!--jQuery and Bootstrap CSS-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="home.css">
+    <title>Document</title>
 
-    <!--jQuery and Bootstrap javascript-->
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+    <!--jQuery-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+
+    <!-- Bootstrap 5 Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <!--Icon Scout-->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 
-    <!-- Bootstrap 5 Font Icon CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
+    <!--Bootstrap/jQuery Select picker-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"/>
 
-    <title>Home</title>
+    <!--<link rel="stylesheet" href="home_test.css">-->
+    <link rel="stylesheet" href="home.css">
+    
+    <!--scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
+
 </head>
 <body>
-    <div class="full">
-        <div class="menuDIV">
-            <div class="loginDIV">
-                <p class="loginP" style="margin-top:15px; margin-bottom:0px;">
-                    <?php
-                        echo
-                        $_SESSION["name_"];
-                    ?>
-                </p>
-                <p class="loginP" style="margin:0px;">
-                    <?php
-                        echo $_SESSION["GID"];
-                    ?>
-                </p>
-                <p class="loginP" style="margin:0px;">    
-                    <?php
-                        if ($_SESSION["userlevel"] === "1"){
-                        echo "administrator";
-                        }
-                        else {        
-                        }
-                    ?>
-                </p>
-                <p class="loginP" style="margin:0px;">    
-                    <?php
-                        echo $_SESSION["department_name"];
-                    ?>
-                </p>  
-                    <a href="includes/logout.inc.php" class="btn-34">ログアウト</a>   
-            </div>
-            <div class="navDIV">
-                <?php
-                if($_SESSION["userlevel"] === "1") {
+    <div class="container-fluid" style="height:100%;">
+        <div class="row" style="height:100%;">
+            <div class="col-2 min-vh-100 navigation-menu" style="background-color: rgba(4, 73, 129, 0.808);">
+                <div class="pt-4 pb-1 px-2">
+                    <a href="" class="text-white text-decoration-none">
+                        <i class="fa-solid fs-2 fa-brands fa-wpforms me-2"></i>
+                        <span class="fs-5 d-none d-sm-inline">教育訓練記録</span>
+                    </a>
+                </div>
+    
+                <hr class="text-white">
+         
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item text-white mb-2" style="margin-left:10px;">
+                       <!-- <a href="includes/logout.inc.php" class="nav-link text-white"> -->
+                            
+                            <!--<i class="fa-solid fa-user-tie fs-5 me-2 "></i>-->
+                            <i class="fa-solid fa-circle-user fs-5 me-2"></i>
+                            <span class="d-none d-sm-inline">
+                                <?php echo $_SESSION["name_"] . "<br>";  
+                                   ?>
+                            </span>
+                        <!--</a> -->
+                    </li>
+                   
+                </ul>
 
-                echo
-                 '
-                 <a href="progress.php" class = "btn-34"><span>進捗状況</span></a>
-                 <a href="newform.php" class = "btn-34"><span>新規作成</span></a>
-                 <a href="training.php" class = "btn-34"><span>受講者署名</span></a>
-                 <a href="idregistration.php" class = "btn-34"><span>IDカード登録</span></a>
-                 <a href="" class = "btn-34"><span>ユーザー管理</span></a>'
-                 ;
-                }
+                <hr class="text-white">
 
-                else if ($_SESSION["userlevel"] === "3") {
-                echo 
-                '<button class="btn4" onclick="displayRegForm()" disabled>新規作成</button></a>
-                <button class="btn4" onclick="displayProgress()" disabled>進捗状況</button></a>
-                <a href="training.php" class = "btn-34">受講者署名</a>
-                <button class="btn4" onclick="regSignature()" disabled >IDカード登録</button></a>
-                <button class="btn4" onclick="userManagement()" disabled>ユーザー管理</button></a>';
-                }
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item nav-item-progress <?php if($_SESSION["userlevel"] === '3') { echo "d-none";} ?>">
+                        <a href="progress_test.php" class="nav-link progress-tab text-white">
+                            <i class="fa-solid fs-5 fa-list-check me-2"></i>
+                            <span class="d-none d-sm-inline">進捗状況</span>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-new-form <?php if($_SESSION["userlevel"] === '3') { echo "d-none";} ?>">
+                        <a href="newform.php" class="nav-link new-form-tab text-white" style="hover:0.5;">
+                            <i class="fa-solid fs-5 fa-file-medical me-3"></i>
+                            <span class="d-none d-sm-inline">新規作成</span>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-training">
+                        <a href="training.php" class="nav-link training-tab text-white">
+                            <i class="fa-solid fs-6 fa-chalkboard-user me-2"></i>
+                            <span class="d-none d-sm-inline">受講者署名</span>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-id-card-registration <?php if($_SESSION["userlevel"] === '3') { echo "d-none";} ?>">
+                        <a href="idregistration.php" class="nav-link id-registration-tab text-white">
+                            <i class="fa-solid fs-5 fa-id-card me-2"></i>
+                            <span class="d-none d-sm-inline">IDカード登録</span>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-user-management <?php if($_SESSION["userlevel"] !== '1') { echo "d-none";} ?>">
+                        <a href="" class="nav-link text-white user-management-tab">
+                            <i class="fa-solid fs-5 fa-gear me-2"></i>
+                            <span class="d-none d-sm-inline">ユーザー管理</span>
+                        </a>
+                    </li>
+                </ul>
                 
-                else if ($_SESSION["userlevel"] === "2") {
-                echo 
-                '<a href="progress.php" class = "btn-34">進捗状況</a>
-                 <a href="newform.php" class = "btn-34">新規作成</a>
-                 <a href="training.php" class = "btn-34">受講者署名</a>
-                 <a href="idregistration.php" class = "btn-34">IDカード登録</a>
-                 <a href="" class = "btn4" disabled>ユーザー管理</a>';
-                }
-                
-                ?>
+                <hr class="text-white">
+
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item text-white">
+                        <a href="#" class="nav-link text-white">
+                            <i class="fa-solid fa-gears fs-5 me-2"></i>
+                            <span class="d-none d-sm-inline">ユーザー設定</span>
+                        </a> 
+                    </li>
+                    <li class="nav-item">
+                        <a href="includes/logout.inc.php" class="nav-link text-white">
+                            <i class="bi fs-5 me-2 bi-box-arrow-left"></i>
+                            <span class="d-none d-sm-inline">ログアウト</span>
+                        </a>
+                    </li>
+                </ul>
+
             </div>
-        </div>
-        <div class="mainwrapper">
+ 
+            <div class="col-10"  style="height:100%;  overflow:scroll;">
+                <div class="pt-4 pb-1 px-2 main-page" style="height:100%;">
+
+
+
+          
