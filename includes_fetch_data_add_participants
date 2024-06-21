@@ -12,27 +12,25 @@ if(isset($_POST["action"])) {
     FROM users
     INNER JOIN department on users.department_id = department.department_id
     INNER JOIN shift on users.shift_id = shift.shift_id
-    
-
     ";
 
-    if(isset($_POST["shift"]))
+    if(isset($_POST["shift_add"]))
     {   
-       $shift_trimmed = array_map('trim',$_POST["shift"]);
+       $shift_trimmed = array_map('trim',$_POST["shift_add"]);
        $shift_filter = implode("','",$shift_trimmed);
        $query .= "AND shift.shift_description IN('".$shift_filter."')";
     }
 
-    if(isset($_POST["process"]))
+    if(isset($_POST["process_add"]))
     {
-       $process_trimmed = array_map('trim',$_POST["process"]);
+       $process_trimmed = array_map('trim',$_POST["process_add"]);
        $process_filter = implode("','",$process_trimmed); 
        $query .= "AND department.department_name IN('".$process_filter."')";
     }
 
-    if(isset($_POST["building"]))
+    if(isset($_POST["building_add"]))
     {
-       $building_trimmed = array_map('trim',($_POST["building"]));
+       $building_trimmed = array_map('trim',($_POST["building_add"]));
        $building_filter = implode("','",$building_trimmed); 
        $query .= "AND users.building IN('".$building_filter."')";
     }
@@ -50,10 +48,8 @@ if(isset($_POST["action"])) {
         $query .= "AND name_ LIKE ('%$name_search%')
         ";
     }
-
-       
-    $query .=   "EXCEPT
-
+   
+    $query .= "EXCEPT
     SELECT GIDh, attendance.name_, attendance.RFID, department_name, shift_description, group_, building
 	from attendance
     INNER JOIN users on users.GID = attendance.GIDh
@@ -74,7 +70,7 @@ if(isset($_POST["action"])) {
         {
             $output .= "
             <tr>
-            <td style='width:10%; padding:0;' ><input type='checkbox' class='GIDcheck' name='GIDcheck_add[]'  value= '$row[GID]' onchange ='count()'></td>
+            <td style='width:10%; padding:0;' ><input type='checkbox' class='GIDcheck form-check-input' name='GIDcheck_add[]'  value= '$row[GID]' onchange ='count()'></td>
             <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='GIDname'  name='GIDname_add[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
             <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='name_'  name='name_add[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
             <td style='width:18%; padding:0; font-size:15px;' ><input type='text' hidden class='shift_description' hidden name='shift_description_add[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
