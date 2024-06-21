@@ -1,9 +1,6 @@
-   <?php
-
+<?php
    include('includes/dbh2.inc.php');
-   
    if(isset($_GET["file_id"])) {    //Get the File ID 
-
    $file_id = $_GET["file_id"];
 
    $query ="SELECT 
@@ -40,15 +37,17 @@
 
    $ip_add = $_SERVER['HTTP_HOST']; //get the ip add of the server
    $http = "http://"; 
-   $download_file_path_temp = $http . $ip_add . "/Training/download_temp/" . $file_name . "." . $file_ext; //getting the directory of the file using http
-
-   $download_file_name = $file_name . "." . $file_ext;
+   //$download_file_path_temp = $http . $ip_add . "/Training/download_temp/" . $file_name . "." . $file_ext; //getting the directory of the file using http
    
-   copy($full_path, $file_destination); //copy the original file to the temporary folder
+   $download_file_path_temp = "download_temp/" . $file_name . "." . $file_ext; //getting the directory of the file using http
+   $download_file_name = $file_name.".".$file_ext;
+   
+   if(copy($full_path, $file_destination)){ //copy the original file to the temporary folder
 
-   header('Content-description:FIle Transfer');
+   header('Content-description:File Transfer');
    header('Content-Type: application/octet-stream');  
-   header("Content-Disposition: attachment; filename=$download_file_name");  
+   //header('Content-Type: application/pdf'); 
+   header("Content-Disposition: attachment; filename=$download_file_name");
    header('Expires: 0');
    header('Cache-Control: must-revalidate, post-check=0');
    header('Pragma: public'); 
@@ -56,10 +55,17 @@
    ob_clean();
    flush();
 
-   readfile($download_file_path_temp); //download the file via HTTP 
-   
-   unlink($file_destination); //deletes the file from the temporary folder
+   if(readfile($download_file_path_temp)) {; //download the file via HTTP 
+
+   unlink($file_destination); //deletes the file from the temporary folder */
+   }
 
    exit();
+   }
+
+   else
+   { 
+      echo "failed to download";
+   }
 
 }
