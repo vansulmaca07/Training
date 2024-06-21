@@ -1,28 +1,27 @@
 <?php
-    include_once 'navigation.php';
+    include_once 'navigation_test.php';
     $group_ = $_SESSION["group_"];
     include_once 'includes/dbh2.inc.php';
     $GID_creator = $_SESSION["GID"];
     
-$training_name = '';
-$process_prefix = '';
-$instructor_regular = '';
-$location_regular = '';
-$purpose = '';
-$audience = '';
-$contents = '';
-$usage_id = '';
-$training_id = '';
-$category = array ();
-
-
+    $training_name = '';
+    $process_prefix = '';
+    $instructor_regular = '';
+    $location_regular = '';
+    $purpose = '';
+    $audience = '';
+    $contents = '';
+    $usage_id = '';
+    $training_id = '';
+    $category = array ();
 
 if(isset($_GET["training_id"])) {
     $training_id = $_GET["training_id"];
     $query_copy = "SELECT * FROM training_form
-    where training_id = '$training_id'
+    where training_id = :training_id
     ";
     $stmt_copy = $pdo->prepare($query_copy);
+    $stmt_copy->bindParam(":training_id", $training_id);
     $stmt_copy-> execute();
     $result_copy = $stmt_copy->fetchAll();
     
@@ -35,18 +34,36 @@ if(isset($_GET["training_id"])) {
         /*$audience = $copy_data["audience"];*/
         $contents = $copy_data["contents"];
         $usage_id = $copy_data["usage_id"];
-
     }
+
+    $query_copy_same_process = "SELECT * FROM training_form
+        WHERE 
+            creator = :GID_creator
+        ORDER BY 
+            date_created 
+        DESC LIMIT 1";
      
+    $stmt_copy_same_process = $pdo->prepare($query_copy_same_process);
+    //$stmt_copy_same_process->bindParam(":training_id", $training_id);
+    $stmt_copy_same_process->bindParam(":GID_creator", $GID_creator);
+    $stmt_copy_same_process->execute();
+
+    $result_copy_same_process = $stmt_copy_same_process->fetchAll();
+
+    foreach($result_copy_same_process as $copy_data) {
+        $process_prefix = $copy_data["process_prefix"];
+        $location_regular = $copy_data["location_regular"];
+        $instructor_regular = $copy_data["instructor_regular"];
+        $audience = $copy_data["audience"];
+    }
+
     $query_cat = "SELECT category.category_id, category_name FROM category
-    
-    INNER JOIN category_ref on
-        category_ref.category_id = category.category_id
-        
-    WHERE training_id = '$training_id'";
+        INNER JOIN 
+            category_ref ON category_ref.category_id = category.category_id    
+        WHERE training_id = :training_id";
 
     $stmt_cat = $pdo->prepare($query_cat);
-
+    $stmt_cat->bindParam(":training_id", $training_id);
     $stmt_cat->execute();
 
     $result_cat = $stmt_cat->fetchAll();
@@ -61,7 +78,7 @@ if(isset($_GET["training_id"])) {
 else if(!isset($_GET["training_id"])) {
 
     $query_previous = 
-    "SELECT * FROM training_form
+    "SELECT * FROM training_form 
         WHERE creator = '$GID_creator'
         ORDER BY date_created DESC LIMIT 1";
 
@@ -88,23 +105,9 @@ else if(!isset($_GET["training_id"])) {
 <style> 
 
 </style>
-        <div class="main" id="main">
-            
-       
-            <div class="scroll" id="div-scroll">
-
             <form action="includes/createform.inc.php" method="post" enctype="multipart/form-data">
-
-                <div  id="creationdepartment">
-                    <h2><b>作成部署: <?php echo $_SESSION["department_name"]; ?>
-                    <input type="text"
-                    style="width:15%"
-                    hidden
-                    name="departmentID"
-                    id="departmentID"
-                    value="<?php echo $_SESSION["department_name"]; ?>"
-                    required></b>
-                    </h2>
+                <div  id="creationdepartment" class = "header-1" >
+                    <h4><b>作成部署: 製造部</b></h4>
                 </div> 
                 <div id="mainrecord">
                     <table id="mainrecordTable" border="1" class="table table-sm table-hover rounded-3 overflow-hidden mainrecordT2">
@@ -230,22 +233,22 @@ else if(!isset($_GET["training_id"])) {
                                 <span>Ａ班実施日時：</span>
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeAStart" id="datetimeAStart" value="" class="input-main-form">
+                                <input type="datetime-local" name="datetime_a_start" id="datetimeAStart" value="" class="input-main-form">
                             </td>
                             <td style="vertical-align:middle; width:17.5%;">
-                                <input type="datetime-local" name="datetimeAEnd" id="datetimeAEnd" value="" class="input-main-form">
+                                <input type="datetime-local" name="datetime_a_end" id="datetimeAEnd" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             場所：
                             </td>
                             <td style=" width:15%;">
-                                <input type="text" id="LocationA" name="LocationA" value="" class="input-main-form">
+                                <input type="text" id="LocationA" name="location_a" value="" class="input-main-form">
                             </td>
                             <td style="width:5%; padding: 0;">
                             講師：
                             </td>
                             <td>
-                                <input type="text" id="trial_input" name="instructorAID" value=""  hidden class="input-main-form">
+                                <input type="text" id="trial_input" name="instructor_a" value=""  hidden class="input-main-form">
                             <!--SEARCH INSTRUCTOR-->
                                 <div class="wrapper">
                                     <div class="select-btn">        
@@ -278,6 +281,8 @@ else if(!isset($_GET["training_id"])) {
                                     </div>
                                 </div>
                             <!--SEARCH INSTRUCTOR-->
+
+                            
                             </td>
                         </tr>
 
@@ -532,7 +537,7 @@ else if(!isset($_GET["training_id"])) {
                                 <th style="width:18%; vertical-align:middle;height:40px;">GID</th>
                                 <th style="width:18%; vertical-align:middle;height:40px;">名前</th>
                                 <th style="width:18%; vertical-align:middle;height:40px;">
-                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Team</a>
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">Team<i style="float:right;" class="bi bi-caret-down-fill"></i></a></a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
                                                 $query = "SELECT distinct(shift_description) FROM users
@@ -559,7 +564,7 @@ else if(!isset($_GET["training_id"])) {
                                         </ul>  
                                 </th>
                                 <th style="width:18%; vertical-align:middle; height:40px;">
-                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">工程</a>
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">工程<i style="float:right;" class="bi bi-caret-down-fill"></i></a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="max-height: 300px; overflow-y:scroll">
                                             <?php
                                                 $query = "SELECT DISTINCT(department_name) FROM users
@@ -587,7 +592,7 @@ else if(!isset($_GET["training_id"])) {
                                         </ul>  
                                 </th>
                                 <th style="width:18%; vertical-align:middle; height:40px;">
-                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white" class="dropdown-toggle">Building</a>
+                                    <a href="" role="button" id="drowdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">Building<i style="float:right;" class="bi bi-caret-down-fill"></i></a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <?php
                                                 $query = "SELECT DISTINCT(building) FROM users
@@ -617,11 +622,47 @@ else if(!isset($_GET["training_id"])) {
                         <tbody id="post_list" class="participants_tbody">
                         </tbody>
                     
-                    </table> 
-                           
+                    </table>                 
                 </div> 
+
+                <?php
+
+                if(isset($_GET["training_id"])) {
+
+                echo "
+                <div class='reference_material_div'>
+                    <table class='table table-bordered table-hover rounded-3 overflow-hidden reference_material_T' id='files_table'>
+                        <thead class='table text-center theadstyle reference_material_thead' style='width: 98.5%;'>
+                            <th style='width:10%;'>No.</th>
+                            <th style='width:65%;'>Reference Materials</th>
+                            <th style='width:12.5%;'>Download</th>
+                            <th style='width:12.5%;'>Files</th>
+                        </thead>
+                        <tbody id='post_list_add_files' class='files_tbody'>
+                        </tbody>
+                    </table>
+                </div>  
+                
+                <div class='upload_div'>
+                    <div class='mb-3'>
+                        <input class='form-control' type='file' id='formFileMultiple' name='file[]' style='width:50%; background-color:lightyellow;' multiple>
+                    </div>
+                </div>";
+                }
+
+                else {
+                    echo "
+                    <div class='upload_div'>
+                        <div class='mb-3'>
+                            <input class='form-control' type='file' id='formFileMultiple' name='file[]' style='width:50%; background-color:lightyellow;' multiple>
+                        </div>
+                    </div>
+                    ";
+                }
+
+                ?>
                 <div id="contentsDIV" class="contentsDIV">
-                <caption><b>内容</b></caption>
+                    <caption><b>内容</b></caption>
                     <table id="contentsTable" border="1" class="contentsT">
                         <tr>
                             <td><textarea type="text" name="contentsID" id="contentsID" value="" class="contentsInput" rows="3" required><?php  echo $contents; ?></textarea></td>
@@ -636,9 +677,9 @@ else if(!isset($_GET["training_id"])) {
                         </tr>
                         <tr>
                             
-                            <td style="justify-tems:center; width:45%;">訓練資料を追加(任意):<input type="file" name="file[]" multiple class="input-main-form"></td>
+                            <!--<td style="justify-tems:center; width:45%;">訓練資料を追加(任意):<input type="file" name="file[]" multiple class="input-main-form"></td>
                         
-                            <td style="width: 60%;"></td>
+                            <td style="width: 60%;"></td> -->
                         </tr>
                     </table>
                 </div>
@@ -656,7 +697,7 @@ else if(!isset($_GET["training_id"])) {
                         </tr>
                     </table>
                 </div>
-                <div id="checker_comment_regular" class="checker_comment_regular_div">
+                <!--<div id="checker_comment_regular" class="checker_comment_regular_div">
                     <caption style="text-align:center;"><b>教育効果の確認結果</b></caption>
                     <table id="confirmation_table" border="1" class="table table-hover rounded-3 overflow-hidden mainrecordT2">
                         <tr>
@@ -669,18 +710,32 @@ else if(!isset($_GET["training_id"])) {
                              value="上記の人にインタビューを実施し、理解できたことを確認できました。" style="width:100%"></td>
                         </tr>
                     </table>
-                </div>
-                    <button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;" id="checkBtn"><span>送信</span></button>
+                </div>-->
+             
+                    <!--<button type="submit" class = "btn-update" style="text-decoration:none; margin-right:20px;" id="checkBtn"><span>送信&nbsp;&nbsp;&nbsp;<i class="fa-solid fs-6 fa-file-export"></i></span></button>
+                    -->
+                    <button type="submit" class="btn btn-primary mb-3" style="float:right; width:150px; margin-right:20px;">
+                    送信&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fs-6 fa-file-export"></i>
+                    </button> 
             </form>   
             </div>
-        </div> <!--main-->
-    </div> <!--mainwrapper-->
-</div> <!--full-->   
+
+            
+            </div> <!--paddin-->
+        </div> <!--col-->
+    </div> <!--row-->
+</div> <!--container-fluid-->  
 
 <!-----SCRIPT------>
+<!--jQuery and Bootstrap javascript
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+Bootstrap/jQuery Select picker
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"/>-->
+
 
 <script type="text/javascript">
-
 
 
 
@@ -733,6 +788,10 @@ wrapper.classList.toggle("active");
 
 $(document).ready(function() {
 
+   $(".new-form-tab").addClass("active");
+
+    add_files_data();
+
     $('#checkBtn').click(function() {
         checked = $('input[name="GIDcheck[]"]:checked').length;
 
@@ -780,6 +839,28 @@ $(document).ready(function() {
   $('.common_selector').click(function(){
       filter_data();
   });
+
+  //add files
+
+    function add_files_data() {
+        //$('#post_list_add_files').html();
+        var action ='fetch_data';
+        $.ajax({
+        url: "includes/fetch_data_add_files_copy_form.inc.php",
+        method: "POST",
+        data: {action:action},
+        success:function(data){ 
+            console.log("success");
+            $('#post_list_add_files').html(data);
+        },
+        error:function(data){
+            console.log("error");
+        }
+        });
+    }
+
+
+
 });
 
 
