@@ -51,7 +51,7 @@ if(isset($_POST["action"])) {
         {
             $output .= "
             <tr>
-            <td style='width:10.2%; padding:0;' ><input type='checkbox' name='GIDcheck[]'  value= '$row[GID]' onchange ='count()'></td>
+            <td style='width:10.2%; padding:0;' ><input type='checkbox' name='GIDcheck[]' class='form-check-input' style='accent-color: green;  font-size:20px;' value= '$row[GID]' onchange ='count()'></td>
             <td style='width:18.2%; padding:0; font-size:15px;' ><input type='text' hidden name='GIDname[]' value= '$row[GID]'>" . $row["GID"] .  "</td>
             <td style='width:18.3%; padding:0; font-size:15px;' ><input type='text' hidden name='name_[]' value= '$row[name_]'> " . $row["name_"] .  "</td>
             <td style='width:18.3%; padding:0; font-size:15px;' ><input type='text' hidden name='shift_description[]' value= '$row[shift_description]'> " . $row["shift_description"] .  "</td>
