@@ -38,14 +38,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }      
         }
         
-        $query3= "UPDATE attendance 
-        INNER JOIN users ON
-        attendance.GIDh = users.GID
-        SET 
-        attendance.RFID = users.RFID
+        $query3= "UPDATE attendance
+            INNER JOIN 
+                users ON attendance.GIDh = users.GID
+            SET 
+                attendance.RFID = users.RFID
+            WHERE 
+                training_id = :training_id
         ";
 
         $stmt3 = $pdo->prepare($query3);
+        $stmt3->bindParam(":training_id", $training_id);
         $stmt3->execute();
 
     }
