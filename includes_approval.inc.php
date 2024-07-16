@@ -1,29 +1,39 @@
 <?php
 session_start();
 
-$training_id = $_SESSION["training_id"];
+
 
 include_once "dbh2.inc.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+    $training_id = $_POST["training_id_approve"];
+    $approver = $_POST["approver"];
+    $approver_GID = $_POST["approver_GID"];
+
     $query = "UPDATE training_form
         SET 
             approval = '2',
             approval_date = now(),
-            status_id = '2'
-        WHERE training_id = '$training_id';
+            status_id = '2',
+            approved_by = :approver,
+            approver_GID = :approver_GID
 
-      
+        WHERE training_id = :training_id;
 
     ";
 
     $stmt = $pdo->prepare($query);
+
+    $stmt->bindParam(":approver", $approver);
+    $stmt->bindParam(":approver_GID", $approver_GID);
+    $stmt->bindParam(":training_id", $training_id);
+
     $stmt->execute();
 
     $pdo =null;
     $stmt =null;
 
-    header("Location: ../pdf_preview.php");
+    header("Location: ../pdf_preview.php?training_id=$training_id");
 
 }
